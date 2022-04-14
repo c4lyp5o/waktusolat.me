@@ -1,24 +1,27 @@
 {
-  "name": "quran-api",
+  "name": "waktusolat-api",
   "version": "1.0.0",
-  "main": "api/server.js",
-  "repository": "https://github.com/sutanlab/quran-api.git",
-  "author": "Sutan Nasution. <sutan.gnst@gmail.com>",
-  "license": "MIT",
-  "private": false,
+  "description": "waktusolat.me API for everything",
+  "type": "module",
+  "main": "server.js",
   "scripts": {
-    "build": "yarn",
-    "start": "node api/server.js",
-    "dev": "nodemon api/server.js",
-    "crawl": "node crawler/script.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/c4lyp5o/quran-api.git"
+  },
+  "author": "c4lyp5o",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/c4lyp5o/quran-api/issues"
+  },
+  "homepage": "https://github.com/c4lyp5o/quran-api#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "node-fetch": "^3.1.1"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.2"
+    "cpray": "^1.1.7",
+    "express": "^4.17.3",
+    "express-rate-limit": "^6.3.0"
   }
 }

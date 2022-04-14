@@ -1,4 +1,3 @@
 node_modules
-quran-tafsir.json
-.env
-.vercel
+engine/data/times/
+engine/public/
