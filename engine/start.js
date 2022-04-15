@@ -3,7 +3,7 @@ import express, { json, urlencoded } from "express";
 import RateLimit from "express-rate-limit";
 import cors from "cors";
 import Route from "./routes/api.js";
-import { getTest, getTimesAndWrite } from "./data/getter.js";
+import { getTimesAndWrite } from "./data/getter.js";
 import { zones } from "./data/getter.js";
 
 // create express app

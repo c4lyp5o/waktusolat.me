@@ -66,32 +66,6 @@ const zones = [
   "wly02",
 ];
 
-async function getTimesAndCache(zone) {
-  await redisClient.connect();
-  const prayerTimes = await cpray.getTimesbyWeek(zone);
-  await redisClient.json.set(zone, ".", prayerTimes, "EX", 15552000);
-  setTimeout(() => {
-    console.log("Disconnected from Redis");
-  }, 5000);
-}
-
-async function forAllTid() {
-  await redisClient.connect();
-  zones.forEach((item) => {
-    console.log(`running cache on ${item}`);
-    getTimesAndCache(item);
-    console.log(`cache on ${item} done`);
-  });
-  redisClient.disconnect();
-}
-
-async function getTest() {
-  await redisClient.connect();
-  const prayerTimes = await cpray.getTimesbyWeek("kdh01");
-  await redisClient.json.set("kdh01", ".", prayerTimes, "EX", 15552000);
-  redisClient.disconnect();
-}
-
 async function getTimesAndWrite(zone) {
   var Times = await cpray.getTimesbyYear(zone);
   var jsonContent = JSON.stringify(Times);
@@ -119,4 +93,4 @@ async function sleep({ delay = 2000, throwReject = false }) {
   });
 }
 
-export { getTimesAndCache, forAllTid, getTest, getTimesAndWrite, sleep, zones };
+export { getTimesAndWrite, sleep, zones };

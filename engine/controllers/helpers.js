@@ -1,4 +1,4 @@
-import { Zones, Months, Quranen, Quranmy } from "./monthlib.js";
+import { Zones, Months, Quranen, Quranmy } from "./library.js";
 
 class QuranHelpers {
   static getSurahName(req, res) {
