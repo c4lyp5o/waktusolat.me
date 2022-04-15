@@ -1,5 +1,7 @@
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
+const { holyQuran: quranmy } = require("../data/quran/quran_id.json");
+const { holyQuran: quranen } = require("../data/quran/quran_en.json");
 const { prayerTime: kedah01 } = require("../data/times/kdh01.json");
 const { prayerTime: kedah02 } = require("../data/times/kdh02.json");
 const { prayerTime: kedah03 } = require("../data/times/kdh03.json");
@@ -57,6 +59,9 @@ const { prayerTime: sarawak08 } = require("../data/times/swk08.json");
 const { prayerTime: sarawak09 } = require("../data/times/swk09.json");
 const { prayerTime: wilayah01 } = require("../data/times/wly01.json");
 const { prayerTime: wilayah02 } = require("../data/times/wly02.json");
+
+const Quranen = quranen;
+const Quranmy = quranmy;
 
 const Zones = {
   kdh01: { db: kedah01, name: "KOTA SETAR, POKOK SENA DAN KUBANG PASU" },
@@ -128,91 +133,19 @@ const Zones = {
   wly02: "LABUAN",
 };
 
-const Months = {
-  _January: 31,
-  get January() {
-    return this._January;
-  },
-  set January(value) {
-    this._January = value;
-  },
-  _February: 59,
-  get February() {
-    return this._February;
-  },
-  set February(value) {
-    this._February = value;
-  },
-  _March: 90,
-  get March() {
-    return this._March;
-  },
-  set March(value) {
-    this._March = value;
-  },
-  _April: 120,
-  get April() {
-    return this._April;
-  },
-  set April(value) {
-    this._April = value;
-  },
-  _May: 151,
-  get May() {
-    return this._May;
-  },
-  set May(value) {
-    this._May = value;
-  },
-  _June: 181,
-  get June() {
-    return this._June;
-  },
-  set June(value) {
-    this._June = value;
-  },
-  _July: 212,
-  get July() {
-    return this._July;
-  },
-  set July(value) {
-    this._July = value;
-  },
-  _August: 243,
-  get August() {
-    return this._August;
-  },
-  set August(value) {
-    this._August = value;
-  },
-  _September: 273,
-  get September() {
-    return this._September;
-  },
-  set September(value) {
-    this._September = value;
-  },
-  _October: 304,
-  get October() {
-    return this._October;
-  },
-  set October(value) {
-    this._October = value;
-  },
-  _November: 334,
-  get November() {
-    return this._November;
-  },
-  set November(value) {
-    this._November = value;
-  },
-  _December: 365,
-  get December() {
-    return this._December;
-  },
-  set December(value) {
-    this._December = value;
-  },
-};
+const Months = [
+  { id: 1, name: "January", count: 31 },
+  { id: 2, name: "February", count: 28 },
+  { id: 3, name: "March", count: 31 },
+  { id: 4, name: "April", count: 30 },
+  { id: 5, name: "May", count: 31 },
+  { id: 6, name: "June", count: 30 },
+  { id: 7, name: "July", count: 31 },
+  { id: 8, name: "August", count: 31 },
+  { id: 9, name: "September", count: 30 },
+  { id: 10, name: "October", count: 31 },
+  { id: 11, name: "November", count: 30 },
+  { id: 12, name: "December", count: 31 },
+];
 
-export { Zones, Months };
+export { Zones, Months, Quranen, Quranmy };

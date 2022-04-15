@@ -1,13 +1,8 @@
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-const { holyQuran: quranmy } = require("../data/quran/quran_id.json");
-const { holyQuran: quranen } = require("../data/quran/quran_en.json");
-const { prayerTime: kdh01 } = require("../data/times/kdh01.json");
-import { Zones, Months } from "./monthlib.js";
+import { Zones, Months, Quranen, Quranmy } from "./monthlib.js";
 
-class Helpers {
+class QuranHelpers {
   static getSurahName(req, res) {
-    const data = quranmy.map((item) => {
+    const data = Quran.en.map((item) => {
       const surah = { ...item };
       return surah.transliteration;
     });
@@ -20,7 +15,7 @@ class Helpers {
   }
 
   static getFullSurah(req, res) {
-    const Quran = req.params.lang == "en" ? quranen : quranmy;
+    const Quran = req.params.lang == "en" ? Quranen : Quranmy;
     const data = Quran.find((item) => item.id === parseInt(req.params.id));
     if (!data) {
       return res.status(404).json({
@@ -39,7 +34,7 @@ class Helpers {
   }
 
   static getAyatfromSurah(req, res) {
-    const Quran = req.params.lang == "en" ? quranen : quranmy;
+    const Quran = req.params.lang == "en" ? Quranen : Quranmy;
     const data = Quran.find((item) => item.id === parseInt(req.params.id));
     if (!data) {
       return res.status(404).json({
@@ -100,9 +95,21 @@ class TimeHelpers {
   }
 
   static getTimeAMonth(req, res) {
+    function getMonthName() {
+      let numberOfDays = 0;
+      const date = new Date().getMonth();
+      for (let i = 0; i < date; i++) {
+        numberOfDays += Months[i].count;
+      }
+      return numberOfDays;
+    }
+    const zone = Zones[req.params.zone];
     let timeArray = [];
-    for (let i = Months.March; i < Months.April; i++) {
-      timeArray = [...timeArray, kdh01[i]];
+    var pastCount = getMonthName();
+    var currentCount = pastCount + Months[new Date().getMonth()].count;
+    console.log(pastCount, currentCount);
+    for (let i = pastCount; i < currentCount; i++) {
+      timeArray = [...timeArray, zone.db[i]];
     }
     if (!timeArray) {
       return res.status(404).json({
@@ -115,9 +122,10 @@ class TimeHelpers {
       code: 200,
       status: "Mantap.",
       message: "Berhasil.",
+      zone: zone.name,
       data: timeArray,
     });
   }
 }
 
-export { Helpers, TimeHelpers };
+export { QuranHelpers, TimeHelpers };
