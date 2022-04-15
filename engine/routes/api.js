@@ -22,6 +22,6 @@ router.get(
 // times routes
 router.get("/waktusolat/week/:zone", cacheService, TimeHelpers.getTimeAWeek);
 router.get("/waktusolat/month/:zone", cacheService, TimeHelpers.getTimeAMonth);
-// router.get("/waktusolat/:zone/:year", cacheService, TimeHelpers.getTimeAYear);
+router.get("/waktusolat/year/:zone", cacheService, TimeHelpers.getTimeAYear);
 
 export default router;

@@ -126,6 +126,28 @@ class TimeHelpers {
       data: timeArray,
     });
   }
+
+  static getTimeAYear(req, res) {
+    const zone = Zones[req.params.zone];
+    let timeArray = [];
+    for (let i = 0; i < zone.db.length; i++) {
+      timeArray = [...timeArray, zone.db[i]];
+    }
+    if (!timeArray) {
+      return res.status(404).json({
+        code: 404,
+        status: "Not Found.",
+        message: "Time not found.",
+      });
+    }
+    return res.status(200).json({
+      code: 200,
+      status: "Mantap.",
+      message: "Berhasil.",
+      zone: zone.name,
+      timeArray,
+    });
+  }
 }
 
 export { QuranHelpers, TimeHelpers };
