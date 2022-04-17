@@ -107,7 +107,6 @@ class TimeHelpers {
     let timeArray = [];
     var pastCount = getMonthName();
     var currentCount = pastCount + Months[new Date().getMonth()].count;
-    console.log(pastCount, currentCount);
     for (let i = pastCount; i < currentCount; i++) {
       timeArray = [...timeArray, zone.db[i]];
     }

@@ -78,10 +78,10 @@ async function getTimesAndWrite(zone) {
         console.log("An error occured while writing JSON Object to File.");
         return console.log(err);
       }
-      console.log("JSON file has been saved.");
+      console.log(`${zone} time file has been saved.`);
     }
   );
-  sleep({ delay: 2000 });
+  sleep({ delay: 20000 });
 }
 
 async function sleep({ delay = 2000, throwReject = false }) {
@@ -93,4 +93,12 @@ async function sleep({ delay = 2000, throwReject = false }) {
   });
 }
 
-export { getTimesAndWrite, sleep, zones };
+function getTimes() {  
+  zones.forEach(async (zone) => {
+    await getTimesAndWrite(zone);
+  });  
+}
+
+getTimes();
+
+
