@@ -8,6 +8,7 @@ const { prayerTime: kedah03 } = require("../data/times/kdh03.json");
 const { prayerTime: kedah04 } = require("../data/times/kdh04.json");
 const { prayerTime: kedah05 } = require("../data/times/kdh05.json");
 const { prayerTime: kedah06 } = require("../data/times/kdh06.json");
+const { prayerTime: kedah07 } = require("../data/times/kdh07.json");
 const { prayerTime: melaka01 } = require("../data/times/mlk01.json");
 const { prayerTime: negeriSembilan01 } = require("../data/times/ngs01.json");
 const { prayerTime: negeriSembilan02 } = require("../data/times/ngs02.json");
@@ -68,69 +69,123 @@ const Zones = {
   kdh02: { db: kedah02, name: "KUALA MUDA, PENDANG DAN YAN" },
   kdh03: { db: kedah03, name: "PADANG TERAP DAN SIK" },
   kdh04: { db: kedah04, name: "BALING" },
-  kdh05: "KULIM DAN BANDAR BAHARU",
-  kdh06: "LANGKAWI",
-  kdh07: "GUNUNG JERAI",
-  mlk01: "SELURUH NEGERI MELAKA",
-  ngs01: "JEMPOL DAN TAMPIN",
-  ngs02: "PORT DICKSON, SEREMBAN, KUALA PILAH, JELEBU DAN REMBAU",
-  phg01: "PULAU TIOMAN",
-  phg02: "ROMPIN, PEKAN, MUADZAM SHAH DAN KUANTAN",
-  phg03: "MARAN, CHENOR, TEMERLOH, BERA, JENGKA DAN JERANTUT",
-  phg04: "BENTONG, RAUB DAN LIPIS",
-  phg05: "BUKIT TINGGI, GENTING SEMPAH, DAN JANDA BAIK",
-  phg06: "CAMERON HIGHLANDS, BUKIT FRASER DAN GENTING HIGHLANDS",
-  prk01: "TAPAH, SLIM RIVER DAN TANJUNG MALIM",
-  prk02: "IPOH, BATU GAJAH, KAMPAR, SG. SIPUT DAN KUALA KANGSAR",
-  prk03: "PENGKALAN HULU, GERIK DAN LENGGONG",
-  prk04: "TEMENGOR DAN BELUM",
-  prk05:
-    "TELUK INTAN, BAGAN DATUK, KG. GAJAH, SERI ISKANDAR, BERUAS, PARIT, LUMUT, SITIAWAN DAN PULAU PANGKOR",
-  prk06: "SELAMA, TAIPING, BAGAN SERAI DAN PARIT BUNTAR",
-  prk07: "BUKIT LARUT",
-  pls01: "SELURUH NEGERI PERLIS",
-  png01: "SELURUH NEGERI PULAU PINANG",
-  sgr01: "HULU SELANGOR, GOMBAK, PETALING/SHAH ALAM, HULU LANGAT DAN SEPANG",
-  sgr02: "SABAK BERNAM DAN KUALA SELANGOR",
-  sgr03: "KLANG DAN KUALA LANGAT",
-  trg01: "KUALA TERENGGANU, MARANG DAN KUALA NERUS",
-  trg02: "BESUT DAN SETIU",
-  trg03: "HULU TERENGGANU",
-  trg04: "DUNGUN DAN KEMAMAN",
-  jhr01: "PULAU AUR DAN PULAU PEMANGGIL",
-  jhr02: "KOTA TINGGI, MERSING DAN JOHOR BAHRU",
-  jhr03: "KLUANG DAN PONTIAN",
-  jhr04: "BATU PAHAT, MUAR, SEGAMAT DAN GEMAS JOHOR",
-  ktn01:
-    "JAJAHAN KOTA BHARU, BACHOK, PASIR PUTEH, TUMPAT , PASIR MAS, TANAH MERAH, MACHANG KUALA KRAI DAN GUA MUSANG (DAERAH CHIKU)",
-  ktn03:
-    "JAJAHAN JELI, GUA MUSANG (DAERAH GALAS DAN BERTAM) DAN JAJAHAN KECIL LOJING",
-  sbh01:
-    "BAHAGIAN SANDAKAN (TIMUR) BANDAR SANDAKAN, BUKIT GARAM, SEMAWANG, TEMANGGONG DAN TAMBISAN",
-  sbh02:
-    "BAHAGIAN SANDAKAN (BARAT) PINANGAH, TERUSAN, BELURAN, KUAMUT DAN TELUPID",
-  sbh03:
-    "BAHAGIAN TAWAU (TIMUR) LAHAD DATU, KUNAK, SILABUKAN, TUNGKU, SAHABAT, DAN SEMPORNA",
-  sbh04: "BAHAGIAN TAWAU (BARAT), BANDAR TAWAU, BALONG, MEROTAI DAN KALABAKAN",
-  sbh05: "BAHAGIAN KUDAT KUDAT, KOTA MARUDU, PITAS DAN PULAU BANGGI",
-  sbh06: "GUNUNG KINABALU",
-  sbh07:
-    "BAHAGIAN PANTAI BARAT KOTA KINABALU, PENAMPANG, TUARAN, PAPAR, KOTA BELUD, PUTATAN DAN RANAU",
-  sbh08: "BAHAGIAN PEDALAMAN (ATAS) PENSIANGAN, KENINGAU, TAMBUNAN DAN NABAWAN",
-  sbh09:
-    "BAHAGIAN PEDALAMAN (BAWAH) SIPITANG, MEMBAKUT, BEAUFORT, KUALA PENYU, WESTON, TENOM DAN LONG PA SIA",
-  swk01: "LIMBANG, SUNDAR, TRUSAN DAN LAWAS",
-  swk02: "NIAH, SIBUTI, MIRI, BEKENU DAN MARUDI",
-  swk03: "TATAU, SUAI, BELAGA, PANDAN, SEBAUH, BINTULU",
-  swk04: "IGAN, KANOWIT, SIBU, DALAT, OYA, BALINGIAN, MUKAH, KAPIT DAN SONG",
-  swk05: "BELAWAI, MATU, DARO, SARIKEI, JULAU, BINTANGOR DAN RAJANG",
-  swk06:
-    "KABONG, LINGGA, SRI AMAN, ENGKELILI, BETONG, SPAOH, PUSA, SARATOK, ROBAN, DEBAK DAN LUBOK ANTU",
-  swk07: "SAMARAHAN, SIMUNJAN, SERIAN, SEBUYAU DAN MELUDAM",
-  swk08: "KUCHING, BAU, LUNDU DAN SEMATAN",
-  swk09: "KAMPUNG PATARIKAN",
-  wly01: "KUALA LUMPUR DAN PUTRAJAYA",
-  wly02: "LABUAN",
+  kdh05: { db: kedah05, name: "KULIM DAN BANDAR BAHARU" },
+  kdh06: { db: kedah06, name: "LANGKAWI" },
+  kdh07: { db: kedah07, name: "GUNUNG JERAI" },
+  mlk01: { db: melaka01, name: "SELURUH NEGERI MELAKA" },
+  ngs01: { db: negeriSembilan01, name: "JEMPOL DAN TAMPIN" },
+  ngs02: {
+    db: negeriSembilan02,
+    name: "PORT DICKSON, SEREMBAN, KUALA PILAH, JELEBU DAN REMBAU",
+  },
+  phg01: { db: pahang01, name: "PULAU TIOMAN" },
+  phg02: { db: pahang02, name: "ROMPIN, PEKAN, MUADZAM SHAH DAN KUANTAN" },
+  phg03: {
+    db: pahang03,
+    name: "MARAN, CHENOR, TEMERLOH, BERA, JENGKA DAN JERANTUT",
+  },
+  phg04: { db: pahang04, name: "BENTONG, RAUB DAN LIPIS" },
+  phg05: { db: pahang05, name: "BUKIT TINGGI, GENTING SEMPAH, DAN JANDA BAIK" },
+  phg06: {
+    db: pahang06,
+    name: "CAMERON HIGHLANDS, BUKIT FRASER DAN GENTING HIGHLANDS",
+  },
+  prk01: { db: perak01, name: "TAPAH, SLIM RIVER DAN TANJUNG MALIM" },
+  prk02: {
+    db: perak02,
+    name: "IPOH, BATU GAJAH, KAMPAR, SG. SIPUT DAN KUALA KANGSAR",
+  },
+  prk03: { db: perak03, name: "PENGKALAN HULU, GERIK DAN LENGGONG" },
+  prk04: { db: perak04, name: "TEMENGOR DAN BELUM" },
+  prk05: {
+    db: perak05,
+    name: "TELUK INTAN, BAGAN DATUK, KG. GAJAH, SERI ISKANDAR, BERUAS, PARIT, LUMUT, SITIAWAN DAN PULAU PANGKOR",
+  },
+  prk06: { db: perak06, name: "SELAMA, TAIPING, BAGAN SERAI DAN PARIT BUNTAR" },
+  prk07: { db: perak07, name: "BUKIT LARUT" },
+  pls01: { db: perlis01, name: "SELURUH NEGERI PERLIS" },
+  png01: { db: penang01, name: "SELURUH NEGERI PULAU PINANG" },
+  sgr01: {
+    db: selangor01,
+    name: "HULU SELANGOR, GOMBAK, PETALING/SHAH ALAM, HULU LANGAT DAN SEPANG",
+  },
+  sgr02: { db: selangor02, name: "SABAK BERNAM DAN KUALA SELANGOR" },
+  sgr03: { db: selangor03, name: "KLANG DAN KUALA LANGAT" },
+  trg01: { db: terengganu01, name: "KUALA TERENGGANU, MARANG DAN KUALA NERUS" },
+  trg02: { db: terengganu02, name: "BESUT DAN SETIU" },
+  trg03: { db: terengganu03, name: "HULU TERENGGANU" },
+  trg04: { db: terengganu04, name: "DUNGUN DAN KEMAMAN" },
+  jhr01: { db: johor01, name: "PULAU AUR DAN PULAU PEMANGGIL" },
+  jhr02: { db: johor02, name: "KOTA TINGGI, MERSING DAN JOHOR BAHRU" },
+  jhr03: { db: johor03, name: "KLUANG DAN PONTIAN" },
+  jhr04: { db: johor04, name: "BATU PAHAT, MUAR, SEGAMAT DAN GEMAS JOHOR" },
+  ktn01: {
+    db: kelantan01,
+    name: "JAJAHAN KOTA BHARU, BACHOK, PASIR PUTEH, TUMPAT , PASIR MAS, TANAH MERAH, MACHANG KUALA KRAI DAN GUA MUSANG (DAERAH CHIKU)",
+  },
+  ktn03: {
+    db: kelantan02,
+    name: "JAJAHAN JELI, GUA MUSANG (DAERAH GALAS DAN BERTAM) DAN JAJAHAN KECIL LOJING",
+  },
+  sbh01: {
+    db: sabah01,
+    name: "BAHAGIAN SANDAKAN (TIMUR) BANDAR SANDAKAN, BUKIT GARAM, SEMAWANG, TEMANGGONG DAN TAMBISAN",
+  },
+  sbh02: {
+    db: sabah02,
+    name: "BAHAGIAN SANDAKAN (BARAT) PINANGAH, TERUSAN, BELURAN, KUAMUT DAN TELUPID",
+  },
+  sbh03: {
+    db: sabah03,
+    name: "BAHAGIAN TAWAU (TIMUR) LAHAD DATU, KUNAK, SILABUKAN, TUNGKU, SAHABAT, DAN SEMPORNA",
+  },
+  sbh04: {
+    db: sabah04,
+    name: "BAHAGIAN TAWAU (BARAT), BANDAR TAWAU, BALONG, MEROTAI DAN KALABAKAN",
+  },
+  sbh05: {
+    db: sabah05,
+    name: "BAHAGIAN KUDAT KUDAT, KOTA MARUDU, PITAS DAN PULAU BANGGI",
+  },
+  sbh06: { db: sabah06, name: "GUNUNG KINABALU" },
+  sbh07: {
+    db: sabah07,
+    name: "BAHAGIAN PANTAI BARAT KOTA KINABALU, PENAMPANG, TUARAN, PAPAR, KOTA BELUD, PUTATAN DAN RANAU",
+  },
+  sbh08: {
+    db: sabah08,
+    name: "BAHAGIAN PEDALAMAN (ATAS) PENSIANGAN, KENINGAU, TAMBUNAN DAN NABAWAN",
+  },
+  sbh09: {
+    db: sabah09,
+    name: "BAHAGIAN PEDALAMAN (BAWAH) SIPITANG, MEMBAKUT, BEAUFORT, KUALA PENYU, WESTON, TENOM DAN LONG PA SIA",
+  },
+  swk01: { db: sarawak01, name: "LIMBANG, SUNDAR, TRUSAN DAN LAWAS" },
+  swk02: { db: sarawak02, name: "NIAH, SIBUTI, MIRI, BEKENU DAN MARUDI" },
+  swk03: {
+    db: sarawak03,
+    name: "TATAU, SUAI, BELAGA, PANDAN, SEBAUH, BINTULU",
+  },
+  swk04: {
+    db: sarawak04,
+    name: "IGAN, KANOWIT, SIBU, DALAT, OYA, BALINGIAN, MUKAH, KAPIT DAN SONG",
+  },
+  swk05: {
+    db: sarawak05,
+    name: "BELAWAI, MATU, DARO, SARIKEI, JULAU, BINTANGOR DAN RAJANG",
+  },
+  swk06: {
+    db: sarawak06,
+    name: "KABONG, LINGGA, SRI AMAN, ENGKELILI, BETONG, SPAOH, PUSA, SARATOK, ROBAN, DEBAK DAN LUBOK ANTU",
+  },
+  swk07: {
+    db: sarawak07,
+    name: "SAMARAHAN, SIMUNJAN, SERIAN, SEBUYAU DAN MELUDAM",
+  },
+  swk08: { db: sarawak08, name: "KUCHING, BAU, LUNDU DAN SEMATAN" },
+  swk09: { db: sarawak09, name: "KAMPUNG PATARIKAN" },
+  wly01: { db: wilayah01, name: "KUALA LUMPUR DAN PUTRAJAYA" },
+  wly02: { db: wilayah02, name: "LABUAN" },
 };
 
 const Months = [

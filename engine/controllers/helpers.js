@@ -2,7 +2,7 @@ import { Zones, Months, Quranen, Quranmy } from "./library.js";
 
 class QuranHelpers {
   static getSurahName(req, res) {
-    const data = Quran.en.map((item) => {
+    const data = Quranen.map((item) => {
       const surah = { ...item };
       return surah.transliteration;
     });
