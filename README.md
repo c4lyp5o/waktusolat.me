@@ -1,7 +1,7 @@
 # API for waktusolat.me
 I will update this later.
 
-Usage:
+# Usage:
 
 ## Quran
 /surah : lists all surah in Al Quran\
