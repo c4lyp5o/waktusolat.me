@@ -1,21 +1,21 @@
-###API for waktusolat.me
+### API for waktusolat.me
 I will update this later.
 
 Usage:
 
-##Quran
+## Quran
 /surah : lists all surah in Al Quran
 /surah/en/(surah number) : displays surah in english language
 /surah/my/(surah number) : displays surah in malay language
 /surah/en/(surah number)/(ayat number) : displays ayat in surah in english language
 /surah/my/(surah number)/(ayat number) : displays ayat in surah in malay language
 
-##Prayer Times
+## Prayer Times
 /waktusolat/week/(zone) : displays prayer time for the week for the zone
 /waktusolat/month/(zone) : displays prayer time for the month for the zone
 /waktusolat/year/(zone) : displays prayer time for the year for the zone
 
-##The Zones
+## The Zones
 1. Kedah
 KDH01 = KOTA SETAR, POKOK SENA DAN KUBANG PASU
 KDH02 = KUALA MUDA, PENDANG DAN YAN
