@@ -19,6 +19,21 @@ var corsOptions = {
   optionsSuccessStatus: 200,
 };
 
+// init app
+import express, { json, urlencoded } from "express";
+import RateLimit from "express-rate-limit";
+import cors from "cors";
+import Route from "./routes/api.js";
+
+// function getTimes() {
+//   zones.forEach(async (element) => {
+//     console.log(`running cache on ${element}`);
+//     await getTimesAndWrite(element);
+//   });
+// }
+
+// getTimes();
+
 // enable middlewares
 app.use(limiter);
 app.use(cors());
