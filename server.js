@@ -15,7 +15,7 @@ function normalizePort(val) {
   return false;
 }
 
-const port = normalizePort(8002);
+const port = normalizePort(8001);
 
 function errorHandler(error) {
   if (error.syscall !== "listen") {
