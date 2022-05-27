@@ -93,12 +93,10 @@ async function sleep({ delay = 2000, throwReject = false }) {
   });
 }
 
-function getTimes() {  
+function getTimes() {
   zones.forEach(async (zone) => {
     await getTimesAndWrite(zone);
-  });  
+  });
 }
 
 getTimes();
-
-

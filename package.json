@@ -6,7 +6,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./engine/data/getter.js && node server.js"
+    "start": "node ./engine/data/getter.js && node server.js",
+    "go": "node server.js"
   },
   "repository": {
     "type": "git",
