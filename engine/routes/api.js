@@ -8,18 +8,18 @@ import { cacheService } from '../middlewares/cache.js';
 router.get('/', (req, res) => {
   res.write('waktusolat.me API for everything.\nReach us c4lyp5o @ github\n\n');
   res.write(
-    'Usage:\n/quran : lists all surah\n/quran/(language)/(surah number) : Get surah with specific language\n'
+    'Usage:\n\n/quran : lists all surah\n/quran/(language)/(surah number) : Get surah with specific language\n'
   );
   res.write(
     '/quran/(language)/(surah number)/(verse number) : Get specific verse of surah with specific language\n'
   );
-  res.write('/quran/random : Get random verse of surah with both lamnguage\n');
-  res.write('Available languages:\nmy : malay\nen : english\n');
+  res.write('/quran/random : Get random verse of surah with both language\n');
+  res.write('\nAvailable languages:\nmy : malay\nen : english\n');
   res.write(
-    '\n\nwaktusolat/(period)/(location) : Get prayer times for specific location\n'
+    '\n/waktusolat/(period)/(location) : Get prayer times for specific location\n'
   );
-  res.write('Available periods:\nweek\nmonth\nyear\n');
-  res.write('Available locations: Please refer to github page.\n');
+  res.write('\nAvailable periods:\ntoday\nweek\nmonth\nyear\n');
+  res.write('\nAvailable locations: \nPlease refer to github page.\n');
   res.status(200).end();
 });
 

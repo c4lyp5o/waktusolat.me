@@ -355,45 +355,45 @@ class TimeHelpers {
       const ishaTime = getDateFromHours(times[0].isha);
       const tomorrowsFajrTime = await getDateFromHoursAndAdd1Day(times[1].fajr);
       let timeDifference = {};
-      timeDifference.timeNow = timeNow.toLocaleTimeString();
       if (timeNow >= fajrTime) {
         timeDifference.status = 'fajr has started';
       } else {
-        timeDifference.fajr = fajrTime - timeNow;
+        timeDifference.timeToFajr = fajrTime - timeNow;
       }
       if (timeNow >= sunriseTime) {
         timeDifference.status = 'sunrise has started';
       } else {
-        timeDifference.sunrise = sunriseTime - timeNow;
+        timeDifference.timeToSunrise = sunriseTime - timeNow;
       }
       if (timeNow >= dhuhrTime) {
         timeDifference.status = 'dhuhr has started';
       } else {
-        timeDifference.dhuhr = dhuhrTime - timeNow;
+        timeDifference.timeToDhuhr = dhuhrTime - timeNow;
       }
       if (timeNow >= asrTime) {
         timeDifference.status = 'asr has started';
       } else {
-        timeDifference.asr = asrTime - timeNow;
+        timeDifference.timeToAsr = asrTime - timeNow;
       }
       if (timeNow >= maghribTime) {
         timeDifference.status = 'maghrib has started';
       } else {
-        timeDifference.maghrib = maghribTime - timeNow;
+        timeDifference.timeToMaghrib = maghribTime - timeNow;
       }
       if (timeNow >= ishaTime) {
-        timeDifference.status = 'isha has started';
         if (fajrTime - timeNow > 0) {
-          timeDifference.fajr = fajrTime - timeNow;
+          timeDifference.timeToFajr = fajrTime - timeNow;
+          timeDifference.status = 'time for tahajjud';
         } else {
-          timeDifference.tomorrowsFajrTime = tomorrowsFajrTime - timeNow;
+          timeDifference.timeToTomorrowsFajrTime = tomorrowsFajrTime - timeNow;
+          timeDifference.status = 'isha has started';
         }
       } else {
-        timeDifference.status = 'time for tahajjud';
+        timeDifference.timeToIsha = ishaTime - timeNow;
       }
       timeDifference = {
-        timeNowStandardForm: timeNow,
-        fajrTimeStandardForm: fajrTime,
+        // timeNowStandardForm: timeNow,
+        // fajrTimeStandardForm: fajrTime,
         ...timeDifference,
       };
       console.log(timeDifference);
@@ -405,17 +405,38 @@ class TimeHelpers {
       switch (timeDifference.status) {
         case 'fajr has started':
           timeReminder.nextSolah = await convertMstoHours(
-            timeDifference.sunrise
+            timeDifference.timeToSunrise
           );
-          timeReminder.nextSolah = { ...timeReminder.nextSolah, name: 'dhuhr' };
+          timeReminder.nextSolah = {
+            ...timeReminder.nextSolah,
+            name: 'isyraq',
+          };
+          break;
+        case 'sunrise has started':
+          timeReminder.nextSolah = await convertMstoHours(
+            timeDifference.timeToDhuhr
+          );
+          if (new Date().getDay() === 5) {
+            timeReminder.nextSolah = {
+              ...timeReminder.nextSolah,
+              name: 'jumaat',
+            };
+          } else {
+            timeReminder.nextSolah = {
+              ...timeReminder.nextSolah,
+              name: 'dhuhr',
+            };
+          }
           break;
         case 'dhuhr has started':
-          timeReminder.nextSolah = await convertMstoHours(timeDifference.asr);
+          timeReminder.nextSolah = await convertMstoHours(
+            timeDifference.timeToAsr
+          );
           timeReminder.nextSolah = { ...timeReminder.nextSolah, name: 'asr' };
           break;
         case 'asr has started':
           timeReminder.nextSolah = await convertMstoHours(
-            timeDifference.maghrib
+            timeDifference.timeToMaghrib
           );
           timeReminder.nextSolah = {
             ...timeReminder.nextSolah,
@@ -423,34 +444,38 @@ class TimeHelpers {
           };
           break;
         case 'maghrib has started':
-          timeReminder.nextSolah = await convertMstoHours(timeDifference.isha);
+          timeReminder.nextSolah = await convertMstoHours(
+            timeDifference.timeToIsha
+          );
           timeReminder.nextSolah = { ...timeReminder.nextSolah, name: 'isha' };
           break;
         case 'isha has started':
-          if (
-            timeDifference.fajrTimeStandardForm -
-              timeDifference.timeNowStandardForm >
-            0
-          ) {
-            timeReminder.nextSolah = await convertMstoHours(
-              timeDifference.fajr
-            );
-            timeReminder.nextSolah = {
-              ...timeReminder.nextSolah,
-              name: 'fajr',
-            };
-          } else {
-            timeReminder.nextSolah = await convertMstoHours(
-              timeDifference.tomorrowsFajrTime
-            );
-            timeReminder.nextSolah = {
-              ...timeReminder.nextSolah,
-              name: 'fajr',
-            };
-          }
+          // if (
+          //   timeDifference.fajrTimeStandardForm -
+          //     timeDifference.timeNowStandardForm >
+          //   0
+          // ) {
+          //   timeReminder.nextSolah = await convertMstoHours(
+          //     timeDifference.fajr
+          //   );
+          //   timeReminder.nextSolah = {
+          //     ...timeReminder.nextSolah,
+          //     name: 'fajr',
+          //   };
+          // } else {
+          timeReminder.nextSolah = await convertMstoHours(
+            timeDifference.timeToTomorrowsFajrTime
+          );
+          timeReminder.nextSolah = {
+            ...timeReminder.nextSolah,
+            name: 'fajr',
+          };
+          // }
           break;
         case 'time for tahajjud':
-          timeReminder.nextSolah = await convertMstoHours(timeDifference.fajr);
+          timeReminder.nextSolah = await convertMstoHours(
+            timeDifference.timeToFajr
+          );
           timeReminder.nextSolah = { ...timeReminder.nextSolah, name: 'fajr' };
           break;
         default:
@@ -489,6 +514,7 @@ class TimeHelpers {
                 day: fixedDay + ' / ' + zone.db[dayNumber].day,
                 date: fixedDate.withNumber + ' / ' + fixedDate.withName,
                 hijri: fixedHijri.withMonthCount + ' / ' + fixedHijri.withName,
+                imsak: zone.db[dayNumber].imsak,
                 fajr: zone.db[dayNumber].fajr,
                 syuruk: zone.db[dayNumber].syuruk,
                 dhuhr: zone.db[dayNumber].dhuhr,
@@ -512,6 +538,7 @@ class TimeHelpers {
                 day: fixedDay + ' / ' + zone.db[dayNumber].day,
                 date: fixedDate.withNumber + ' / ' + fixedDate.withName,
                 hijri: fixedHijri.withMonthCount + ' / ' + fixedHijri.withName,
+                imsak: zone.db[dayNumber].imsak,
                 fajr: zone.db[dayNumber].fajr,
                 syuruk: zone.db[dayNumber].syuruk,
                 dhuhr: zone.db[dayNumber].dhuhr,
@@ -537,6 +564,7 @@ class TimeHelpers {
                 day: fixedDay + ' / ' + zone.db[j].day,
                 date: fixedDate.withNumber + ' / ' + fixedDate.withName,
                 hijri: fixedHijri.withMonthCount + ' / ' + fixedHijri.withName,
+                imsak: zone.db[j].imsak,
                 fajr: zone.db[j].fajr,
                 syuruk: zone.db[j].syuruk,
                 dhuhr: zone.db[j].dhuhr,
@@ -558,6 +586,7 @@ class TimeHelpers {
                 day: fixedDay + ' / ' + zone.db[j].day,
                 date: fixedDate.withNumber + ' / ' + fixedDate.withName,
                 hijri: fixedHijri.withMonthCount + ' / ' + fixedHijri.withName,
+                imsak: zone.db[j].imsak,
                 fajr: zone.db[j].fajr,
                 syuruk: zone.db[j].syuruk,
                 dhuhr: zone.db[j].dhuhr,

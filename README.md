@@ -24,23 +24,27 @@ docker build -t waktusolat .
 docker run -p 8080:8002 -d waktusolat
 ```
 
+Then point your browser to localhost:8080
+
+# API
+
 ## Quran
 
-/quran : lists all surah in Al Quran\
-/quran/en/(surah number) : displays surah in english language\
-/quran/my/(surah number) : displays surah in malay language\
-/quran/en/(surah number)/(ayat number) : displays ayat in surah in english language\
-/quran/my/(surah number)/(ayat number) : displays ayat in surah in malay language\
-/quran/random : displays random ayat in english and malay language\
+GET /quran : lists all surah in Al Quran\
+GET /quran/en/(surah number) : displays surah in english language\
+GET /quran/my/(surah number) : displays surah in malay language\
+GET /quran/en/(surah number)/(ayat number) : displays ayat in surah in english language\
+GET /quran/my/(surah number)/(ayat number) : displays ayat in surah in malay language\
+GET /quran/random : displays random ayat in english and malay language
 
 ## Prayer Times
 
-/waktusolat/today/(zone) : displays prayer time for the week for the zone\
-/waktusolat/week/(zone) : displays prayer time for the week for the zone\
-/waktusolat/month/(zone) : displays prayer time for the month for the zone\
-/waktusolat/year/(zone) : displays prayer time for the year for the zone\
+GET /waktusolat/today/(zone) : displays prayer time for the week for the zone\
+GET /waktusolat/week/(zone) : displays prayer time for the week for the zone\
+GET /waktusolat/month/(zone) : displays prayer time for the month for the zone\
+GET /waktusolat/year/(zone) : displays prayer time for the year for the zone
 
-## The Zones
+# The Zones
 
 1. Kedah\
    KDH01 = KOTA SETAR, POKOK SENA DAN KUBANG PASU\
@@ -126,4 +130,4 @@ docker run -p 8080:8002 -d waktusolat
 
 14. Wilayah Persekutuan\
     WLY01 = KUALA LUMPUR DAN PUTRAJAYA\
-    WLY02 = LABUAN\
+    WLY02 = LABUAN
