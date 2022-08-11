@@ -36,4 +36,13 @@ router.get('/quran/random', QuranHelpers.getRandomAyat);
 // times routes
 router.get('/waktusolat/:period/:zone', TimeHelpers.getTime);
 
+// fallback router
+router.all('*', (req, res) =>
+  res.status(404).send({
+    code: 404,
+    status: 'Not Found.',
+    message: `Resource "${req.url}" is not found.`,
+  })
+);
+
 export default router;

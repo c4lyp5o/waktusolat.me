@@ -1,8 +1,28 @@
 # API for waktusolat.me
 
-I will update this later.
+In the name of Allah, the gracious, the merciful.
+This is the API that waktusolat.me uses to display prayer times and quranic verses. Only serves prayer time for Malaysian districts. Currently not thinking of supporting other places.
+
+# License
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Usage:
+
+Run
+
+```bash
+npm run start
+```
+
+to start the server.
+
+Deployable to Docker:
+
+```bash
+docker build -t waktusolat .
+docker run -p 8080:8002 -d waktusolat
+```
 
 ## Quran
 
@@ -11,7 +31,7 @@ I will update this later.
 /quran/my/(surah number) : displays surah in malay language\
 /quran/en/(surah number)/(ayat number) : displays ayat in surah in english language\
 /quran/my/(surah number)/(ayat number) : displays ayat in surah in malay language\
-/quran/random
+/quran/random : displays random ayat in english and malay language\
 
 ## Prayer Times
 

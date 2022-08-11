@@ -1,8 +1,8 @@
 // init app
-import express, { json, urlencoded } from "express";
-import RateLimit from "express-rate-limit";
-import cors from "cors";
-import Route from "./routes/api.js";
+import express, { json, urlencoded } from 'express';
+import RateLimit from 'express-rate-limit';
+import cors from 'cors';
+import Route from './routes/api.js';
 
 // create express app
 const app = express();
@@ -13,33 +13,34 @@ var limiter = RateLimit({
   max: 30, // limit each IP to 10 requests per windowMs
 });
 
-// get em
-var corsOptions = {
-  origin: "*",
-  optionsSuccessStatus: 200,
-};
-
 // enable middlewares
 app.use(limiter);
 app.use(cors());
-app.use(json());
-app.use(urlencoded({ extended: true }));
-// app.use(express.static("public"));
+app.use(express.json());
+
+// set header
+app.use((_, res, next) => {
+  res.setHeader(
+    'Cache-Control',
+    'public, max-age=0, s-maxage=86400, stale-while-revalidate'
+  );
+  next();
+});
 
 // init route
-app.use("/", Route);
+app.use('/', Route);
 
 // 404 handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
   res.status(err.status || 500);
   res.send({
     code: err.status || 500,
-    status: "Not Found.",
+    status: 'Not Found.',
     message: `Resource "${req.url}" is not found.`,
     error: err.message,
   });
