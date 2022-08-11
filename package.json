@@ -1,13 +1,13 @@
 {
   "name": "waktusolat-api",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "waktusolat.me API for everything",
   "type": "module",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./engine/data/getter.js && node server.js",
-    "go": "node server.js"
+    "go": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -24,5 +24,8 @@
     "cpray": "^1.1.7",
     "express": "^4.17.3",
     "express-rate-limit": "^6.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
   }
 }

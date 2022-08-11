@@ -1,6 +1,12 @@
 # pull the Node.js Docker image
 FROM node:alpine
 
+# add timezone data
+RUN apk add --no-cache tzdata
+
+# set timezone data
+ENV TZ=Asia/Kuala_Lumpur
+
 # create the directory inside the container
 WORKDIR /usr/src/app
 
@@ -17,4 +23,4 @@ COPY . .
 EXPOSE 8002
 
 # the command that starts our app
-CMD ["node", "server.js"]
+CMD ["npm", "run", "start"]
