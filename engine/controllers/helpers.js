@@ -390,13 +390,12 @@ class TimeHelpers {
         }
       } else {
         timeDifference.timeToIsha = ishaTime - timeNow;
+        timeDifference.status = 'time for tahajjud';
       }
       timeDifference = {
-        // timeNowStandardForm: timeNow,
-        // fajrTimeStandardForm: fajrTime,
         ...timeDifference,
       };
-      console.log(timeDifference);
+      // console.log(timeDifference);
       return timeDifference;
     };
     const timeReminder = async (times) => {
@@ -450,19 +449,6 @@ class TimeHelpers {
           timeReminder.nextSolah = { ...timeReminder.nextSolah, name: 'isha' };
           break;
         case 'isha has started':
-          // if (
-          //   timeDifference.fajrTimeStandardForm -
-          //     timeDifference.timeNowStandardForm >
-          //   0
-          // ) {
-          //   timeReminder.nextSolah = await convertMstoHours(
-          //     timeDifference.fajr
-          //   );
-          //   timeReminder.nextSolah = {
-          //     ...timeReminder.nextSolah,
-          //     name: 'fajr',
-          //   };
-          // } else {
           timeReminder.nextSolah = await convertMstoHours(
             timeDifference.timeToTomorrowsFajrTime
           );
@@ -470,7 +456,6 @@ class TimeHelpers {
             ...timeReminder.nextSolah,
             name: 'fajr',
           };
-          // }
           break;
         case 'time for tahajjud':
           timeReminder.nextSolah = await convertMstoHours(
@@ -482,7 +467,7 @@ class TimeHelpers {
           timeReminder.status = 'is it judgment day?';
           break;
       }
-      console.log(timeReminder);
+      // console.log(timeReminder);
       return timeReminder;
     };
     const convertMstoHours = async (milliseconds) => {
