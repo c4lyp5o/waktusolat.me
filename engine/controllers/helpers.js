@@ -389,13 +389,18 @@ class TimeHelpers {
           timeDifference.status = 'isha has started';
         }
       } else {
+        // if (fajrTime - timeNow > 0) {
+        //   timeDifference.timeToFajr = fajrTime - timeNow;
+        //   timeDifference.status = 'time for tahajjud';
+        // } else {
+        //   timeDifference.status = 'fajr has started';
+        // }
         timeDifference.timeToIsha = ishaTime - timeNow;
-        timeDifference.status = 'time for tahajjud';
       }
       timeDifference = {
         ...timeDifference,
       };
-      // console.log(timeDifference);
+      console.log(timeDifference);
       return timeDifference;
     };
     const timeReminder = async (times) => {
@@ -467,7 +472,7 @@ class TimeHelpers {
           timeReminder.status = 'is it judgment day?';
           break;
       }
-      // console.log(timeReminder);
+      console.log(timeReminder);
       return timeReminder;
     };
     const convertMstoHours = async (milliseconds) => {
@@ -497,8 +502,8 @@ class TimeHelpers {
               ...timeArray,
               {
                 day: fixedDay + ' / ' + zone.db[dayNumber].day,
-                date: fixedDate.withNumber + ' / ' + fixedDate.withName,
                 hijri: fixedHijri.withMonthCount + ' / ' + fixedHijri.withName,
+                date: fixedDate.withNumber + ' / ' + fixedDate.withName,
                 imsak: zone.db[dayNumber].imsak,
                 fajr: zone.db[dayNumber].fajr,
                 syuruk: zone.db[dayNumber].syuruk,
@@ -521,8 +526,8 @@ class TimeHelpers {
               ...timeArray,
               {
                 day: fixedDay + ' / ' + zone.db[dayNumber].day,
-                date: fixedDate.withNumber + ' / ' + fixedDate.withName,
                 hijri: fixedHijri.withMonthCount + ' / ' + fixedHijri.withName,
+                date: fixedDate.withNumber + ' / ' + fixedDate.withName,
                 imsak: zone.db[dayNumber].imsak,
                 fajr: zone.db[dayNumber].fajr,
                 syuruk: zone.db[dayNumber].syuruk,
@@ -547,8 +552,8 @@ class TimeHelpers {
               ...timeArray,
               {
                 day: fixedDay + ' / ' + zone.db[j].day,
-                date: fixedDate.withNumber + ' / ' + fixedDate.withName,
                 hijri: fixedHijri.withMonthCount + ' / ' + fixedHijri.withName,
+                date: fixedDate.withNumber + ' / ' + fixedDate.withName,
                 imsak: zone.db[j].imsak,
                 fajr: zone.db[j].fajr,
                 syuruk: zone.db[j].syuruk,
@@ -569,8 +574,8 @@ class TimeHelpers {
               ...timeArray,
               {
                 day: fixedDay + ' / ' + zone.db[j].day,
-                date: fixedDate.withNumber + ' / ' + fixedDate.withName,
                 hijri: fixedHijri.withMonthCount + ' / ' + fixedHijri.withName,
+                date: fixedDate.withNumber + ' / ' + fixedDate.withName,
                 imsak: zone.db[j].imsak,
                 fajr: zone.db[j].fajr,
                 syuruk: zone.db[j].syuruk,
