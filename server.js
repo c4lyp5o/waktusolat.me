@@ -1,5 +1,5 @@
-import { createServer } from "http";
-import app from "./engine/start.js";
+import { createServer } from 'http';
+import app from './engine/start.js';
 
 function normalizePort(val) {
   const port = parseInt(val, 10);
@@ -15,19 +15,19 @@ function normalizePort(val) {
   return false;
 }
 
-const port = normalizePort(8001);
+const port = normalizePort(8002);
 
 function errorHandler(error) {
-  if (error.syscall !== "listen") {
+  if (error.syscall !== 'listen') {
     throw error;
   }
   const address = server.address();
-  const bind = typeof address === "string" ? "pipe " + address : "port " + port;
+  const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
   switch (error.code) {
-    case "EACCES":
+    case 'EACCES':
       console.error(`${bind} requires elevated privileges`);
       process.exit(1);
-    case "EADDRINUSE":
+    case 'EADDRINUSE':
       console.error(`${bind} is already in use`);
       process.exit(1);
     default:
@@ -37,10 +37,10 @@ function errorHandler(error) {
 
 const server = createServer(app);
 
-server.on("error", errorHandler);
-server.on("listening", () => {
+server.on('error', errorHandler);
+server.on('listening', () => {
   const address = server.address();
-  const bind = typeof address === "string" ? `pipe ${address}` : "port " + port;
+  const bind = typeof address === 'string' ? `pipe ${address}` : 'port ' + port;
   console.log(`Currently listening on ${bind}. Lessgo!`);
 });
 

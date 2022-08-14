@@ -358,36 +358,56 @@ class TimeHelpers {
       if (timeNow >= fajrTime) {
         timeDifference.status = 'fajr has started';
       } else {
-        timeDifference.timeToFajr = fajrTime - timeNow;
+        timeDifference.solatETA = {
+          ...timeDifference.solatETA,
+          timeToFajr: fajrTime - timeNow,
+        };
+        timeDifference.status = 'time for tahajjud';
       }
       if (timeNow >= sunriseTime) {
         timeDifference.status = 'sunrise has started';
       } else {
-        timeDifference.timeToSunrise = sunriseTime - timeNow;
+        timeDifference.solatETA = {
+          ...timeDifference.solatETA,
+          timeToSunrise: sunriseTime - timeNow,
+        };
       }
       if (timeNow >= dhuhrTime) {
         timeDifference.status = 'dhuhr has started';
       } else {
-        timeDifference.timeToDhuhr = dhuhrTime - timeNow;
+        timeDifference.solatETA = {
+          ...timeDifference.solatETA,
+          timeToDhuhr: dhuhrTime - timeNow,
+        };
       }
       if (timeNow >= asrTime) {
         timeDifference.status = 'asr has started';
       } else {
-        timeDifference.timeToAsr = asrTime - timeNow;
+        timeDifference.solatETA = {
+          ...timeDifference.solatETA,
+          timeToAsr: asrTime - timeNow,
+        };
       }
       if (timeNow >= maghribTime) {
         timeDifference.status = 'maghrib has started';
       } else {
-        timeDifference.timeToMaghrib = maghribTime - timeNow;
+        timeDifference.solatETA = {
+          ...timeDifference.solatETA,
+          timeToMaghrib: maghribTime - timeNow,
+        };
       }
       if (timeNow >= ishaTime) {
-        if (fajrTime - timeNow > 0) {
-          timeDifference.timeToFajr = fajrTime - timeNow;
-          timeDifference.status = 'time for tahajjud';
-        } else {
-          timeDifference.timeToTomorrowsFajrTime = tomorrowsFajrTime - timeNow;
-          timeDifference.status = 'isha has started';
-        }
+        // if (fajrTime - timeNow > 0) {
+        //   console.log('fajrTime - timeNow > 0');
+        //   timeDifference.timeToFajr = fajrTime - timeNow;
+        //   timeDifference.status = 'time for tahajjud';
+        // } else {
+        timeDifference.solatETA = {
+          ...timeDifference.solatETA,
+          timeToTomorrowsFajrTime: tomorrowsFajrTime - timeNow,
+        };
+        timeDifference.status = 'isha has started';
+        // }
       } else {
         // if (fajrTime - timeNow > 0) {
         //   timeDifference.timeToFajr = fajrTime - timeNow;
@@ -395,7 +415,10 @@ class TimeHelpers {
         // } else {
         //   timeDifference.status = 'fajr has started';
         // }
-        timeDifference.timeToIsha = ishaTime - timeNow;
+        timeDifference.solatETA = {
+          ...timeDifference.solatETA,
+          timeToIsha: ishaTime - timeNow,
+        };
       }
       timeDifference = {
         ...timeDifference,
@@ -409,7 +432,7 @@ class TimeHelpers {
       switch (timeDifference.status) {
         case 'fajr has started':
           timeReminder.nextSolah = await convertMstoHours(
-            timeDifference.timeToSunrise
+            timeDifference.solatETA.timeToSunrise
           );
           timeReminder.nextSolah = {
             ...timeReminder.nextSolah,
@@ -418,7 +441,7 @@ class TimeHelpers {
           break;
         case 'sunrise has started':
           timeReminder.nextSolah = await convertMstoHours(
-            timeDifference.timeToDhuhr
+            timeDifference.solatETA.timeToDhuhr
           );
           if (new Date().getDay() === 5) {
             timeReminder.nextSolah = {
@@ -434,13 +457,13 @@ class TimeHelpers {
           break;
         case 'dhuhr has started':
           timeReminder.nextSolah = await convertMstoHours(
-            timeDifference.timeToAsr
+            timeDifference.solatETA.timeToAsr
           );
           timeReminder.nextSolah = { ...timeReminder.nextSolah, name: 'asr' };
           break;
         case 'asr has started':
           timeReminder.nextSolah = await convertMstoHours(
-            timeDifference.timeToMaghrib
+            timeDifference.solatETA.timeToMaghrib
           );
           timeReminder.nextSolah = {
             ...timeReminder.nextSolah,
@@ -449,13 +472,13 @@ class TimeHelpers {
           break;
         case 'maghrib has started':
           timeReminder.nextSolah = await convertMstoHours(
-            timeDifference.timeToIsha
+            timeDifference.solatETA.timeToIsha
           );
           timeReminder.nextSolah = { ...timeReminder.nextSolah, name: 'isha' };
           break;
         case 'isha has started':
           timeReminder.nextSolah = await convertMstoHours(
-            timeDifference.timeToTomorrowsFajrTime
+            timeDifference.solatETA.timeToTomorrowsFajrTime
           );
           timeReminder.nextSolah = {
             ...timeReminder.nextSolah,
@@ -464,7 +487,7 @@ class TimeHelpers {
           break;
         case 'time for tahajjud':
           timeReminder.nextSolah = await convertMstoHours(
-            timeDifference.timeToFajr
+            timeDifference.solatETA.timeToFajr
           );
           timeReminder.nextSolah = { ...timeReminder.nextSolah, name: 'fajr' };
           break;
