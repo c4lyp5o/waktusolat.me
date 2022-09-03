@@ -1,14 +1,17 @@
 // init app
-import express, { json, urlencoded } from 'express';
+import express from 'express';
+import { graphqlHTTP } from 'express-graphql';
 import RateLimit from 'express-rate-limit';
 import cors from 'cors';
 import Route from './routes/api.js';
+import { WSAPIschema } from './graphql/schema/index.js';
+import { WSAPIresolvers } from './graphql/resolver/index.js';
 
 // create express app
 const app = express();
 
 // set up rate limiter: maximum of five requests per minute
-var limiter = RateLimit({
+const limiter = RateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
   max: 30, // limit each IP to 10 requests per windowMs
 });
@@ -26,6 +29,16 @@ app.use((_, res, next) => {
   );
   next();
 });
+
+// GraphQL route
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: WSAPIschema,
+    rootValue: WSAPIresolvers,
+    graphiql: true,
+  })
+);
 
 // init route
 app.use('/', Route);
