@@ -1,7 +1,11 @@
 // calling all things
 import { Router } from 'express';
 const router = Router();
-import { QuranHelpers, TimeHelpers } from '../controllers/helpers.js';
+import {
+  QuranHelpers,
+  HadithsHelpers,
+  TimeHelpers,
+} from '../controllers/helpers.js';
 import { cacheService } from '../middlewares/cache.js';
 
 // init routes
@@ -15,6 +19,8 @@ router.get('/', (req, res) => {
   );
   res.write('/quran/random : Get random verse of surah with both language\n');
   res.write('\nAvailable languages:\nmy : malay\nen : english\n');
+  res.write('\n/hadis/(book) : Get hadith from specific book\n');
+  res.write('\nAvailable books:\nriwayat : riwayat\n');
   res.write(
     '\n/waktusolat/(period)/(location) : Get prayer times for specific location\n'
   );
@@ -32,6 +38,10 @@ router.get(
   QuranHelpers.getAyatfromSurah
 );
 router.get('/quran/random', QuranHelpers.getRandomAyat);
+
+// hadith routes
+router.get('/hadis', HadithsHelpers.getHadithBook);
+router.get('/hadis/:book', HadithsHelpers.getHadith);
 
 // times routes
 router.get('/waktusolat/:period/:zone', TimeHelpers.getTime);

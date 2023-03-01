@@ -1,6 +1,17 @@
-import { Zones, Months, Quranen, Quranmy } from './library.js';
+import {
+  Zones,
+  Months,
+  Quranen,
+  Quranmy,
+  BukhariBook,
+  MuslimBook,
+  AbuDaudBook,
+  NasaiBook,
+  TirmiziBook,
+  IbnuMajahBook,
+} from './library.js';
 
-//
+// functions to use
 const getDateFromHours = (time) => {
   time = time.split(':');
   let now = new Date();
@@ -515,7 +526,6 @@ class QuranHelpers {
       data,
     });
   }
-
   static getFullSurah(req, res) {
     const { lang, id } = req.params;
     if (lang !== 'en' && lang !== 'my') {
@@ -540,7 +550,6 @@ class QuranHelpers {
       data: surah,
     });
   }
-
   static getAyatfromSurah(req, res) {
     const { lang, id, ayat } = req.params;
     if (lang !== 'en' && lang !== 'my') {
@@ -572,7 +581,6 @@ class QuranHelpers {
       data,
     });
   }
-
   static getRandomAyat(req, res) {
     let data = {};
     const eng = Quranen;
@@ -603,6 +611,53 @@ class QuranHelpers {
       });
     }
     return res.status(200).json({ data });
+  }
+}
+class HadithsHelpers {
+  static getHadithBook(req, res) {
+    res
+      .status(200)
+      .json({ msg: 'bukhari, muslim, abudaud, nasai, tirmizi, ibnumajah' });
+  }
+  static getHadith(req, res) {
+    const { book } = req.params;
+    let hadis, one, random;
+    switch (book) {
+      case 'bukhari':
+        random = Math.floor(Math.random() * BukhariBook.length);
+        one = BukhariBook[random];
+        hadis = one.hadis;
+        break;
+      case 'muslim':
+        random = Math.floor(Math.random() * MuslimBook.length);
+        one = MuslimBook[random];
+        hadis = one.hadis;
+        break;
+      case 'abudaud':
+        random = Math.floor(Math.random() * AbuDaudBook.length);
+        one = AbuDaudBook[random];
+        hadis = one.hadis;
+        break;
+      case 'nasai':
+        random = Math.floor(Math.random() * NasaiBook.length);
+        one = NasaiBook[random];
+        hadis = one.hadis;
+        break;
+      case 'tirmizi':
+        random = Math.floor(Math.random() * TirmiziBook.length);
+        one = TirmiziBook[random];
+        hadis = one.hadis;
+        break;
+      case 'ibnumajah':
+        random = Math.floor(Math.random() * IbnMajahBook.length);
+        one = IbnuMajahBook[random];
+        hadis = one.hadis;
+        break;
+      default:
+        data = 'No Hadith found.';
+        break;
+    }
+    return res.status(200).json({ hadis });
   }
 }
 class TimeHelpers {
@@ -654,4 +709,11 @@ class TimeHelpers {
   }
 }
 
-export { QuranHelpers, TimeHelpers, timeCruncher, timeReminder, getTimeNow };
+export {
+  QuranHelpers,
+  HadithsHelpers,
+  TimeHelpers,
+  timeCruncher,
+  timeReminder,
+  getTimeNow,
+};

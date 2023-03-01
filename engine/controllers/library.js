@@ -2,6 +2,12 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { holyQuran: quranmy } = require('../data/quran/quran_id.json');
 const { holyQuran: quranen } = require('../data/quran/quran_en.json');
+const bukhari = require('../data/hadith/sahih-bukhari.json');
+const muslim = require('../data/hadith/sahih-muslim.json');
+const abu_daud = require('../data/hadith/sunan-abu-daud.json');
+const nasai = require('../data/hadith/sunan-al-nasai.json');
+const tirmizi = require('../data/hadith/sunan-al-tirmizi.json');
+const ibnu_majah = require('../data/hadith/sunan-ibnu-majah.json');
 const { prayerTime: kedah01 } = require('../data/times/kdh01.json');
 const { prayerTime: kedah02 } = require('../data/times/kdh02.json');
 const { prayerTime: kedah03 } = require('../data/times/kdh03.json');
@@ -63,6 +69,12 @@ const { prayerTime: wilayah02 } = require('../data/times/wly02.json');
 
 const Quranen = quranen;
 const Quranmy = quranmy;
+const BukhariBook = bukhari;
+const MuslimBook = muslim;
+const AbuDaudBook = abu_daud;
+const NasaiBook = nasai;
+const TirmiziBook = tirmizi;
+const IbnuMajahBook = ibnu_majah;
 
 const Zones = {
   kdh01: {
@@ -327,4 +339,15 @@ const Months = [
   { id: 12, name: 'December', count: 31 },
 ];
 
-export { Zones, Months, Quranen, Quranmy };
+export {
+  Zones,
+  Months,
+  Quranen,
+  Quranmy,
+  BukhariBook,
+  MuslimBook,
+  AbuDaudBook,
+  NasaiBook,
+  TirmiziBook,
+  IbnuMajahBook,
+};

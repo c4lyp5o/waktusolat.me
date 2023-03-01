@@ -6,6 +6,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "node server.js",
     "start": "node ./engine/data/getter.js && node server.js",
     "go": "nodemon server.js"
   },
