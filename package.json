@@ -6,9 +6,10 @@
   "main": "server.js",
   "scripts": {
     "get-times": "node ./engine/data/getter.js",
-    "start": "npm run get-times && npm run server",
     "dev": "nodemon server.js",
-    "prestart": "npm install"
+    "server": "node server.js",
+    "prestart": "npm install",
+    "start": "npm run get-times && npm run server"
   },
   "repository": {
     "type": "git",
