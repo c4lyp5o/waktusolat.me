@@ -1,14 +1,14 @@
 {
   "name": "waktusolat-api",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "waktusolat.me API for everything",
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "node server.js",
-    "start": "node ./engine/data/getter.js && node server.js",
-    "go": "nodemon server.js"
+    "get-times": "node ./engine/data/getter.js",
+    "start": "npm run get-times && npm run server",
+    "dev": "nodemon server.js",
+    "prestart": "npm install"
   },
   "repository": {
     "type": "git",
