@@ -18,19 +18,27 @@ const getDateFromHours = (time) => {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate(), ...time);
 };
 const getDateFromHoursAndAdd1Day = async (time) => {
-  time = time.split(':');
-  let tomorrow = new Date(Date.now() + 3600 * 1000 * 24);
-  return new Date(
-    tomorrow.getFullYear(),
-    tomorrow.getMonth(),
-    tomorrow.getDate(),
-    ...time
-  );
+  try {
+    const [hours, minutes] = time.split(':');
+    const tomorrow = new Date(Date.now() + 3600 * 1000 * 24);
+    const nextDayDate = new Date(
+      tomorrow.getFullYear(),
+      tomorrow.getMonth(),
+      tomorrow.getDate(),
+      hours,
+      minutes
+    );
+    return nextDayDate;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 };
 const getMonthName = () => {
   let numberOfDays = 0;
-  const date = new Date().getMonth();
-  for (let i = 0; i < date; i++) {
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  for (let i = 0; i < currentMonth; i++) {
     numberOfDays += Months[i].count;
   }
   return numberOfDays;
@@ -44,25 +52,21 @@ const getDayNumberInYear = () => {
 };
 const getTimeNow = () => {
   const today = new Date();
-  const stringDate = today.toLocaleDateString('en-GB');
-  var day = stringDate.substring(0, 2);
-  var month = stringDate.substring(3, 5);
-  if (month.includes('0', 0)) {
-    month = month.substring(1, 2);
-  }
-  var year = stringDate.substring(6, 11);
-  var fixedDate = day + '/' + month + '/' + year;
+  const day = today.getDate().toString().padStart(2, '0');
+  const month = (today.getMonth() + 1).toString().padStart(2, '0');
+  const year = today.getFullYear().toString();
+  const fixedDate = `${day}/${month}/${year}`;
   const dateToday = {
     numberedDate: fixedDate,
-    withMonthName: intepretNormalChristDate(today.toLocaleDateString('en-GB')),
+    withMonthName: interpretNormalChristDate(today.toLocaleDateString('en-GB')),
   };
   const timeNow = today.toLocaleTimeString();
   return {
-    date: dateToday.numberedDate + ' / ' + dateToday.withMonthName,
+    date: `${dateToday.numberedDate} / ${dateToday.withMonthName}`,
     time: timeNow,
   };
 };
-const intepretHijriMonth = (month) => {
+const interpretHijriMonth = (month) => {
   switch (month) {
     case '1':
       return 'Muharram';
@@ -92,7 +96,7 @@ const intepretHijriMonth = (month) => {
       return 'Error';
   }
 };
-const intepretChristMonth = (month) => {
+const interpretChristMonth = (month) => {
   switch (month) {
     case 'Jan':
       return 'Januari';
@@ -122,7 +126,7 @@ const intepretChristMonth = (month) => {
       return 'Error';
   }
 };
-const invertedIntepretChristMonth = (month) => {
+const invertedInterpretChristMonth = (month) => {
   switch (month) {
     case 'Jan':
       return '1';
@@ -152,7 +156,7 @@ const invertedIntepretChristMonth = (month) => {
       return 'Error';
   }
 };
-const intepretNumberedChristMonth = (month) => {
+const interpretNumberedChristMonth = (month) => {
   switch (month) {
     case '01':
       return 'Januari';
@@ -182,7 +186,7 @@ const intepretNumberedChristMonth = (month) => {
       return 'Error';
   }
 };
-const intepretDay = (day) => {
+const interpretDay = (day) => {
   switch (day) {
     case 'Sunday':
       return 'Ahad';
@@ -202,41 +206,29 @@ const intepretDay = (day) => {
       return 'Error';
   }
 };
-const intepretHijriDate = (date) => {
-  var day = date.substring(8, 10);
-  var month = date.substring(5, 7);
-  if (month.includes('0', 0)) {
-    month = month.substring(1, 2);
-  }
-  var year = date.substring(0, 4);
-  var hijriMonth = intepretHijriMonth(month);
-  if (day.includes('0', 0) && !day.includes('0', 1)) {
-    day = day.slice(1, 2);
-  }
+const interpretHijriDate = (date) => {
+  const [year, month, day] = date.split('-').map(Number);
+  const hijriMonth = interpretHijriMonth(month.toString().padStart(2, '0'));
   return {
     withName: `${day}/${hijriMonth}/${year}`,
     withMonthCount: `${day}/${month}/${year}`,
   };
 };
-const intepretChristDate = (date) => {
-  var day = date.substring(0, 2);
-  var month = date.substring(3, 6);
-  var year = date.substring(7, 11);
-  var christMonth = intepretChristMonth(month);
-  var numberedMonth = invertedIntepretChristMonth(month);
-  if (day.includes('0', 0) && !day.includes('0', 1)) {
-    day = day.slice(1, 2);
-  }
+const interpretChristDate = (date) => {
+  const [day, monthName, year] = date.split('-');
+  const christMonth = interpretChristMonth(monthName);
+  const numberedMonth = invertedInterpretChristMonth(monthName);
+  const formattedDay = day.startsWith('0') ? day.substring(1) : day;
   return {
-    withName: `${day}/${christMonth}/${year}`,
-    withNumber: `${day}/${numberedMonth}/${year}`,
+    withName: `${formattedDay}/${christMonth}/${year}`,
+    withNumber: `${formattedDay}/${numberedMonth}/${year}`,
   };
 };
-const intepretNormalChristDate = (date) => {
-  var day = date.substring(0, 2);
-  var month = date.substring(3, 5);
-  var year = date.substring(6, 11);
-  var christMonth = intepretNumberedChristMonth(month);
+const interpretNormalChristDate = (date) => {
+  let day = date.substring(0, 2);
+  let month = date.substring(3, 5);
+  let year = date.substring(6, 11);
+  let christMonth = interpretNumberedChristMonth(month);
   if (day.includes('0', 0) && !day.includes('0', 1)) {
     day = day.slice(1, 2);
   }
@@ -252,160 +244,132 @@ const getTimeDifference = async (times) => {
   const ishaTime = getDateFromHours(times[0].isha);
   const tomorrowsFajrTime = await getDateFromHoursAndAdd1Day(times[1].fajr);
   let timeDifference = {};
+
   if (timeNow >= fajrTime) {
     timeDifference.status = 'fajr has started';
-  } else {
+  } else if (timeNow < fajrTime) {
     timeDifference.solatETA = {
-      ...timeDifference.solatETA,
       timeToFajr: fajrTime - timeNow,
     };
     timeDifference.status = 'time for tahajjud';
   }
+
   if (timeNow >= sunriseTime) {
     timeDifference.status = 'sunrise has started';
-  } else {
+  } else if (timeNow < sunriseTime) {
     timeDifference.solatETA = {
       ...timeDifference.solatETA,
       timeToSunrise: sunriseTime - timeNow,
     };
   }
+
   if (timeNow >= dhuhrTime) {
     timeDifference.status = 'dhuhr has started';
-  } else {
+  } else if (timeNow < dhuhrTime) {
     timeDifference.solatETA = {
       ...timeDifference.solatETA,
       timeToDhuhr: dhuhrTime - timeNow,
     };
   }
+
   if (timeNow >= asrTime) {
     timeDifference.status = 'asr has started';
-  } else {
+  } else if (timeNow < asrTime) {
     timeDifference.solatETA = {
       ...timeDifference.solatETA,
       timeToAsr: asrTime - timeNow,
     };
   }
+
   if (timeNow >= maghribTime) {
     timeDifference.status = 'maghrib has started';
-  } else {
+  } else if (timeNow < maghribTime) {
     timeDifference.solatETA = {
       ...timeDifference.solatETA,
       timeToMaghrib: maghribTime - timeNow,
     };
   }
+
   if (timeNow >= ishaTime) {
-    // if (fajrTime - timeNow > 0) {
-    //   console.log('fajrTime - timeNow > 0');
-    //   timeDifference.timeToFajr = fajrTime - timeNow;
-    //   timeDifference.status = 'time for tahajjud';
-    // } else {
     timeDifference.solatETA = {
       ...timeDifference.solatETA,
       timeToTomorrowsFajrTime: tomorrowsFajrTime - timeNow,
     };
     timeDifference.status = 'isha has started';
-    // }
-  } else {
-    // if (fajrTime - timeNow > 0) {
-    //   timeDifference.timeToFajr = fajrTime - timeNow;
-    //   timeDifference.status = 'time for tahajjud';
-    // } else {
-    //   timeDifference.status = 'fajr has started';
-    // }
+  } else if (timeNow < ishaTime) {
     timeDifference.solatETA = {
       ...timeDifference.solatETA,
       timeToIsha: ishaTime - timeNow,
     };
   }
-  timeDifference = {
-    ...timeDifference,
-  };
-  console.log(timeDifference);
+
   return timeDifference;
 };
 const timeReminder = async (times) => {
-  const timeDifference = await getTimeDifference(times);
+  const { status, solatETA } = await getTimeDifference(times);
   const timeReminder = {};
-  switch (timeDifference.status) {
+
+  switch (status) {
     case 'fajr has started':
-      timeReminder.nextSolah = await convertMstoHours(
-        timeDifference.solatETA.timeToSunrise
-      );
       timeReminder.nextSolah = {
-        ...timeReminder.nextSolah,
+        ...(await convertMstoHours(solatETA.timeToSunrise)),
         name: 'isyraq',
       };
       break;
     case 'sunrise has started':
-      timeReminder.nextSolah = await convertMstoHours(
-        timeDifference.solatETA.timeToDhuhr
-      );
-      if (new Date().getDay() === 5) {
-        timeReminder.nextSolah = {
-          ...timeReminder.nextSolah,
-          name: 'jumaat',
-        };
-      } else {
-        timeReminder.nextSolah = {
-          ...timeReminder.nextSolah,
-          name: 'dhuhr',
-        };
-      }
+      timeReminder.nextSolah = {
+        ...(await convertMstoHours(solatETA.timeToDhuhr)),
+        name: new Date().getDay() === 5 ? 'jumaat' : 'dhuhr',
+      };
       break;
     case 'dhuhr has started':
-      timeReminder.nextSolah = await convertMstoHours(
-        timeDifference.solatETA.timeToAsr
-      );
-      timeReminder.nextSolah = { ...timeReminder.nextSolah, name: 'asr' };
+      timeReminder.nextSolah = {
+        ...(await convertMstoHours(solatETA.timeToAsr)),
+        name: 'asr',
+      };
       break;
     case 'asr has started':
-      timeReminder.nextSolah = await convertMstoHours(
-        timeDifference.solatETA.timeToMaghrib
-      );
       timeReminder.nextSolah = {
-        ...timeReminder.nextSolah,
+        ...(await convertMstoHours(solatETA.timeToMaghrib)),
         name: 'maghrib',
       };
       break;
     case 'maghrib has started':
-      timeReminder.nextSolah = await convertMstoHours(
-        timeDifference.solatETA.timeToIsha
-      );
-      timeReminder.nextSolah = { ...timeReminder.nextSolah, name: 'isha' };
+      timeReminder.nextSolah = {
+        ...(await convertMstoHours(solatETA.timeToIsha)),
+        name: 'isha',
+      };
       break;
     case 'isha has started':
-      timeReminder.nextSolah = await convertMstoHours(
-        timeDifference.solatETA.timeToTomorrowsFajrTime
-      );
       timeReminder.nextSolah = {
-        ...timeReminder.nextSolah,
+        ...(await convertMstoHours(solatETA.timeToTomorrowsFajrTime)),
         name: 'fajr',
       };
       break;
     case 'time for tahajjud':
-      timeReminder.nextSolah = await convertMstoHours(
-        timeDifference.solatETA.timeToFajr
-      );
-      timeReminder.nextSolah = { ...timeReminder.nextSolah, name: 'fajr' };
+      timeReminder.nextSolah = {
+        ...(await convertMstoHours(solatETA.timeToFajr)),
+        name: 'fajr',
+      };
       break;
     default:
       timeReminder.status = 'is it judgment day?';
       break;
   }
-  console.log(timeReminder);
+
   return timeReminder;
 };
 const convertMstoHours = async (milliseconds) => {
-  let seconds = Math.floor(milliseconds / 1000);
-  let minutes = Math.floor(seconds / 60);
-  let hours = Math.floor(minutes / 60);
-  seconds = seconds % 60;
-  minutes = minutes % 60;
-  hours = hours % 24;
+  const seconds = Math.floor(milliseconds / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const remainingSeconds = seconds % 60;
+  const remainingMinutes = minutes % 60;
+  const remainingHours = hours % 24;
   return {
-    hours: hours,
-    minutes: minutes,
-    seconds: seconds,
+    hours: remainingHours,
+    minutes: remainingMinutes,
+    seconds: remainingSeconds,
     milliseconds: milliseconds,
   };
 };
@@ -413,96 +377,143 @@ const timeCruncher = (period, zone) => {
   let timeArray = [];
   switch (period) {
     case 'today':
-      var dayNumber = getDayNumberInYear();
+      let dayNumber = getDayNumberInYear();
       for (let j = 0; j < 2; j++) {
-        let fixedDate = intepretChristDate(zone.db[dayNumber].date);
-        let fixedHijri = intepretHijriDate(zone.db[dayNumber].hijri);
-        let fixedDay = intepretDay(zone.db[dayNumber].day);
+        let {
+          date,
+          hijri,
+          day,
+          imsak,
+          fajr,
+          syuruk,
+          dhuhr,
+          asr,
+          maghrib,
+          isha,
+        } = zone.db[dayNumber];
+        let fixedDate = interpretChristDate(date);
+        let fixedHijri = interpretHijriDate(hijri);
+        let fixedDay = interpretDay(day);
         timeArray = [
           ...timeArray,
           {
-            day: fixedDay + ' / ' + zone.db[dayNumber].day,
-            hijri: fixedHijri.withMonthCount + ' / ' + fixedHijri.withName,
-            date: fixedDate.withNumber + ' / ' + fixedDate.withName,
-            imsak: zone.db[dayNumber].imsak,
-            fajr: zone.db[dayNumber].fajr,
-            syuruk: zone.db[dayNumber].syuruk,
-            dhuhr: zone.db[dayNumber].dhuhr,
-            asr: zone.db[dayNumber].asr,
-            maghrib: zone.db[dayNumber].maghrib,
-            isha: zone.db[dayNumber].isha,
+            day: `${fixedDay} / ${day}`,
+            hijri: `${fixedHijri.withMonthCount} / ${fixedHijri.withName}`,
+            date: `${fixedDate.withNumber} / ${fixedDate.withName}`,
+            imsak,
+            fajr,
+            syuruk,
+            dhuhr,
+            asr,
+            maghrib,
+            isha,
           },
         ];
         dayNumber++;
       }
       return timeArray;
     case 'week':
-      var dayNumber = getDayNumberInYear();
+      let weekStartDayNumber = getDayNumberInYear();
       for (let j = 0; j < 7; j++) {
-        let fixedDate = intepretChristDate(zone.db[dayNumber].date);
-        let fixedHijri = intepretHijriDate(zone.db[dayNumber].hijri);
-        let fixedDay = intepretDay(zone.db[dayNumber].day);
+        let {
+          date,
+          hijri,
+          day,
+          imsak,
+          fajr,
+          syuruk,
+          dhuhr,
+          asr,
+          maghrib,
+          isha,
+        } = zone.db[weekStartDayNumber];
+        let fixedDate = interpretChristDate(date);
+        let fixedHijri = interpretHijriDate(hijri);
+        let fixedDay = interpretDay(day);
         timeArray = [
           ...timeArray,
           {
-            day: fixedDay + ' / ' + zone.db[dayNumber].day,
-            hijri: fixedHijri.withMonthCount + ' / ' + fixedHijri.withName,
-            date: fixedDate.withNumber + ' / ' + fixedDate.withName,
-            imsak: zone.db[dayNumber].imsak,
-            fajr: zone.db[dayNumber].fajr,
-            syuruk: zone.db[dayNumber].syuruk,
-            dhuhr: zone.db[dayNumber].dhuhr,
-            asr: zone.db[dayNumber].asr,
-            maghrib: zone.db[dayNumber].maghrib,
-            isha: zone.db[dayNumber].isha,
+            day: `${fixedDay} / ${day}`,
+            hijri: `${fixedHijri.withMonthCount} / ${fixedHijri.withName}`,
+            date: `${fixedDate.withNumber} / ${fixedDate.withName}`,
+            imsak,
+            fajr,
+            syuruk,
+            dhuhr,
+            asr,
+            maghrib,
+            isha,
           },
         ];
-        dayNumber++;
+        weekStartDayNumber++;
       }
       return timeArray;
     case 'month':
-      console.log('came here');
-      var pastCount = getMonthName();
-      var currentCount = pastCount + Months[new Date().getMonth()].count;
+      let pastCount = getMonthName();
+      let currentCount = pastCount + Months[new Date().getMonth()].count;
       for (let j = pastCount; j < currentCount; j++) {
-        let fixedDate = intepretChristDate(zone.db[j].date);
-        let fixedHijri = intepretHijriDate(zone.db[j].hijri);
-        let fixedDay = intepretDay(zone.db[j].day);
+        let {
+          date,
+          hijri,
+          day,
+          imsak,
+          fajr,
+          syuruk,
+          dhuhr,
+          asr,
+          maghrib,
+          isha,
+        } = zone.db[j];
+        let fixedDate = interpretChristDate(date);
+        let fixedHijri = interpretHijriDate(hijri);
+        let fixedDay = interpretDay(day);
         timeArray = [
           ...timeArray,
           {
-            day: fixedDay + ' / ' + zone.db[j].day,
-            hijri: fixedHijri.withMonthCount + ' / ' + fixedHijri.withName,
-            date: fixedDate.withNumber + ' / ' + fixedDate.withName,
-            imsak: zone.db[j].imsak,
-            fajr: zone.db[j].fajr,
-            syuruk: zone.db[j].syuruk,
-            dhuhr: zone.db[j].dhuhr,
-            asr: zone.db[j].asr,
-            maghrib: zone.db[j].maghrib,
-            isha: zone.db[j].isha,
+            day: `${fixedDay} / ${day}`,
+            hijri: `${fixedHijri.withMonthCount} / ${fixedHijri.withName}`,
+            date: `${fixedDate.withNumber} / ${fixedDate.withName}`,
+            imsak,
+            fajr,
+            syuruk,
+            dhuhr,
+            asr,
+            maghrib,
+            isha,
           },
         ];
       }
       return timeArray;
     case 'year':
       for (let j = 0; j < zone.db.length; j++) {
-        let fixedDate = intepretChristDate(zone.db[j].date);
-        let fixedHijri = intepretHijriDate(zone.db[j].hijri);
-        let fixedDay = intepretDay(zone.db[j].day);
+        let {
+          date,
+          hijri,
+          day,
+          imsak,
+          fajr,
+          syuruk,
+          dhuhr,
+          asr,
+          maghrib,
+          isha,
+        } = zone.db[j];
+        let fixedDate = interpretChristDate(date);
+        let fixedHijri = interpretHijriDate(hijri);
+        let fixedDay = interpretDay(day);
         timeArray = [
           ...timeArray,
           {
-            day: fixedDay + ' / ' + zone.db[j].day,
-            hijri: fixedHijri.withMonthCount + ' / ' + fixedHijri.withName,
-            date: fixedDate.withNumber + ' / ' + fixedDate.withName,
-            imsak: zone.db[j].imsak,
-            fajr: zone.db[j].fajr,
-            syuruk: zone.db[j].syuruk,
-            dhuhr: zone.db[j].dhuhr,
-            asr: zone.db[j].asr,
-            maghrib: zone.db[j].maghrib,
-            isha: zone.db[j].isha,
+            day: `${fixedDay} / ${day}`,
+            hijri: `${fixedHijri.withMonthCount} / ${fixedHijri.withName}`,
+            date: `${fixedDate.withNumber} / ${fixedDate.withName}`,
+            imsak,
+            fajr,
+            syuruk,
+            dhuhr,
+            asr,
+            maghrib,
+            isha,
           },
         ];
       }
@@ -512,64 +523,44 @@ const timeCruncher = (period, zone) => {
   }
 };
 class QuranHelpers {
-  static getSurahName(req, res) {
-    const data = Quranen.map((item) => {
-      const surah = { ...item };
-      return {
-        number: surah.id,
-        name: surah.name,
-        transliteration: surah.transliteration,
-        translation: surah.translation,
-      };
-    });
-    return res.status(200).json({
-      data,
-    });
-  }
-  static getFullSurah(req, res) {
+  static getSurahNames = (req, res) => {
+    const data = Quranen.map(({ id, name, transliteration, translation }) => ({
+      number: id,
+      name,
+      transliteration,
+      translation,
+    }));
+    res.status(200).json({ data });
+  };
+
+  static getFullSurah = (req, res) => {
     const { lang, id } = req.params;
-    if (lang !== 'en' && lang !== 'my') {
-      return res.status(400).json({
-        code: 400,
-        status: 'Bad Request.',
-        message: 'Invalid language.',
-      });
-    }
-    const Quran = lang == 'en' ? Quranen : Quranmy;
-    const data = Quran.find((item) => item.id === parseInt(id));
+    const Quran = lang === 'en' ? Quranen : Quranmy;
+    const data = Quran.find(({ id: surahId }) => surahId === parseInt(id));
     if (!data) {
-      console.log('fullsurah');
       return res.status(404).json({
         code: 404,
         status: 'Not Found.',
         message: 'Surah not found.',
       });
     }
-    const surah = { ...data };
-    return res.status(200).json({
-      data: surah,
-    });
-  }
-  static getAyatfromSurah(req, res) {
+    res.status(200).json({ data });
+  };
+
+  static getAyatFromSurah = (req, res) => {
     const { lang, id, ayat } = req.params;
-    if (lang !== 'en' && lang !== 'my') {
-      return res.status(400).json({
-        code: 400,
-        status: 'Bad Request.',
-        message: 'Invalid language.',
-      });
-    }
-    const Quran = lang == 'en' ? Quranen : Quranmy;
-    const surah = Quran.find((item) => item.id === parseInt(id));
+    const Quran = lang === 'en' ? Quranen : Quranmy;
+    const surah = Quran.find(({ id: surahId }) => surahId === parseInt(id));
     if (!surah) {
-      console.log('ayatfromsurah');
       return res.status(404).json({
         code: 404,
         status: 'Not Found.',
         message: 'Surah not found.',
       });
     }
-    const data = surah.verses.find((item) => item.id === parseInt(ayat));
+    const data = surah.verses.find(
+      ({ id: ayatId }) => ayatId === parseInt(ayat)
+    );
     if (!data) {
       return res.status(404).json({
         code: 404,
@@ -577,134 +568,100 @@ class QuranHelpers {
         message: 'Ayat not found.',
       });
     }
-    return res.status(200).json({
-      data,
-    });
-  }
-  static getRandomAyat(req, res) {
-    let data = {};
+    res.status(200).json({ data });
+  };
+
+  static getRandomAyat = (req, res) => {
     const eng = Quranen;
     const mys = Quranmy;
-    const numberOfSurah = eng.length;
-    const randomSurah = Math.floor(Math.random() * numberOfSurah);
-    data = {
-      ...data,
-      fromSurah:
-        eng[randomSurah].name + ' / ' + eng[randomSurah].transliteration,
+    const numberOfSurahs = eng.length;
+    const randomSurahIndex = Math.floor(Math.random() * numberOfSurahs);
+    const { name, transliteration } = eng[randomSurahIndex];
+    const { verses } = eng[randomSurahIndex];
+    const randomAyatIndex = Math.floor(Math.random() * verses.length);
+    const { id: ayatNumber, text: arabic } = verses[randomAyatIndex];
+    const { translation: englishTranslation } = verses[randomAyatIndex];
+    const { translation: malayTranslation } =
+      mys[randomSurahIndex].verses[randomAyatIndex];
+    const data = {
+      fromSurah: `${name} / ${transliteration}`,
+      ayatNumber,
+      arabic,
+      englishTranslation,
+      malayTranslation,
     };
-    const randomSurahAyats = eng[randomSurah].verses.length;
-    const randomAyat = Math.floor(Math.random() * randomSurahAyats);
-    const engdata = eng[randomSurah].verses[randomAyat];
-    const mysdata = mys[randomSurah].verses[randomAyat];
-    data = {
-      ...data,
-      ayatNumber: engdata.id,
-      arabic: engdata.text,
-      englishTranslation: engdata.translation,
-      malayTranslation: mysdata.translation,
-    };
-    if (!engdata && !mysdata) {
-      return res.status(404).json({
-        code: 404,
-        status: 'Not Found.',
-        message: 'Surah not found.',
-      });
-    }
-    return res.status(200).json({ data });
-  }
+    res.status(200).json({ data });
+  };
 }
 class HadithsHelpers {
+  static HADITH_BOOKS = [
+    'bukhari',
+    'muslim',
+    'abudaud',
+    'nasai',
+    'tirmizi',
+    'ibnumajah',
+  ];
+
   static getHadithBook(req, res) {
-    res
+    return res
       .status(200)
-      .json({ msg: 'bukhari, muslim, abudaud, nasai, tirmizi, ibnumajah' });
+      .json({ msg: HadithsHelpers.HADITH_BOOKS.join(', ') });
   }
+
   static getHadith(req, res) {
     const { book } = req.params;
-    let hadis, one, random;
-    switch (book) {
-      case 'bukhari':
-        random = Math.floor(Math.random() * BukhariBook.length);
-        one = BukhariBook[random];
-        hadis = one.hadis;
-        break;
-      case 'muslim':
-        random = Math.floor(Math.random() * MuslimBook.length);
-        one = MuslimBook[random];
-        hadis = one.hadis;
-        break;
-      case 'abudaud':
-        random = Math.floor(Math.random() * AbuDaudBook.length);
-        one = AbuDaudBook[random];
-        hadis = one.hadis;
-        break;
-      case 'nasai':
-        random = Math.floor(Math.random() * NasaiBook.length);
-        one = NasaiBook[random];
-        hadis = one.hadis;
-        break;
-      case 'tirmizi':
-        random = Math.floor(Math.random() * TirmiziBook.length);
-        one = TirmiziBook[random];
-        hadis = one.hadis;
-        break;
-      case 'ibnumajah':
-        random = Math.floor(Math.random() * IbnMajahBook.length);
-        one = IbnuMajahBook[random];
-        hadis = one.hadis;
-        break;
-      default:
-        data = 'No Hadith found.';
-        break;
+
+    if (!HadithsHelpers.HADITH_BOOKS.includes(book)) {
+      return res.status(404).json({ error: 'No Hadith found.' });
     }
+
+    const bookData = eval(
+      `${book.charAt(0).toUpperCase()}${book.slice(1)}Book`
+    );
+    const random = Math.floor(Math.random() * bookData.length);
+    const hadis = bookData[random].hadis;
+
     return res.status(200).json({ hadis });
   }
 }
 class TimeHelpers {
-  static getTime(req, res) {
-    // get zones and period
-    const { period, zone } = req.params;
-    // check if period is valid
-    if (
-      period === 'today' ||
-      period === 'week' ||
-      period === 'month' ||
-      period === 'year'
-    ) {
-      // check if zone is valid
-      if (Zones[zone]) {
-        // get zone
-        const currentZone = Zones[zone];
-        // get time
-        const data = timeCruncher(period, currentZone);
-        // get time difference
-        const today = timeCruncher('today', currentZone);
-        // get today's info
-        const todayData = getTimeNow();
-        // pack em
-        let combinedData = {
-          day: today[0].day,
-          hijri: today[0].hijri,
-          ...todayData,
-        };
-        timeReminder(today).then((timeDifference) => {
-          res.status(200).json({
-            today: combinedData,
-            nextSolat: timeDifference.nextSolah,
-            negeri: currentZone.negeri,
-            zone: currentZone.name,
-            data,
-          });
-        });
-      } else {
-        res.status(400).json({
-          message: 'Invalid zone',
-        });
+  static async getTime(req, res) {
+    try {
+      const { period, zone } = req.params;
+      const validPeriods = ['today', 'week', 'month', 'year'];
+      const zones = Object.keys(Zones);
+
+      if (!validPeriods.includes(period)) {
+        return res.status(400).json({ message: 'Invalid period' });
       }
-    } else {
-      res.status(400).json({
-        message: 'Invalid period',
+
+      if (!zones.includes(zone)) {
+        return res.status(400).json({ message: 'Invalid zone' });
+      }
+
+      const currentZone = Zones[zone];
+      const data = timeCruncher(period, currentZone);
+      const todayData = getTimeNow();
+      const today = timeCruncher('today', currentZone);
+      const timeDifference = await timeReminder(today);
+
+      const combinedData = {
+        day: today[0].day,
+        hijri: today[0].hijri,
+        ...todayData,
+      };
+
+      res.status(200).json({
+        today: combinedData,
+        nextSolat: timeDifference.nextSolah,
+        negeri: currentZone.negeri,
+        zone: currentZone.name,
+        data,
       });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
     }
   }
 }

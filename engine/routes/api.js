@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
   );
   res.write('/quran/random : Get random verse of surah with both language\n');
   res.write('\nAvailable languages:\nmy : malay\nen : english\n');
-  res.write('\n/hadis/(book) : Get hadith from specific book\n');
+  res.write('\n/hadis/(book) : Get random hadith from specific book\n');
   res.write('\nAvailable books:\nriwayat : riwayat\n');
   res.write(
     '\n/waktusolat/(period)/(location) : Get prayer times for specific location\n'
@@ -30,12 +30,12 @@ router.get('/', (req, res) => {
 });
 
 // surah routes
-router.get('/quran', cacheService, QuranHelpers.getSurahName);
+router.get('/quran', cacheService, QuranHelpers.getSurahNames);
 router.get('/quran/:lang/:id', cacheService, QuranHelpers.getFullSurah);
 router.get(
   '/quran/:lang/:id/:ayat',
   cacheService,
-  QuranHelpers.getAyatfromSurah
+  QuranHelpers.getAyatFromSurah
 );
 router.get('/quran/random', QuranHelpers.getRandomAyat);
 
