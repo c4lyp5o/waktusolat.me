@@ -5,7 +5,7 @@ This is the API that waktusolat.me uses to display prayer times and quranic vers
 
 # License
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Build Status](https://pipeline.calypsocloud.one/job/waktusolat.me-api/badge/icon)](https://pipeline.calypsocloud.one/job/waktusolat.me-api/)
 
 # Usage:
 
