@@ -5,10 +5,10 @@ import {
   Quranmy,
   BukhariBook,
   MuslimBook,
-  AbuDaudBook,
+  AbudaudBook,
   NasaiBook,
   TirmiziBook,
-  IbnuMajahBook,
+  IbnumajahBook,
 } from './library.js';
 
 // functions to use

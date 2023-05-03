@@ -71,10 +71,10 @@ const Quranen = quranen;
 const Quranmy = quranmy;
 const BukhariBook = bukhari;
 const MuslimBook = muslim;
-const AbuDaudBook = abu_daud;
+const AbudaudBook = abu_daud;
 const NasaiBook = nasai;
 const TirmiziBook = tirmizi;
-const IbnuMajahBook = ibnu_majah;
+const IbnumajahBook = ibnu_majah;
 
 const Zones = {
   kdh01: {
@@ -346,8 +346,8 @@ export {
   Quranmy,
   BukhariBook,
   MuslimBook,
-  AbuDaudBook,
+  AbudaudBook,
   NasaiBook,
   TirmiziBook,
-  IbnuMajahBook,
+  IbnumajahBook,
 };
