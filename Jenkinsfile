@@ -5,10 +5,12 @@ pipeline {
         stage('Purge') {
             steps {
                 script {
-                    def container = dockerContainer(name: 'waktusolat.me-api')
+                    def image = docker.image('waktusolat.me-api:latest')
+                    def container = image.runningContainer
+
                     if (container) {
-                        sh "docker stop ${container.id}"
-                        sh "docker rm ${container.id}"
+                        container.stop()
+                        container.remove()
                     }
                 }
             }
