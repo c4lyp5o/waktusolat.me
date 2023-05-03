@@ -4,15 +4,8 @@ pipeline {
     stages {
         stage('Purge') {
             steps {
-                script {
-                    def image = docker.image('waktusolat.me-api:latest')
-                    def container = image.runningContainer
-
-                    if (container) {
-                        container.stop()
-                        container.remove()
-                    }
-                }
+                sh "docker stop waktusolat.me-api || true"
+                sh "docker rm waktusolat.me-api || true"
             }
         }
         stage('Build') {
