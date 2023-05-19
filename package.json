@@ -9,7 +9,8 @@
     "dev": "nodemon server.js",
     "server": "node server.js",
     "prestart": "npm install",
-    "start": "npm run get-times && npm run server"
+    //"start": "npm run get-times && npm run server"
+    "start": "npm run server"
   },
   "repository": {
     "type": "git",
