@@ -2,9 +2,19 @@ import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 import RateLimit from 'express-rate-limit';
 import cors from 'cors';
+
 import Route from './routes/api.js';
+import { initiateDb } from './db/db.js';
+
 import { WSAPIschema } from './graphql/schema/index.js';
 import { WSAPIresolvers } from './graphql/resolver/index.js';
+
+try {
+  initiateDb();
+} catch (err) {
+  console.log(err);
+  process.exit(1);
+}
 
 const app = express();
 

@@ -68,23 +68,23 @@ const getTimeNow = () => {
 };
 const interpretHijriMonth = (month) => {
   switch (month) {
-    case '1':
+    case '01':
       return 'Muharram';
-    case '2':
+    case '02':
       return 'Safar';
-    case '3':
+    case '03':
       return 'Rabiul Awal';
-    case '4':
+    case '04':
       return 'Rabiul Akhir';
-    case '5':
+    case '05':
       return 'Jumadil Awal';
-    case '6':
+    case '06':
       return 'Jumadil Akhir';
-    case '7':
+    case '07':
       return 'Rajab';
-    case '8':
-      return 'Syaban';
-    case '9':
+    case '08':
+      return 'Syaaban';
+    case '09':
       return 'Ramadhan';
     case '10':
       return 'Syawal';
@@ -627,19 +627,19 @@ class HadithsHelpers {
 }
 class TimeHelpers {
   static async getTime(req, res) {
+    const { period, zone } = req.params;
+    const validPeriods = ['today', 'week', 'month', 'year'];
+    const zones = Object.keys(Zones);
+
+    if (!validPeriods.includes(period)) {
+      return res.status(400).json({ message: 'Invalid period' });
+    }
+
+    if (!zones.includes(zone)) {
+      return res.status(400).json({ message: 'Invalid zone' });
+    }
+
     try {
-      const { period, zone } = req.params;
-      const validPeriods = ['today', 'week', 'month', 'year'];
-      const zones = Object.keys(Zones);
-
-      if (!validPeriods.includes(period)) {
-        return res.status(400).json({ message: 'Invalid period' });
-      }
-
-      if (!zones.includes(zone)) {
-        return res.status(400).json({ message: 'Invalid zone' });
-      }
-
       const currentZone = Zones[zone];
       const data = timeCruncher(period, currentZone);
       const todayData = getTimeNow();
