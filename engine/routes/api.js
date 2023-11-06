@@ -1,12 +1,14 @@
 // calling all things
 import { Router } from 'express';
-const router = Router();
+import { insertVisitor, getVisitors } from '../middlewares/visitors.js';
 import {
   QuranHelpers,
   HadithsHelpers,
   TimeHelpers,
 } from '../controllers/helpers.js';
 import { cacheService } from '../middlewares/cache.js';
+
+const router = Router();
 
 // init routes
 router.get('/', (req, res) => {
@@ -28,6 +30,12 @@ router.get('/', (req, res) => {
   res.write('\nAvailable locations: \nPlease refer to github page.\n');
   res.status(200).end();
 });
+
+// record visitor
+router.get('/thanks', insertVisitor);
+
+// see visitors
+router.get('/visitors', getVisitors);
 
 // surah routes
 router.get('/quran', cacheService, QuranHelpers.getSurahNames);
