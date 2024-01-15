@@ -70,11 +70,11 @@ async function getTimesAndWrite(zone) {
   const Times = await cpray.getTimesbyYear(zone);
   const jsonContent = JSON.stringify(Times);
   await fs.writeFile(
-    join(process.cwd(), 'engine', 'data', 'times', `${zone}.json`),
+    join(process.cwd(), 'times', `${zone}.json`),
     jsonContent,
     'utf8'
   );
-  await sleep(5000);
+  await sleep(500);
 }
 
 function sleep(delay) {
