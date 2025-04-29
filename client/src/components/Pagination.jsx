@@ -57,8 +57,8 @@ export default function Pagination({
 	};
 
 	return (
-		<div className={styles.paginationContainer}>
-			<div className={styles.dataContainer}>
+		<>
+			<div>
 				{getPaginatedData().map((d, i) => (
 					<RenderComponent key={d.id || i} data={d} />
 				))}
@@ -110,6 +110,6 @@ export default function Pagination({
 					</button>
 				</div>
 			)}
-		</div>
+		</>
 	);
 }
