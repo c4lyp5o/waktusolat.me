@@ -44,29 +44,30 @@ export default function QuranSurahSelect() {
 			<title>Al Quran</title>
 			<meta name="description" content="Al Quran" />
 			<link rel="icon" href="/favicon.ico" />
-
-			<main className="container">
-				<form onSubmit={handleSubmit}>
-					<select className="damnbuttons" id="surah" name="surah">
-						<option value="">Sila pilih surah...</option>
-						{surah.data.map((singleSurah, index) => (
-							<option key={singleSurah.transliteration} value={index}>
-								{singleSurah.transliteration}
-							</option>
-						))}
-					</select>
-					<button type="submit" value="Submit">
-						Pilih
-					</button>
-				</form>
-				<hgroup>
-					<h1 className={styles.quranicIntro}>{randomAyat.data.arabic}</h1>
-					<p className={styles.intro}>{randomAyat.data.malayTranslation}</p>
+			<form onSubmit={handleSubmit}>
+				<select className="button" id="surah" name="surah">
+					<option value="">Sila pilih surah...</option>
+					{surah.data.map((singleSurah, index) => (
+						<option key={singleSurah.transliteration} value={index}>
+							{singleSurah.transliteration}
+						</option>
+					))}
+				</select>
+				<button type="submit" value="Submit">
+					Pilih
+				</button>
+			</form>
+			<hgroup>
+				<h1 className={styles.quranicIntro}>{randomAyat.data.arabic}</h1>
+				<p className={styles.translationIntro}>
+					{randomAyat.data.malayTranslation}
+				</p>
+				<div className={styles.translationIntro}>
 					<small>{randomAyat.data.fromSurah}</small>
 					{", "}
 					<small>{randomAyat.data.ayatNumber}</small>
-				</hgroup>
-			</main>
+				</div>
+			</hgroup>
 		</>
 	);
 }

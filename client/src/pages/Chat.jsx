@@ -16,6 +16,7 @@ export default function Chat() {
 	const [messageInput, setMessageInput] = useState("");
 
 	const socketRef = useRef();
+	const messagesEndRef = useRef(null);
 
 	useEffect(() => {
 		const generatedUsername = `Anon${Math.floor(Math.random() * 100000)}`;
@@ -36,6 +37,11 @@ export default function Chat() {
 		return () => socketRef.current.disconnect();
 	}, []);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+	}, [messages]);
+
 	const sendMessage = useCallback(() => {
 		if (messageInput.trim().length === 0) return;
 
@@ -44,56 +50,61 @@ export default function Chat() {
 	}, [messageInput]);
 
 	return (
-		<>
+		<div className="chat-container">
 			<title>Chat</title>
 			<meta
 				name="description"
 				content="Chat dengan orang awam tanpa diketahui nama"
 			/>
 			<link rel="icon" href="/favicon.ico" />
-
-			<main className="chat-container">
-				<div className="messages-container">
-					<div className="messages-list">
-						{messages.map((singleMessage, index) => (
-							<div
-								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-								key={index}
-								className={`message ${singleMessage.username === "system" ? "system" : singleMessage.username === username ? "sent" : "received"}`}
-							>
-								<div className="message-content">
-									{singleMessage.username !== "system" &&
-									singleMessage.message.startsWith(username)
-										? singleMessage.message.replace(`${username}:`, "")
-										: singleMessage.message}
-								</div>
+			<div className="messages-container">
+				<div className="messages-list">
+					{messages.map((singleMessage, index) => (
+						<div
+							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+							key={index}
+							className={`message ${singleMessage.username === "system" ? "system" : singleMessage.username === username ? "sent" : "received"}`}
+						>
+							<div className="message-content">
+								{singleMessage.username !== "system" &&
+								singleMessage.message.startsWith(username)
+									? singleMessage.message.replace(`${username}:`, "")
+									: singleMessage.message}
 							</div>
-						))}
-					</div>
+						</div>
+					))}
+					{/* Invisible div to scroll to the bottom */}
+					<div ref={messagesEndRef} />
 				</div>
-				<div className="chat-input-container">
-					<form
-						className="chat-form"
-						onSubmit={(event) => {
-							event.preventDefault();
-							sendMessage();
+			</div>
+			<div className="chat-input-container">
+				<form
+					className="chat-form"
+					onSubmit={(event) => {
+						event.preventDefault();
+						sendMessage();
+					}}
+				>
+					<input
+						type="text"
+						id="message"
+						name="message"
+						value={messageInput}
+						onChange={(e) => setMessageInput(e.target.value)}
+						placeholder="Type your message..."
+						className="chat-input"
+						onKeyDown={(e) => {
+							if (e.key === "Enter") {
+								e.preventDefault();
+								sendMessage();
+							}
 						}}
-					>
-						<input
-							type="text"
-							id="message"
-							name="message"
-							value={messageInput}
-							onChange={(e) => setMessageInput(e.target.value)}
-							placeholder="Type your message..."
-							className="chat-input"
-						/>
-						<button type="submit" className="chat-send-button">
-							Send
-						</button>
-					</form>
-				</div>
-			</main>
-		</>
+					/>
+					<button type="submit" className="chat-send-button">
+						Send
+					</button>
+				</form>
+			</div>
+		</div>
 	);
 }

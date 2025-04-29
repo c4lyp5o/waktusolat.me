@@ -14,18 +14,16 @@ function QuranData(props) {
 	// const { text, audio, translation, number, verses } = props.data;
 	const { text, translation, id } = props.data;
 	return (
-		<main className="container">
-			<hgroup>
-				<h5 className={styles.quranic}>
-					{text} ({id})
-				</h5>
-				<p>{translation}</p>
-			</hgroup>
+		<hgroup>
+			<h5 className={styles.quranic}>
+				{text} ({id})
+			</h5>
+			<p>{translation}</p>
 			{/* <audio controls>
       <source src={audio.primary} />
       Your browser does not support the audio element.
     </audio> */}
-		</main>
+		</hgroup>
 	);
 }
 
