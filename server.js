@@ -1,47 +1,67 @@
-import { createServer } from 'http';
-import app from './engine/start.js';
+import express from "express";
+import dotenv from "dotenv";
+import { graphqlHTTP } from "express-graphql";
+import RateLimit from "express-rate-limit";
+import cors from "cors";
+import { createServer } from "node:http";
+import path from "node:path";
 
-function normalizePort(val) {
-  const port = parseInt(val, 10);
+import logger from "./utils/logger.js";
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-  return false;
-}
+dotenv.config();
 
-const port = normalizePort(8002);
+import websocket from "./controllers/websocket.js";
+import httpRoutes from "./routes/api.js";
+import notFound from "./middlewares/notFound.js";
+import errorHandler from "./middlewares/errorHandler.js";
 
-function errorHandler(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
-  const address = server.address();
-  const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
-  switch (error.code) {
-    case 'EACCES':
-      console.error(`${bind} requires elevated privileges`);
-      process.exit(1);
-    case 'EADDRINUSE':
-      console.error(`${bind} is already in use`);
-      process.exit(1);
-    default:
-      throw error;
-  }
-}
+import { initiateDb } from "./db/db.js";
 
-const server = createServer(app);
+import { WSAPIschema } from "./graphql/schema/index.js";
+import { WSAPIresolvers } from "./graphql/resolver/index.js";
 
-server.on('error', errorHandler);
-server.on('listening', () => {
-  const address = server.address();
-  const bind = typeof address === 'string' ? `pipe ${address}` : 'port ' + port;
-  console.log(`Currently listening on ${bind}. Lessgo!`);
+const limiter = RateLimit({
+	windowMs: 1 * 60 * 1000,
+	max: 30,
 });
 
-server.listen(port);
+try {
+	await initiateDb();
+} catch (err) {
+	logger.error("[sqlite3] ", err);
+	process.exit(1);
+}
+
+const app = express();
+const server = createServer(app);
+websocket(server);
+
+app.use(limiter);
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(process.cwd(), "public")));
+
+app.use(
+	"/graphql",
+	graphqlHTTP({
+		schema: WSAPIschema,
+		rootValue: WSAPIresolvers,
+		graphiql: true,
+	}),
+);
+
+app.use("/api/v1", httpRoutes);
+
+app.get("*", (req, res) => {
+	res.sendFile(path.join(process.cwd(), "public", "index.html"));
+});
+
+app.use(notFound);
+app.use(errorHandler);
+
+server.listen(process.env.PORT || 5000, () => {
+	logger.info(`[app] Server is running on port ${process.env.PORT || 5000}`);
+	logger.info(
+		`[graphql] GraphQL API is running on http://localhost:${process.env.PORT || 5000}/graphql`,
+	);
+});

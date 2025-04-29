@@ -1,4 +1,4 @@
 node_modules
-engine/public/
+public/
 .github/
-/engine/db/visitors.db
+db/visitors.db

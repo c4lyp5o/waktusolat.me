@@ -1,23 +1,48 @@
-# pull the Node.js Docker image
-FROM node:alpine
+# Stage 1: Build Stage (client build)
+FROM node:lts-alpine AS builder
 
-# add timezone data
-RUN apk add --no-cache tzdata
+WORKDIR /app
 
-# set timezone data
-ENV TZ=Asia/Kuala_Lumpur
-
-# create the directory inside the container
-WORKDIR /usr/src/app
-
-# copy the package.json files from local machine to the workdir in container
+# Install root dependencies (Express etc.)
 COPY package*.json ./
+RUN npm install
 
-# copy the generated modules and all other files to the container
+# Copy client separately and install client dependencies + build
+COPY client ./client
+WORKDIR /app/client
+RUN npm install && npm run build
+
+# Move built files to /app/public in the builder stage
+RUN mkdir -p /app/public && mv ../public/* /app/public/
+
+# Return to root app dir
+WORKDIR /app
+
+# Stage 2: Production Stage
+FROM node:lts-alpine
+
+# Install curl for health check
+RUN apk update --no-cache && \
+    apk add --no-cache curl
+
+WORKDIR /app
+
+# Install only production dependencies
+COPY package*.json ./
+RUN npm install --omit=dev
+
+# Copy backend source code (everything except what's ignored)
 COPY . .
 
-# our app is running on port 8002 within the container, so need to expose it
-EXPOSE 8002
+# Copy built public files from builder
+COPY --from=builder /app/public /app/public
 
-# the command that starts our app
-CMD ["npm", "run", "start"]
+# Expose your server port
+EXPOSE 5000
+
+# Add a health check to ensure the container is running properly
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:5000/api/v1/health || exit 1
+
+# Start your app
+CMD ["npm", "start"]
