@@ -1,10 +1,3 @@
-.center-all {
-	align-items: center;
-	align-self: center;
-	align-content: center;
-	text-align: center;
-}
-
 #breath-light {
 	justify-self: center;
 	width: 120px;
@@ -75,18 +68,19 @@
 	animation-iteration-count: infinite;
 }
 
-@media only screen and (max-width: 425px) {
+.grid > div {
+	text-align: center; /* Center content inside each grid item */
+	justify-self: center; /* Center horizontally */
+	align-self: center; /* Center vertically */
+	margin-top: 1rem;
+}
+
+@media only screen and (max-width: 1280px) {
 	.grid {
-		width: 99%;
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		gap: 12px;
-		align-self: center;
-		align-items: center;
-		justify-content: space-between;
-	}
-	.grid > div {
-		margin: 20px;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+		grid-gap: 20px; /* Space between items */
+		width: 100%; /* Full width */
+		margin: 0 auto; /* Center the grid */
 	}
 }
