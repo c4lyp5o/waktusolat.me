@@ -23,7 +23,10 @@ FROM node:lts-alpine
 
 # Install curl for health check
 RUN apk update --no-cache && \
-    apk add --no-cache curl
+    apk add --no-cache curl tzdata
+
+# Set timezone data
+ENV TZ=Asia/Kuala_Lumpur
 
 WORKDIR /app
 
