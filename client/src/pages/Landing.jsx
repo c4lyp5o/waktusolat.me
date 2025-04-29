@@ -27,10 +27,7 @@ export default function Landing() {
 			<meta name="author" content="c4lyp5o" />
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			<link rel="icon" href="/favicon.ico" />
-
-			<main className="container">
-				<Zones />
-			</main>
+			<Zones />
 		</>
 	);
 }

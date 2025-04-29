@@ -47,35 +47,33 @@ export default function Hadith() {
 			/>
 			<link rel="icon" href="/favicon.ico" />
 
-			<main className="container">
-				<div className="grid">
-					<div>
-						<form onSubmit={handleSubmit}>
-							<select
-								value={search}
-								onChange={(event) => setSearch(event.target.value)}
-								required
-							>
-								<option value="">Sila pilih kitab...</option>
-								{keetab.map((singleKeetab) => (
-									<option key={singleKeetab} value={singleKeetab.id}>
-										{singleKeetab.toUpperCase()}
-									</option>
-								))}
-							</select>
-							<button type="submit" value="Submit">
-								Pilih
-							</button>
-						</form>
-					</div>
-					<div />
-					<div>
-						<h1>Hadith</h1>
-					</div>
+			<div className="grid">
+				<div>
+					<form onSubmit={handleSubmit}>
+						<select
+							value={search}
+							onChange={(event) => setSearch(event.target.value)}
+							required
+						>
+							<option value="">Sila pilih kitab...</option>
+							{keetab.map((singleKeetab) => (
+								<option key={singleKeetab} value={singleKeetab.id}>
+									{singleKeetab.toUpperCase()}
+								</option>
+							))}
+						</select>
+						<button type="submit" value="Submit">
+							Pilih
+						</button>
+					</form>
 				</div>
-				{display ? <Spin /> : hadith.hadis}
-				{showSalam && <p className="centered">Assalamualaikum</p>}
-			</main>
+				<div />
+				<div>
+					<h1>Hadith</h1>
+				</div>
+			</div>
+			{display ? <Spin /> : hadith.hadis}
+			{showSalam && <p className="centered">Assalamualaikum</p>}
 		</>
 	);
 }
