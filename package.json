@@ -1,33 +1,44 @@
 {
-  "name": "waktusolat-api",
-  "version": "1.2.0",
-  "description": "waktusolat.me API for everything",
-  "type": "module",
-  "main": "server.js",
-  "scripts": {
-    "get-times": "node ./engine/data/getter.js",
-    "dev": "nodemon server.js",
-    "server": "node server.js",
-    "prestart": "npm install",
-    "start": "npm run server"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/c4lyp5o/quran-api.git"
-  },
-  "author": "c4lyp5o",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/c4lyp5o/quran-api/issues"
-  },
-  "homepage": "https://github.com/c4lyp5o/quran-api#readme",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "cpray": "^1.1.7",
-    "express": "^4.17.3",
-    "express-graphql": "^0.12.0",
-    "express-rate-limit": "^6.3.0",
-    "graphql": "^15.8.0",
-    "sqlite3": "^5.1.6"
-  }
+	"name": "waktusolat-api",
+	"version": "2.0.0",
+	"description": "waktusolat.me API for everything",
+	"type": "module",
+	"main": "server.js",
+	"scripts": {
+		"get-times": "node ./data/getter.js",
+		"install-server": "npm install",
+		"install-client": "cd client && npm install",
+		"install-all": "npm run install-server && npm run install-client",
+		"server": "nodemon server.js",
+		"client": "cd client && npm run dev",
+		"build-client": "cd client && npm run build",
+		"dev": "concurrently \"npm run server\" \"npm run client\"",
+		"prestart": "npm run get-times",
+		"start": "node server.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/c4lyp5o/quran-api.git"
+	},
+	"author": "c4lyp5o",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/c4lyp5o/quran-api/issues"
+	},
+	"homepage": "https://github.com/c4lyp5o/quran-api#readme",
+	"dependencies": {
+		"cors": "^2.8.5",
+		"cpray": "^1.1.7",
+		"dotenv": "^16.5.0",
+		"express": "^4.17.3",
+		"express-graphql": "^0.12.0",
+		"express-rate-limit": "^6.3.0",
+		"graphql": "^15.8.0",
+		"socket.io": "^4.8.1",
+		"sqlite3": "^5.1.6"
+	},
+	"devDependencies": {
+		"concurrently": "^9.1.2",
+		"nodemon": "^3.1.9"
+	}
 }
