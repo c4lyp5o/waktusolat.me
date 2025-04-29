@@ -1,0 +1,92 @@
+.center-all {
+	align-items: center;
+	align-self: center;
+	align-content: center;
+	text-align: center;
+}
+
+#breath-light {
+	justify-self: center;
+	width: 120px;
+	height: 80px;
+	margin-bottom: 35px;
+	border-radius: 10px;
+	background: white;
+
+	box-shadow: 0 0 60px #ffffff;
+
+	-webkit-animation: breath 6s;
+	animation: breath 6s;
+
+	-webkit-animation-iteration-count: infinite;
+	animation-iteration-count: infinite;
+}
+
+@-webkit-keyframes breath {
+	0% {
+		opacity: 0.1;
+	}
+	60% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0.1;
+	}
+}
+@-o-keyframes breath {
+	0% {
+		opacity: 0.1;
+	}
+	60% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0.1;
+	}
+}
+@-moz-keyframes breath {
+	0% {
+		opacity: 0.1;
+	}
+	60% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0.1;
+	}
+}
+@keyframes breath {
+	0% {
+		opacity: 0.1;
+	}
+	60% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0.1;
+	}
+}
+
+#breath-light:hover {
+	-webkit-animation: breath 6s;
+	animation: breath 6s;
+
+	-webkit-animation-iteration-count: infinite;
+	animation-iteration-count: infinite;
+}
+
+@media only screen and (max-width: 425px) {
+	.grid {
+		width: 99%;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 12px;
+		align-self: center;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.grid > div {
+		margin: 20px;
+	}
+}
