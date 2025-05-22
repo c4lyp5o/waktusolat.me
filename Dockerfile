@@ -1,16 +1,16 @@
 # Stage 1: Build Stage (client build)
-FROM node:lts-alpine AS builder
+FROM oven/bun:1.2.14-alpine AS builder
 
 WORKDIR /app
 
 # Install root dependencies (Express etc.)
 COPY package*.json ./
-RUN npm install
+RUN bun install
 
 # Copy client separately and install client dependencies + build
 COPY client ./client
 WORKDIR /app/client
-RUN npm install && npm run build
+RUN bun install && bun run build
 
 # Move built files to /app/public in the builder stage
 RUN mkdir -p /app/public && mv ../public/* /app/public/
@@ -19,7 +19,7 @@ RUN mkdir -p /app/public && mv ../public/* /app/public/
 WORKDIR /app
 
 # Stage 2: Production Stage
-FROM node:lts-alpine
+FROM oven/bun:1.2.14-alpine
 
 # Install curl for health check
 RUN apk update --no-cache && \
@@ -32,7 +32,7 @@ WORKDIR /app
 
 # Install only production dependencies
 COPY package*.json ./
-RUN npm install --omit=dev
+RUN bun install --omit=dev
 
 # Copy backend source code (everything except what's ignored)
 COPY . .
@@ -48,4 +48,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:5000/api/v1/healthcheck || exit 1
 
 # Start your app
-CMD ["npm", "start"]
+CMD ["bun", "start"]
