@@ -44,7 +44,7 @@ app.use(
 
 app.use("/api/v1", httpRoutes);
 
-app.get("/{*splat}", (_req, res) => {
+app.get("*", (_req, res) => {
 	res.sendFile(path.join(process.cwd(), "public", "index.html"));
 });
 
