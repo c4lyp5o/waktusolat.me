@@ -1,4 +1,4 @@
-# API for waktusolat.me
+# waktusolat.me
 
 In the name of Allah, the gracious, the merciful.
 This is the API that waktusolat.me uses to display prayer times and quranic verses. Only serves prayer time for Malaysian districts. Currently not thinking of supporting other places.
@@ -6,14 +6,13 @@ This is the API that waktusolat.me uses to display prayer times and quranic vers
 # License
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
-[![Build Status](https://pipeline.calypsocloud.one/buildStatus/icon?job=waktusolat.me-api)](https://pipeline.calypsocloud.one/job/waktusolat.me-api/)
 
 # Usage:
 
 Run
 
 ```bash
-npm run start
+bun run start
 ```
 
 to start the server.
@@ -22,12 +21,14 @@ Deployable to Docker:
 
 ```bash
 docker build -t waktusolat .
-docker run -p 8080:8002 -d waktusolat
+docker run -p 5000:5000 -d waktusolat
 ```
 
-Then point your browser to localhost:8080
+Then point your browser to localhost:5000
 
 # API
+
+Accessible via /api/v1/
 
 ## Quran
 
