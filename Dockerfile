@@ -45,7 +45,7 @@ EXPOSE 5000
 
 # Add a health check to ensure the container is running properly
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:5000/api/v1/health || exit 1
+  CMD curl -f http://localhost:5000/api/v1/healthcheck || exit 1
 
 # Start your app
 CMD ["npm", "start"]

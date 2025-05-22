@@ -1,35 +1,44 @@
-# API for waktusolat.me
+# waktusolat.me
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Bun](https://img.shields.io/badge/Bun-%23000000.svg?style=flat&logo=bun&logoColor=white)](https://bun.sh)
 
 In the name of Allah, the gracious, the merciful.
-This is the API that waktusolat.me uses to display prayer times and quranic verses. Only serves prayer time for Malaysian districts. Currently not thinking of supporting other places.
+This is waktusolat.me frontend and backend. Only serves prayer time for Malaysian districts. Currently not thinking of supporting other places.
 
-# License
+## 🚀 Quick Start
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
-[![Build Status](https://pipeline.calypsocloud.one/buildStatus/icon?job=waktusolat.me-api)](https://pipeline.calypsocloud.one/job/waktusolat.me-api/)
+### Prerequisites
+- [Bun](https://bun.sh) installed
+- [Docker](https://www.docker.com/) (optional, for containerization)
 
-# Usage:
-
-Run
-
+### Local Development
 ```bash
-npm run start
+# Install dependencies
+bun install
+
+# Start the server
+bun dev
 ```
 
-to start the server.
-
-Deployable to Docker:
+### Docker Deployment
 
 ```bash
+# Build the image
 docker build -t waktusolat .
-docker run -p 8080:8002 -d waktusolat
+
+# Run the container
+docker run -p 3000:3000 -d waktusolat
 ```
 
-Then point your browser to localhost:8080
+Then point your browser to localhost:3000
 
-# API
+# 🔗 API Endpoints
 
-## Quran
+Base URL: /api/v1
+
+## 📖 Quran Endpoints
 
 GET /quran : lists all surah in Al Quran\
 GET /quran/en/(surah number) : displays surah in english language\
@@ -38,14 +47,14 @@ GET /quran/en/(surah number)/(ayat number) : displays ayat in surah in english l
 GET /quran/my/(surah number)/(ayat number) : displays ayat in surah in malay language\
 GET /quran/random : displays random ayat in english and malay language
 
-## Prayer Times
+## ⏰ Prayer Times Endpoints
 
 GET /waktusolat/today/(zone) : displays prayer time for the week for the zone\
 GET /waktusolat/week/(zone) : displays prayer time for the week for the zone\
 GET /waktusolat/month/(zone) : displays prayer time for the month for the zone\
 GET /waktusolat/year/(zone) : displays prayer time for the year for the zone
 
-# The Zones
+# 📍 Zone Codes
 
 1. Kedah\
    KDH01 = KOTA SETAR, POKOK SENA DAN KUBANG PASU\
@@ -132,3 +141,11 @@ GET /waktusolat/year/(zone) : displays prayer time for the year for the zone
 14. Wilayah Persekutuan\
     WLY01 = KUALA LUMPUR DAN PUTRAJAYA\
     WLY02 = LABUAN
+
+# 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+# 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

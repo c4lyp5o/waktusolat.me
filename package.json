@@ -1,20 +1,20 @@
 {
-	"name": "waktusolat-api",
-	"version": "2.0.0",
-	"description": "waktusolat.me API for everything",
+	"name": "waktusolat.me",
+	"version": "2.0.1",
+	"description": "waktusolat.me frontend and backend",
 	"type": "module",
 	"main": "server.js",
 	"scripts": {
-		"get-times": "node ./data/getter.js",
-		"install-server": "npm install",
-		"install-client": "cd client && npm install",
-		"install-all": "npm run install-server && npm run install-client",
-		"server": "nodemon server.js",
+		"get-times": "bun ./data/getter.js",
+		"install-server": "bun install",
+		"install-client": "cd client && bun install",
+		"install-all": "bun run install-server && bun run install-client",
+		"server": "bun --watch server.js",
 		"client": "cd client && npm run dev",
-		"build-client": "cd client && npm run build",
-		"dev": "concurrently \"npm run server\" \"npm run client\"",
-		"prestart": "npm run get-times",
-		"start": "node server.js"
+		"build-client": "cd client && bun run build",
+		"dev": "conc \"bun run client\" \"bun run server\"",
+		"prestart": "bun run get-times",
+		"start": "NODE_ENV=production bun server.js"
 	},
 	"repository": {
 		"type": "git",
@@ -28,17 +28,16 @@
 	"homepage": "https://github.com/c4lyp5o/quran-api#readme",
 	"dependencies": {
 		"cors": "^2.8.5",
-		"cpray": "^1.1.7",
+		"cpray": "^1.3.0",
+		"deadslog": "^1.2.0",
 		"dotenv": "^16.5.0",
-		"express": "^4.17.3",
+		"express": "^4.21.2",
 		"express-graphql": "^0.12.0",
-		"express-rate-limit": "^6.3.0",
-		"graphql": "^15.8.0",
-		"socket.io": "^4.8.1",
-		"sqlite3": "^5.1.6"
+		"express-rate-limit": "^6.11.2",
+		"graphql": "^15.10.1",
+		"socket.io": "^4.8.1"
 	},
 	"devDependencies": {
-		"concurrently": "^9.1.2",
-		"nodemon": "^3.1.9"
+		"concurrently": "^9.1.2"
 	}
 }

@@ -7,6 +7,7 @@ import {
 	TimeHelpers,
 } from "../controllers/helpers.js";
 import { cacheService } from "../middlewares/cache.js";
+import localAuth from "../middlewares/localAuth.js";
 
 const router = Router();
 
@@ -55,10 +56,8 @@ router.get("/hadis/:book", HadithsHelpers.getHadith);
 router.get("/waktusolat/:period/:zone", TimeHelpers.getTime);
 
 // healthcheck
-router.get("/health", (_req, res) => {
-	res.status(200).json({
-		msg: "ok",
-	});
+router.get("/healthcheck", localAuth, (_req, res) => {
+	res.status(200).json({ msg: "ok" });
 });
 
 export default router;

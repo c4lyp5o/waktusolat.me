@@ -1,4 +1,4 @@
 node_modules
 public/
 .github/
-db/visitors.db
+db/visitors.sqlite
