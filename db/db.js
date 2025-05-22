@@ -1,51 +1,36 @@
-import sqlite3 from "sqlite3";
-import path from "node:path";
-
+import { Database } from "bun:sqlite";
 import logger from "../utils/logger.js";
 
-const db = new sqlite3.Database(
-	path.join(process.cwd(), "db", "visitors.db"),
-	(err) => {
-		if (err) {
-			logger.error(
-				"[sqlite3] Could not connect to the visitors database.",
-				err.message,
-			);
+let dbInstance;
+
+/**
+ * Initializes the SQLite database.
+ * Ensures tables are created if they do not exist.
+ * @returns {Database} The database instance.
+ */
+const initializeDatabase = async () => {
+	if (!dbInstance) {
+
+		try {
+			dbInstance = new Database(process.env.DB_PATH || "./db/visitors.sqlite", { create: true });
+
+			dbInstance.exec(`
+				CREATE TABLE IF NOT EXISTS visitors (
+				id INTEGER PRIMARY KEY AUTOINCREMENT,
+				ip_address TEXT,
+				visit_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+				);
+			`);
+		} catch (error) {
+			console.error("Error creating tables:", error.message);
+			process.exit(1);
 		}
-		logger.info("[sqlite3] Connected to the visitors database.");
-	},
-);
+	}
 
-const initiateDb = async () => {
-	db.get(
-		`SELECT name FROM sqlite_master WHERE type='table' AND name='visitors'`,
-		(err, row) => {
-			if (err) {
-				logger.error(err.message);
-			}
-			if (!row) {
-				db.run(
-					`CREATE TABLE visitors(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            ip_address TEXT,
-            visit_date TEXT
-          )`,
-					(err) => {
-						if (err) {
-							logger.error("[sqlite3] ", err.message);
-						}
-						logger.info("[sqlite3] Done initiating database");
-					},
-				);
-			} else {
-				logger.info(
-					"[sqlite3] Visitors table already exists. Not intiating database.",
-				);
-			}
-		},
+	logger.info(
+		`[db] Database initialized at ${process.env.DB_PATH || "./database/ezjot.sqlite"}`,
 	);
-
-	return true;
+	return dbInstance;
 };
 
-export { db, initiateDb };
+export default initializeDatabase;
