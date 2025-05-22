@@ -1,4 +1,4 @@
-import { createRequire } from 'module';
+import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const { holyQuran: quranmy } = require('../data/quran/quran_id.json');
 const { holyQuran: quranen } = require('../data/quran/quran_en.json');
