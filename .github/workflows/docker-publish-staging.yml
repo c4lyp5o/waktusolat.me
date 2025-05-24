@@ -1,0 +1,48 @@
+name: Build & Deploy Staging
+
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 🧾 Checkout source
+      uses: actions/checkout@v4
+
+    - name: 📁 Inject .env file
+      run: |
+        echo "${{ secrets.STAGING_ENV }}" | base64 -d > .env
+
+    - name: 🐳 Docker Login
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: 🛠️ Build & Push Docker Image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        build-args: |
+          NODE_ENV=staging
+        tags: |
+          calypso666/waktusolat.me:staging
+
+    - name: 🚀 Deploy via SSH
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          cd ~/own
+          docker compose down waktusolat.me || true
+          docker compose down waktusolat.me-staging || true
+          docker pull calypso666/waktusolat.me:staging
+          docker compose up -d waktusolat.me-staging
