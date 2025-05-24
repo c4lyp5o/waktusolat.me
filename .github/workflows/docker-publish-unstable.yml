@@ -29,6 +29,8 @@ jobs:
       with:
         context: .
         push: true
+        build-args: |
+          NODE_ENV=development
         tags: |
           calypso666/waktusolat.me:unstable
 
