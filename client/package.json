@@ -5,10 +5,10 @@
 	"type": "module",
 	"scripts": {
 		"dev": "bunx --bun vite --host",
-		"build-development": "bunx --bun vite build --mode development",
+		"preview": "bunx --bun vite preview",
+		"build-staging": "bunx --bun vite build --mode staging",
 		"build": "bunx --bun vite build",
-		"lint": "eslint .",
-		"preview": "bunx --bun vite preview"
+		"lint": "eslint ."
 	},
 	"dependencies": {
 		"react": "^19.1.0",

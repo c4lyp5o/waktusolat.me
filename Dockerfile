@@ -14,8 +14,8 @@ RUN bun install
 COPY client ./client
 WORKDIR /app/client
 RUN bun install && \
-    if [ "$NODE_ENV" = "development" ]; then \
-        bun run build-development; \
+    if [ "$NODE_ENV" = "staging" ]; then \
+        bun run build-staging; \
     else \
         bun run build; \
     fi
