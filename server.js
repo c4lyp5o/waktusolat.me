@@ -50,7 +50,7 @@ app.use(notFound);
 app.use(errorHandler);
 
 server.listen(process.env.PORT || 5000, () => {
-	logger.info(`[app] waktusolat.me is running on port ${process.env.PORT || 5000}. Running in ${process.env.NODE_ENV} mode.`);
+	logger.info(`[app] waktusolat.me is running on port ${process.env.PORT || 5000}. Running in ${process.env.NODE_ENV ? process.env.NODE_ENV : 'production'} mode.`);
 	logger.info(
 		`[graphql] GraphQL API is running on http://localhost:${process.env.PORT || 5000}/graphql`,
 	);
