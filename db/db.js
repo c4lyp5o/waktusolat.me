@@ -28,7 +28,7 @@ const initializeDatabase = async () => {
 	}
 
 	logger.info(
-		`[db] Database initialized at ${process.env.DB_PATH || "./database/ezjot.sqlite"}`,
+		`[db] Database initialized at ${process.env.DB_PATH || "./database/visitors.sqlite"}`,
 	);
 	return dbInstance;
 };

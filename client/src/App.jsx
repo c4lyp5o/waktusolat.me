@@ -16,9 +16,9 @@ function App() {
 	return (
 		<BrowserRouter>
 			<Navbar />
-			{import.meta.env.MODE === 'development' && (
+			{["development", "staging"].includes(import.meta.env.MODE) && (
 				<p className="text-center text-red-500 bg-red-100 py-1 text-sm">
-					⚠️ This is an unstable version - Features may be incomplete or broken
+					⚠️ This is {import.meta.env.MODE} version - Features may be incomplete or broken
 				</p>
 			)}
 			<Routes>
