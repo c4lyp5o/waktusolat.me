@@ -1,13 +1,11 @@
+import 'dotenv/config';
 import express from "express";
-import dotenv from "dotenv";
 import { graphqlHTTP } from "express-graphql";
 import RateLimit from "express-rate-limit";
 import cors from "cors";
 import { createServer } from "node:http";
 import path from "node:path";
 import logger from "./utils/logger.js";
-
-dotenv.config();
 
 import websocket from "./controllers/websocket.js";
 import httpRoutes from "./routes/api.js";
@@ -52,7 +50,7 @@ app.use(notFound);
 app.use(errorHandler);
 
 server.listen(process.env.PORT || 5000, () => {
-	logger.info(`[app] waktusolat.me is running on port ${process.env.PORT || 5000}`);
+	logger.info(`[app] waktusolat.me is running on port ${process.env.PORT || 5000}. Running in ${process.env.NODE_ENV} mode.`);
 	logger.info(
 		`[graphql] GraphQL API is running on http://localhost:${process.env.PORT || 5000}/graphql`,
 	);
