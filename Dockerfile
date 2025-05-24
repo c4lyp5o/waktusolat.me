@@ -1,6 +1,8 @@
 # Stage 1: Build Stage (client build)
 FROM oven/bun:1.2.14-alpine AS builder
 
+ENV NODE_ENV=$NODE_ENV
+
 WORKDIR /app
 
 # Install root dependencies (Express etc.)
