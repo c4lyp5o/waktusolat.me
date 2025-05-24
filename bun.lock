@@ -66,7 +66,7 @@
 
     "cpray": ["cpray@1.3.0", "", {}, "sha512-jFudE7FjGpqR2Yj0cxLIs1SHkwMmKSKPl0Sxr1eMr66A9Dw7dwqE8oytGwRdANGhSksCxGg4Ul9Vt/XUoSo2Gw=="],
 
-    "deadslog": ["deadslog@1.2.0", "", { "dependencies": { "yoctocolors": "^2.1.1" } }, "sha512-NG963H6jck+D/t39n6w8Lz57Q/oBIctqinKN2VyQgZjNwJfJxB5/Jq7qMNb7SOto2iWQvv8f3E8F7lk4vvJWbg=="],
+    "deadslog": ["deadslog@1.2.1", "", { "dependencies": { "yoctocolors": "^2.1.1" } }, "sha512-hihaXPUrTZ59xkrzmuDOiEJnA0tACjwNnQs9pBSHFlIotVUrNEpikMb9+bfJEov9Qn4X8yKv2AEqDAL9cYfuyg=="],
 
     "debug": ["debug@2.6.9", "", { "dependencies": { "ms": "2.0.0" } }, "sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA=="],
 
