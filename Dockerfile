@@ -1,7 +1,9 @@
 # Stage 1: Build Stage (client build)
 FROM oven/bun:1.2.14-alpine AS builder
 
-ENV NODE_ENV=$NODE_ENV
+# Accept NODE_ENV as a build argument, defaulting to "production"
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /app
 
@@ -21,11 +23,13 @@ RUN bun install && \
 # Move built files to /app/public in the builder stage
 RUN mkdir -p /app/public && mv ../public/* /app/public/
 
-# Return to root app dir
 WORKDIR /app
 
 # Stage 2: Production Stage
 FROM oven/bun:1.2.14-alpine
+
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 
 # Install curl for health check
 RUN apk update --no-cache && \
@@ -46,12 +50,10 @@ COPY . .
 # Copy built public files from builder
 COPY --from=builder /app/public /app/public
 
-# Expose your server port
 EXPOSE 5000
 
 # Add a health check to ensure the container is running properly
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:5000/api/v1/healthcheck || exit 1
 
-# Start your app
 CMD ["bun", "start"]
