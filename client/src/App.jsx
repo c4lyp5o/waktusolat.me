@@ -16,6 +16,11 @@ function App() {
 	return (
 		<BrowserRouter>
 			<Navbar />
+			{import.meta.env.MODE === 'development' && (
+				<p className="text-center text-red-500 bg-red-100 py-1 text-sm">
+					⚠️ This is an unstable version - Features may be incomplete or broken
+				</p>
+			)}
 			<Routes>
 				<Route index element={<Landing />} />
 
