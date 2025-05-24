@@ -14,9 +14,9 @@ jobs:
     - name: 🧾 Checkout source
       uses: actions/checkout@v4
 
-    # - name: 📁 Inject .env file
-    #   run: |
-    #     echo "${{ secrets.UNSTABLE_ENV_B64 }}" | base64 -d > .env
+    - name: 📁 Inject .env file
+      run: |
+        echo "${{ secrets.UNSTABLE_ENV_B64 }}" | base64 -d > .env
 
     - name: 🐳 Docker Login
       uses: docker/login-action@v3
@@ -29,8 +29,6 @@ jobs:
       with:
         context: .
         push: true
-        build-args: |
-          NODE_ENV=unstable
         tags: |
           calypso666/waktusolat.me:unstable
 
