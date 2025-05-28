@@ -16,8 +16,25 @@ function App() {
 	return (
 		<BrowserRouter>
 			{import.meta.env.MODE !== "production" && (
-				<div className="fixed top-0 right-0 bg-yellow-500 text-black px-2 py-1 text-xs font-mono">
-					{import.meta.env.MODE}
+				<div
+					style={{
+						position: "fixed",
+						top: "1rem",
+						right: "1rem",
+						zIndex: 1000,
+					}}
+				>
+					<span
+						className="contrast"
+						style={{
+							padding: "0.25rem 0.75rem",
+							fontFamily: "monospace",
+							fontSize: "0.85rem",
+							fontWeight: 600,
+						}}
+					>
+						{import.meta.env.MODE}
+					</span>
 				</div>
 			)}
 			<Navbar />
