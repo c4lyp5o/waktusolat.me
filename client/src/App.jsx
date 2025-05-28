@@ -15,12 +15,29 @@ import Navbar from "./components/Navbar";
 function App() {
 	return (
 		<BrowserRouter>
-			<Navbar />
-			{["development", "staging"].includes(import.meta.env.MODE) && (
-				<p className="text-center text-red-500 bg-red-100 py-1 text-sm">
-					⚠️ This is {import.meta.env.MODE} version - Features may be incomplete or broken
-				</p>
+			{import.meta.env.MODE !== "production" && (
+				<div
+					style={{
+						position: "fixed",
+						top: "1rem",
+						right: "1rem",
+						zIndex: 1000,
+					}}
+				>
+					<span
+						className="contrast"
+						style={{
+							padding: "0.25rem 0.75rem",
+							fontFamily: "monospace",
+							fontSize: "0.85rem",
+							fontWeight: 600,
+						}}
+					>
+						{import.meta.env.MODE}
+					</span>
+				</div>
 			)}
+			<Navbar />
 			<Routes>
 				<Route index element={<Landing />} />
 
