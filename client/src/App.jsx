@@ -15,12 +15,12 @@ import Navbar from "./components/Navbar";
 function App() {
 	return (
 		<BrowserRouter>
-			<Navbar />
-			{["development", "staging"].includes(import.meta.env.MODE) && (
-				<p className="text-center text-red-500 bg-red-100 py-1 text-sm">
-					⚠️ This is {import.meta.env.MODE} version - Features may be incomplete or broken
-				</p>
+			{import.meta.env.MODE !== "production" && (
+				<div className="fixed top-0 right-0 bg-yellow-500 text-black px-2 py-1 text-xs font-mono">
+					{import.meta.env.MODE}
+				</div>
 			)}
+			<Navbar />
 			<Routes>
 				<Route index element={<Landing />} />
 
