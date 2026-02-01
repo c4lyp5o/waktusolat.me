@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --font-uthmanic: "Uthmanic", serif;
+
+  --animate-breath: breath 3s ease-in-out infinite;
+
+  @keyframes breath {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    50% {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px 5px rgba(16, 185, 129, 0.4);
+    }
+  }
+}
+
+@font-face {
+  font-family: "Uthmanic";
+  src: url("/fonts/KFGQPC-Uthmanic-Script-HAFS-Regular.otf") format("opentype");
+  font-style: normal;
+  font-display: swap;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+body {
+    @apply bg-slate-950 text-slate-200 antialiased;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+input, select, textarea {
+    @apply bg-slate-800 border-slate-700 text-white placeholder-slate-500;
+}
