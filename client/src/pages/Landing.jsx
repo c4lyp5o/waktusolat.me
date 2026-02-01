@@ -1,18 +1,15 @@
 import { useEffect } from "react";
-
-import Zones from "../components/ZoneSelector";
+import ZoneSelector from "../components/ZoneSelector";
 
 export default function Landing() {
 	useEffect(() => {
 		const visit = async () => {
 			try {
 				await fetch("/api/v1/thanks");
-				// console.log("Thanks for visiting!");
 			} catch (error) {
-				// console.log(error);
+				// Silent fail
 			}
 		};
-
 		visit();
 	}, []);
 
@@ -23,11 +20,23 @@ export default function Landing() {
 				name="description"
 				content="Waktu Solat Untuk Malaysia Straight Dari JAKIM"
 			/>
-			<meta name="keywords" content="Waktu Solat, Malaysia, JAKIM" />
-			<meta name="author" content="c4lyp5o" />
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			<link rel="icon" href="/favicon.ico" />
-			<Zones />
+
+			{/* Hero Container */}
+			<main className="min-h-screen bg-slate-950 flex flex-col items-center pt-6 pb-10 px-4">
+				<div className="w-full max-w-3xl space-y-8">
+					{/* Header Text */}
+					<div className="text-center space-y-2">
+						<h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-100">
+							Waktu Solat <span className="text-emerald-600">Malaysia</span>
+						</h1>
+					</div>
+
+					{/* The Selector Component */}
+					<ZoneSelector />
+				</div>
+			</main>
 		</>
 	);
 }
