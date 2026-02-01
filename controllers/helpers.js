@@ -531,7 +531,7 @@ const timeCruncher = (period, zone) => {
 			return "error";
 	}
 };
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+// biome-ignore lint/complexity/noStaticOnlyClass: i dont even
 class QuranHelpers {
 	static getSurahNames = (_req, res) => {
 		const data = Quranen.map(({ id, name, transliteration, translation }) => ({
@@ -607,7 +607,7 @@ class QuranHelpers {
 		res.status(200).json({ data });
 	};
 }
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+// biome-ignore lint/complexity/noStaticOnlyClass: i dont even
 class HadithsHelpers {
 	static HADITH_BOOKS = [
 		"bukhari",
@@ -646,7 +646,7 @@ class HadithsHelpers {
 		return res.status(200).json({ hadis });
 	}
 }
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+// biome-ignore lint/complexity/noStaticOnlyClass: i dont even
 class TimeHelpers {
 	static async getTime(req, res) {
 		const { period, zone } = req.params;
