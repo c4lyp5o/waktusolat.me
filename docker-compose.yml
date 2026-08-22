@@ -1,0 +1,32 @@
+# waktusolat.me — dev/deploy compose
+#
+# NOTE ON BIND MOUNTS:
+# The sqlite visitor DB lives at ./db/visitors.sqlite (gitignored).
+# Bind-mount ./db below so visitor counts persist across container
+# rebuilds. Do NOT bind ./data — that dir holds git-tracked static
+# content (quran/hadith/times JSON) and binding it would shadow and
+# break those routes.
+services:
+  app:
+    build: .
+    # image: calypso/waktusolat.me:latest   # uncomment to pin an image tag
+    container_name: waktusolat
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+      # - "443:5000"   # uncomment + set tls for direct https
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - TZ=Asia/Kuala_Lumpur
+      - DB_PATH=/app/db/visitors.sqlite
+    volumes:
+      # Persistent, gitignored sqlite DB — survives rebuilds
+      - ./db:/app/db
+      # - ./db/visitors.sqlite:/app/db/visitors.sqlite  # single-file variant
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
