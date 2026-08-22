@@ -229,7 +229,7 @@ export default function ZoneSelector() {
 	return (
 		<div className="w-full bg-slate-900 rounded-3xl shadow-xl overflow-hidden border border-slate-800">
 			{/* Search Header */}
-			<div className="p-6 bg-linear-to-r from-emerald-600 to-teal-600">
+			<div className="p-6 bg-linear-to-r from-acre-600 to-teal-600">
 				<label
 					htmlFor="search"
 					className="block text-white text-sm font-semibold mb-2"
@@ -240,13 +240,13 @@ export default function ZoneSelector() {
 					<input
 						id="search"
 						type="text"
-						className="w-full px-4 py-3 rounded-xl border-none ring-2 ring-emerald-500 focus:ring-emerald-300 focus:outline-none shadow-sm bg-slate-800 text-white border-slate-700 placeholder-gray-400"
+						className="w-full px-4 py-3 rounded-xl border-none ring-2 ring-acre-500 focus:ring-acre-300 focus:outline-none shadow-sm bg-slate-800 text-white border-slate-700 placeholder-slate-400"
 						placeholder="Contoh: Gombak, Shah Alam, Melaka..."
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 						autoComplete="off"
 					/>
-					<div className="absolute right-3 top-3 text-gray-400">
+					<div className="absolute right-3 top-3 text-slate-400">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							className="h-6 w-6"
@@ -269,7 +269,7 @@ export default function ZoneSelector() {
 			{/* Results List */}
 			<div className="max-h-[60vh] overflow-y-auto p-4 space-y-4 bg-slate-900s/50">
 				{filteredZones.length === 0 ? (
-					<div className="text-center py-10 text-gray-400">
+					<div className="text-center py-10 text-slate-400">
 						<p>Tiada kawasan dijumpai.</p>
 					</div>
 				) : (
@@ -278,25 +278,25 @@ export default function ZoneSelector() {
 							key={zone.parent}
 							className="bg-slate-900 rounded-xl border border-slate-800 shadow-sm overflow-hidden"
 						>
-							<div className="px-4 py-2 bg-gray-100/50 border-b border-slate-800">
-								<h3 className="font-bold text-gray-200 text-sm uppercase tracking-wide">
+							<div className="px-4 py-2 bg-slate-100/50 border-b border-slate-800">
+								<h3 className="font-bold text-slate-200 text-sm uppercase tracking-wide">
 									{zone.parent}
 								</h3>
 							</div>
-							<div className="divide-y divide-gray-50">
+							<div className="divide-y divide-slate-50">
 								{zone.children.map((child) => (
 									<button
 										type="button"
 										key={child.value}
 										onClick={() => handleSelectZone(child.value)}
-										className="w-full text-left px-4 py-3 hover:bg-emerald-50 hover:text-emerald-700 transition-colors duration-200 flex items-center justify-between group"
+										className="w-full text-left px-4 py-3 hover:bg-acre-50 hover:text-acre-700 transition-colors duration-200 flex items-center justify-between group"
 									>
-										<span className="text-sm font-medium text-slate-300 group-hover:text-emerald-700 normal-case leading-relaxed">
+										<span className="text-sm font-medium text-slate-300 group-hover:text-acre-700 normal-case leading-relaxed">
 											{child.name
 												.toLowerCase()
 												.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())}
 										</span>
-										<span className="text-gray-300 group-hover:text-emerald-400">
+										<span className="text-slate-300 group-hover:text-acre-400">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												className="h-5 w-5"

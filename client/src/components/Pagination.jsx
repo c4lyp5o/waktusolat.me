@@ -61,11 +61,11 @@ export default function Pagination({
 	const baseBtn =
 		"h-10 w-10 flex items-center justify-center rounded-lg border transition-all duration-200 text-sm font-medium";
 	const activeBtn =
-		"bg-emerald-600 text-white border-emerald-600 shadow-md transform scale-105";
+		"bg-acre-600 text-white border-acre-600 shadow-md transform scale-105";
 	const inactiveBtn =
-		"bg-slate-900 text-gray-600 border-slate-800 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200";
+		"bg-slate-900 text-slate-600 border-slate-800 hover:bg-acre-50 hover:text-acre-700 hover:border-acre-200";
 	const disabledBtn =
-		"opacity-40 cursor-not-allowed bg-slate-950 text-gray-400 border-slate-800";
+		"opacity-40 cursor-not-allowed bg-slate-950 text-slate-400 border-slate-800";
 
 	return (
 		<div className="space-y-8">

@@ -56,13 +56,13 @@ export default function QuranSurahSelect() {
 			<main className="min-h-screen bg-slate-950 pb-20 font-sans">
 				<div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
 					{/* --- SECTION 1: AYAT HARI INI (Daily Verse) --- */}
-					<section className="bg-slate-900 rounded-3xl shadow-xl border border-emerald-100 overflow-hidden relative">
+					<section className="bg-slate-900 rounded-3xl shadow-xl border border-acre-100 overflow-hidden relative">
 						{/* Decorative Top Bar */}
-						<div className="h-2 bg-linear-to-r from-emerald-500 to-teal-500" />
+						<div className="h-2 bg-linear-to-r from-acre-500 to-teal-500" />
 
 						<div className="p-6 md:p-10 space-y-6">
 							<div className="flex items-center gap-2 mb-2">
-								<span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+								<span className="bg-acre-100 text-acre-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
 									Ayat Hari Ini
 								</span>
 							</div>
@@ -81,9 +81,9 @@ export default function QuranSurahSelect() {
 									"{randomAyat.data.malayTranslation}"
 								</p>
 
-								<div className="flex items-center justify-end text-sm font-medium text-emerald-600">
+								<div className="flex items-center justify-end text-sm font-medium text-acre-600">
 									<span>Surah {randomAyat.data.fromSurah}</span>
-									<span className="mx-2 text-gray-300">|</span>
+									<span className="mx-2 text-slate-300">|</span>
 									<span>Ayat {randomAyat.data.ayatNumber}</span>
 								</div>
 							</div>
@@ -102,12 +102,12 @@ export default function QuranSurahSelect() {
 								<input
 									type="text"
 									placeholder="Cari Surah (cth: Yasin)..."
-									className="w-full pl-10 pr-4 py-2 rounded-xl border bg-slate-800 text-white border-slate-700 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all outline-none"
+									className="w-full pl-10 pr-4 py-2 rounded-xl border bg-slate-800 text-white border-slate-700 focus:border-acre-500 focus:ring-2 focus:ring-acre-200 transition-all outline-none"
 									value={searchTerm}
 									onChange={(e) => setSearchTerm(e.target.value)}
 								/>
 								<svg
-									className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
+									className="absolute left-3 top-2.5 h-5 w-5 text-slate-400"
 									fill="none"
 									viewBox="0 0 24 24"
 									stroke="currentColor"
@@ -135,27 +135,27 @@ export default function QuranSurahSelect() {
 										type="button"
 										key={singleSurah.transliteration}
 										onClick={() => handleSelectSurah(originalIndex)}
-										className="group bg-slate-900 hover:bg-emerald-50 border border-slate-800 hover:border-emerald-200 rounded-xl p-4 flex items-center justify-between transition-all duration-200 shadow-sm hover:shadow-md text-left"
+										className="group bg-slate-900 hover:bg-acre-50 border border-slate-800 hover:border-acre-200 rounded-xl p-4 flex items-center justify-between transition-all duration-200 shadow-sm hover:shadow-md text-left"
 									>
 										<div className="flex items-center gap-4">
 											{/* Number Badge */}
-											<div className="h-10 w-10 shrink-0 bg-gray-100 group-hover:bg-emerald-200 text-slate-600 group-hover:text-emerald-800 rounded-lg flex items-center justify-center font-bold text-sm transition-colors">
+											<div className="h-10 w-10 shrink-0 bg-slate-100 group-hover:bg-acre-200 text-slate-600 group-hover:text-acre-800 rounded-lg flex items-center justify-center font-bold text-sm transition-colors">
 												{originalIndex + 1}
 											</div>
 
 											{/* Name */}
 											<div>
-												<h3 className="font-bold text-slate-200 group-hover:text-emerald-900">
+												<h3 className="font-bold text-slate-200 group-hover:text-acre-900">
 													{singleSurah.transliteration}
 												</h3>
-												{/* If API had meaning, we'd put it here: <p className="text-xs text-gray-400">The Opening</p> */}
+												{/* If API had meaning, we'd put it here: <p className="text-xs text-slate-400">The Opening</p> */}
 											</div>
 										</div>
 
 										{/* Arrow Icon */}
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
-											className="h-5 w-5 text-gray-300 group-hover:text-emerald-500 transform group-hover:translate-x-1 transition-all"
+											className="h-5 w-5 text-slate-300 group-hover:text-acre-500 transform group-hover:translate-x-1 transition-all"
 											fill="none"
 											viewBox="0 0 24 24"
 											stroke="currentColor"
@@ -174,7 +174,7 @@ export default function QuranSurahSelect() {
 						</div>
 
 						{filteredSurahs.length === 0 && (
-							<div className="text-center py-12 text-gray-400 bg-slate-900 rounded-xl border border-dashed border-slate-800">
+							<div className="text-center py-12 text-slate-400 bg-slate-900 rounded-xl border border-dashed border-slate-800">
 								<p>Tiada surah dijumpai.</p>
 							</div>
 						)}

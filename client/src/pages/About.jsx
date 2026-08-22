@@ -8,7 +8,7 @@ export default function About() {
 			<main className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 font-sans pb-20">
 				<div className="w-full max-w-md bg-slate-900 rounded-3xl shadow-xl overflow-hidden border border-slate-800">
 					{/* Header Image / Pattern */}
-					<div className="h-32 bg-gradient-to-r from-emerald-600 to-teal-600 relative overflow-hidden">
+					<div className="h-32 bg-gradient-to-r from-acre-600 to-teal-600 relative overflow-hidden">
 						{/* Decorative Circles */}
 						<div className="absolute -top-10 -right-10 w-40 h-40 bg-slate-900/10 rounded-full blur-2xl"></div>
 						<div className="absolute top-10 -left-10 w-20 h-20 bg-slate-900/10 rounded-full blur-xl"></div>
@@ -48,7 +48,7 @@ export default function About() {
 								href="https://github.com/c4lyp5o"
 								target="_blank"
 								rel="noreferrer"
-								className="inline-flex items-center gap-2 bg-gray-900 hover:bg-black text-white px-6 py-3 rounded-xl font-medium transition-all transform hover:scale-105 shadow-lg"
+								className="inline-flex items-center gap-2 bg-slate-900 hover:bg-black text-white px-6 py-3 rounded-xl font-medium transition-all transform hover:scale-105 shadow-lg"
 							>
 								<svg
 									className="w-5 h-5"
