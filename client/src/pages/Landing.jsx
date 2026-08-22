@@ -58,38 +58,49 @@ export default function Landing() {
 				{/* Centered hero — as minimal as it gets */}
 				<div className="flex flex-1 flex-col items-center justify-center px-4 pt-10 pb-16">
 					<div className="rise-1 relative w-full max-w-3xl text-center">
-						<p
-							className="font-uthmanic text-2xl text-dinar-400/70 md:text-3xl"
-							dir="rtl"
-							lang="ar"
-							aria-hidden="true"
-						>
-							بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ
-						</p>
-						<h1 className="mt-4 text-5xl font-extrabold tracking-tight text-slate-50 md:text-7xl">
-							Waktu Solat{" "}
-							<span className="text-acre-500">Malaysia</span>
-						</h1>
-						<p className="mt-3 text-sm tracking-wide text-slate-500 md:text-base">
-							waktu solat seluruh negeri — terus dari JAKIM
-						</p>
+										<h1 className="text-5xl font-extrabold tracking-tight text-slate-50 md:text-7xl">
+											Waktu Solat{" "}
+											<span className="text-acre-500">Malaysia</span>
+										</h1>
+									</div>
+
+					{/* Visitor stats — above the fold, before the zone browser */}
+					<div className="rise-2 relative mt-9">
+						{stats && (
+							<div className="flex items-start justify-center gap-8 px-4">
+								<div className="text-center">
+									<p className="text-xl font-bold tabular-nums text-slate-50">
+										{nf(stats.total_visits)}
+									</p>
+									<p className="mt-1 text-[11px] uppercase tracking-widest text-slate-400">
+										Kunjungan
+									</p>
+								</div>
+								<div className="text-center">
+									<p className="text-xl font-bold tabular-nums text-slate-50">
+										{nf(stats.unique_visitors)}
+									</p>
+									<p className="mt-1 text-[11px] uppercase tracking-widest text-slate-400">
+										Pelawat
+									</p>
+								</div>
+								<div className="text-center">
+									<p className="text-xl font-bold tabular-nums text-slate-50">
+										{nf(stats.active_days)}
+									</p>
+									<p className="mt-1 text-[11px] uppercase tracking-widest text-slate-400">
+										Hari Aktif
+									</p>
+								</div>
+							</div>
+						)}
 					</div>
 
 					{/* The one thing to do here */}
-					<div className="rise-2 relative mt-9 w-full max-w-md px-2">
+					<div className="rise-3 relative mt-8 w-full max-w-md px-2">
 						<ZoneSelector />
 					</div>
 				</div>
-
-				{/* Quiet, unobtrusive usage footnote */}
-				<footer className="relative pb-6 text-center">
-					{stats && stats.total_visits > 0 && (
-						<p className="px-4 text-xs tracking-wide text-slate-600">
-							{nf(stats.total_visits)} kunjungan · {nf(stats.unique_visitors)}{" "}
-							pelawat
-						</p>
-					)}
-				</footer>
 			</main>
 		</>
 	);
