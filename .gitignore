@@ -1,4 +1,4 @@
 node_modules
 public/
 .env
-db/visitors.sqlite
+db/visitors.sqlite/.migrate-express/
