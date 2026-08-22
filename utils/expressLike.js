@@ -30,12 +30,20 @@ export function adaptElysia(fn) {
 		const method = (request?.method || "GET").toUpperCase();
 
 		// Elysia does not populate ctx.ip; derive it from headers, falling back
-		// to ctx.server.requestIP() resolution when available.
+		// to the real socket IP via ctx.server.requestIP() when no proxy headers
+		// are present (e.g. direct localhost / non-reverse-proxied requests).
 		let ip =
 			// biome-ignore lint/style/noNonNullAssertion: guarded below
 			String(headersObj["x-forwarded-for"] || "").split(",")[0]?.trim() ||
 			String(headersObj["x-real-ip"] || "").trim() ||
 			String(headersObj["cf-connecting-ip"] || "").trim();
+
+		if (!ip) {
+			const reqIp =
+				ctx.server?.requestIP?.(request)?.address ||
+				ctx.requestIP?.(request)?.address;
+			if (reqIp && typeof reqIp === "string") ip = reqIp;
+		}
 
 		const req = {
 			method,

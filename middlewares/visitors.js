@@ -1,12 +1,14 @@
 import initializeDatabase from "../db/db.js"
+import logger from "../utils/logger.js"
 
 const waktusolatDb = await initializeDatabase();
 
 const insertVisitor = async (req, res) => {
 	const date = new Date().toISOString();
-	const clientIp = req.headers['x-forwarded-for']?.split(',')[0] ||
+	const clientIp =
+		req.headers['x-forwarded-for']?.split(',')[0] ||
 		req.headers['x-real-ip'] ||
-		req.socket.remoteAddress;
+		req.socket?.remoteAddress;
 
 	if (!clientIp) {
 		return res.status(400).json({
@@ -15,16 +17,16 @@ const insertVisitor = async (req, res) => {
 		});
 	}
 
-	await new Promise((resolve, reject) => {
-		waktusolatDb.run(
-			"INSERT INTO visitors(ip_address, visit_date) VALUES(?, ?)",
-			[clientIp, date],
-			(err) => {
-				if (err) reject(err);
-				resolve();
-			}
-		);
-	});
+	// bun:sqlite is synchronous — run() returns { changes, lastInsertRowid }
+	// and takes no callback. The insert executes immediately; wrap in try/catch.
+	try {
+		waktusolatDb
+			.prepare("INSERT INTO visitors(ip_address, visit_date) VALUES(?, ?)")
+			.run(clientIp, date);
+	} catch (err) {
+		logger.error(`[visitors] failed to record visit: ${err.message}`);
+		return res.status(500).json({ code: 500, message: "Failed to record visit" });
+	}
 
 	return res.status(200).json({
 		message: "Thanks for visiting us!",
