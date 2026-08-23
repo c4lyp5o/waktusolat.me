@@ -5,7 +5,10 @@ const USER_ACTION_EVENT = "user actions";
 const SOCKET_SERVER_URL =
 	import.meta.env.VITE_PUBLIC_BUILD === "development"
 		? "ws://localhost:5000/ws"
-		: `wss://${window.location.host}/ws`;
+		// Match the page's own scheme: wss:// when served over https, else ws://.
+		// (Hardcoding wss:// broke LAN/http testing — the secure handshake can
+		// never succeed against a plain-HTTP server.)
+		: `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/ws`;
 
 // Cap retained messages so a long-running session doesn't grow unboundedly.
 const MAX_MESSAGES = 300;
