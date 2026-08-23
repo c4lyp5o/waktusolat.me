@@ -37,7 +37,7 @@ export default function LoadFailed() {
 			<button
 				type="button"
 				onClick={() => window.location.reload()}
-				className="px-6 py-2.5 rounded-full bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium transition-all hover:scale-105 border border-slate-700 hover:border-emerald-500/50 flex items-center gap-2"
+				className="px-6 py-2.5 rounded-full bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium transition-all hover:scale-105 border border-slate-700 hover:border-acre-500/50 flex items-center gap-2"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

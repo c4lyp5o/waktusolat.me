@@ -73,7 +73,7 @@ export class ErrorBoundary extends React.Component {
 					<button
 						type="button"
 						onClick={this.tryAgain}
-						className="px-8 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium transition-all hover:scale-105 shadow-lg shadow-emerald-900/20 flex items-center gap-2"
+						className="px-8 py-3 rounded-full bg-acre-600 hover:bg-acre-700 text-white font-medium transition-all hover:scale-105 shadow-lg shadow-acre-900/20 flex items-center gap-2"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

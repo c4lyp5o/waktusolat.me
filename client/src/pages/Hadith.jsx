@@ -57,7 +57,7 @@ export default function Hadith() {
 					{/* Header Section */}
 					<div className="text-center space-y-2 pt-2">
 						<h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-100">
-							Koleksi <span className="text-emerald-600">Hadis</span>
+							Koleksi <span className="text-acre-600">Hadis</span>
 						</h1>
 						{/* <p className="text-slate-400 text-lg">
 							Pilih kitab di bawah untuk membaca hadis secara rawak.
@@ -66,13 +66,13 @@ export default function Hadith() {
 
 					{/* Book Selection Grid */}
 					<div className="bg-slate-900 rounded-3xl shadow-sm border border-slate-800 p-6">
-						<h2 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">
+						<h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">
 							Pilih Kitab
 						</h2>
 
 						{keetab.length === 0 ? (
 							<div className="animate-pulse flex space-x-4">
-								<div className="h-10 bg-gray-200 rounded w-full"></div>
+								<div className="h-10 bg-slate-200 rounded w-full"></div>
 							</div>
 						) : (
 							<div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -85,8 +85,8 @@ export default function Hadith() {
                       px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 border
                       ${
 												selectedBook === book
-													? "bg-emerald-600 text-white border-emerald-600 shadow-md transform scale-105"
-													: "bg-slate-900 text-slate-200 border-slate-800 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50"
+													? "bg-acre-600 text-white border-acre-600 shadow-md transform scale-105"
+													: "bg-slate-900 text-slate-200 border-slate-800 hover:border-acre-300 hover:text-acre-700 hover:bg-acre-50"
 											}
                     `}
 									>
@@ -104,7 +104,7 @@ export default function Hadith() {
 					{/* Content Display Area */}
 					<div className="min-h-75">
 						{loading ? (
-							<div className="flex flex-col items-center justify-center h-64 text-emerald-600">
+							<div className="flex flex-col items-center justify-center h-64 text-acre-600">
 								<Spin />
 								{/* <p className="mt-4 font-medium animate-pulse">
 									Sedang mencari hadis...
@@ -113,7 +113,7 @@ export default function Hadith() {
 						) : hadithContent ? (
 							<div className="bg-slate-900 rounded-3xl shadow-xl border border-slate-800 overflow-hidden relative">
 								{/* Decorative Quote Icon */}
-								<div className="absolute top-4 left-4 text-emerald-100">
+								<div className="absolute top-4 left-4 text-acre-100">
 									<svg
 										width="60"
 										height="60"
@@ -139,7 +139,7 @@ export default function Hadith() {
 									<div className="mt-8 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
 										<div className="text-sm text-slate-400 font-medium bg-slate-950 px-4 py-2 rounded-lg">
 											Sumber:{" "}
-											<span className="text-emerald-700 font-bold uppercase">
+											<span className="text-acre-700 font-bold uppercase">
 												{selectedBook}
 											</span>
 										</div>
@@ -147,7 +147,7 @@ export default function Hadith() {
 										<button
 											type="button"
 											onClick={() => fetchHadith(selectedBook)}
-											className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-full font-semibold transition-colors shadow-lg shadow-emerald-200"
+											className="flex items-center gap-2 bg-acre-600 hover:bg-acre-700 text-white px-6 py-2.5 rounded-full font-semibold transition-colors shadow-lg shadow-acre-200"
 										>
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -169,7 +169,7 @@ export default function Hadith() {
 							</div>
 						) : (
 							// Initial State / "Salam"
-							<div className="flex flex-col items-center justify-center h-64 text-gray-400 bg-slate-900 rounded-3xl border border-dashed border-gray-300">
+							<div className="flex flex-col items-center justify-center h-64 text-slate-400 bg-slate-900 rounded-3xl border border-dashed border-slate-300">
 								<p className="text-xl font-serif text-slate-400">
 									Assalamualaikum
 								</p>

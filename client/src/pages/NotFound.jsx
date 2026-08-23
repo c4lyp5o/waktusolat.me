@@ -10,11 +10,11 @@ export default function NotFound() {
 				{/* Glow Effect Container */}
 				<div className="relative">
 					{/* Subtle background blur behind the text */}
-					<div className="absolute inset-0 bg-emerald-500/20 blur-[100px] rounded-full pointer-events-none"></div>
+					<div className="absolute inset-0 bg-acre-500/20 blur-[100px] rounded-full pointer-events-none"></div>
 
 					<div className="relative z-10 space-y-8">
 						{/* Big Gradient Text */}
-						<h1 className="text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-600 tracking-tighter drop-shadow-sm">
+						<h1 className="text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-acre-400 to-teal-600 tracking-tighter drop-shadow-sm">
 							404
 						</h1>
 
@@ -31,7 +31,7 @@ export default function NotFound() {
 						<div className="pt-6">
 							<Link
 								to="/"
-								className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3.5 rounded-full font-semibold transition-all hover:scale-105 shadow-lg shadow-emerald-900/50"
+								className="inline-flex items-center gap-2 bg-acre-600 hover:bg-acre-700 text-white px-8 py-3.5 rounded-full font-semibold transition-all hover:scale-105 shadow-lg shadow-acre-900/50"
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
