@@ -64,43 +64,43 @@ export default function Landing() {
 										</h1>
 									</div>
 
-					{/* Visitor stats — above the fold, before the zone browser */}
-					<div className="rise-2 relative mt-9">
-						{stats && (
-							<div className="flex items-start justify-center gap-8 px-4">
-								<div className="text-center">
-									<p className="text-xl font-bold tabular-nums text-slate-50">
-										{nf(stats.total_visits)}
-									</p>
-									<p className="mt-1 text-[11px] uppercase tracking-widest text-slate-400">
-										Kunjungan
-									</p>
-								</div>
-								<div className="text-center">
-									<p className="text-xl font-bold tabular-nums text-slate-50">
-										{nf(stats.unique_visitors)}
-									</p>
-									<p className="mt-1 text-[11px] uppercase tracking-widest text-slate-400">
-										Pelawat
-									</p>
-								</div>
-								<div className="text-center">
-									<p className="text-xl font-bold tabular-nums text-slate-50">
-										{nf(stats.active_days)}
-									</p>
-									<p className="mt-1 text-[11px] uppercase tracking-widest text-slate-400">
-										Hari Aktif
-									</p>
-								</div>
-							</div>
-						)}
-					</div>
-
 					{/* The one thing to do here */}
-					<div className="rise-3 relative mt-8 w-full max-w-md px-2">
+					<div className="rise-2 relative mt-8 w-full max-w-md px-2">
 						<ZoneSelector />
 					</div>
 				</div>
+
+				{/* Visitor stats — quiet fixed footer, pinned to bottom of viewport */}
+				{stats && (
+					<div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-800/60 bg-night-950/60 backdrop-blur-sm">
+						<div className="flex items-center justify-center gap-8 px-4 py-2">
+							<div className="text-center">
+								<p className="text-sm font-semibold tabular-nums text-slate-300">
+									{nf(stats.total_visits)}
+								</p>
+								<p className="mt-0.5 text-[10px] uppercase tracking-widest text-slate-500">
+									Kunjungan
+								</p>
+							</div>
+							<div className="text-center">
+								<p className="text-sm font-semibold tabular-nums text-slate-300">
+									{nf(stats.unique_visitors)}
+								</p>
+								<p className="mt-0.5 text-[10px] uppercase tracking-widest text-slate-500">
+									Pelawat
+								</p>
+							</div>
+							<div className="text-center">
+								<p className="text-sm font-semibold tabular-nums text-slate-300">
+									{nf(stats.active_days)}
+								</p>
+								<p className="mt-0.5 text-[10px] uppercase tracking-widest text-slate-500">
+									Hari Aktif
+								</p>
+							</div>
+						</div>
+					</div>
+				)}
 			</main>
 		</>
 	);
