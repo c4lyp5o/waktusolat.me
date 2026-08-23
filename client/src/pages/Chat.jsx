@@ -7,25 +7,43 @@ const SOCKET_SERVER_URL =
 		? "ws://localhost:5000/ws"
 		: `wss://${window.location.host}/ws`;
 
+// Cap retained messages so a long-running session doesn't grow unboundedly.
+const MAX_MESSAGES = 300;
+
 export default function Chat() {
 	const [username, setUsername] = useState("");
 	const [messages, setMessages] = useState([]);
 	const [messageInput, setMessageInput] = useState("");
+	const [connection, setConnection] = useState("connecting"); // connecting | connected | reconnecting
+	const [onlineCount, setOnlineCount] = useState(null);
+	const [typingUser, setTypingUser] = useState("");
+	const [notice, setNotice] = useState("");
 
-	const socketRef = useRef();
+	const socketRef = useRef(null);
+	const usernameRef = useRef("");
 	const messagesEndRef = useRef(null);
+	const retryRef = useRef(0);
+	const reconnectTimerRef = useRef(null);
+	const typingTimerRef = useRef(null);
+	const noticeTimerRef = useRef(null);
+	const lastTypingSentRef = useRef(0);
 
+	// Stable random username for this session.
 	useEffect(() => {
-		// Generate a simpler, shorter username for display
-		const generatedUsername = `Anon${Math.floor(Math.random() * 1000)}`;
-		setUsername(generatedUsername);
+		const name = `Anon${Math.floor(Math.random() * 1000)}`;
+		setUsername(name);
+		usernameRef.current = name;
+	}, []);
 
-		// Native WebSocket (replaces socket.io-client)
+	// Connect (and reconnect with capped exponential backoff).
+	const connect = useCallback(() => {
 		const ws = new WebSocket(SOCKET_SERVER_URL);
 		socketRef.current = ws;
 
 		ws.onopen = () => {
-			ws.send(JSON.stringify({ type: "join", name: generatedUsername }));
+			retryRef.current = 0;
+			setConnection("connected");
+			ws.send(JSON.stringify({ type: "join", name: usernameRef.current }));
 		};
 
 		ws.onmessage = (event) => {
@@ -36,23 +54,54 @@ export default function Chat() {
 				return;
 			}
 
-			if (parsed.type === "chat") {
-				// payload: { type, username, message }
-				setMessages((prev) => [
-					...prev,
-					{ username: parsed.username, message: parsed.message },
-				]);
-			} else if (parsed.type === "user_actions") {
-				// payload: { type, username, message }
-				setMessages((prev) => [
-					...prev,
-					{ username: parsed.username, message: parsed.message },
-				]);
+			switch (parsed.type) {
+				case NEW_CHAT_MESSAGE_EVENT:
+				case USER_ACTION_EVENT:
+					// chat => { username, message }; user_actions => join/leave notices
+					setMessages((prev) => [
+						...prev.slice(-(MAX_MESSAGES - 1)),
+						{ username: parsed.username, message: parsed.message },
+					]);
+					break;
+				case "user_list":
+					setOnlineCount(Array.isArray(parsed.users) ? parsed.users.length : null);
+					break;
+				case "typing":
+					setTypingUser(parsed.username);
+					clearTimeout(typingTimerRef.current);
+					typingTimerRef.current = setTimeout(() => setTypingUser(""), 2500);
+					break;
+				case "error":
+					setNotice(parsed.message || "Something went wrong.");
+					clearTimeout(noticeTimerRef.current);
+					noticeTimerRef.current = setTimeout(() => setNotice(""), 3500);
+					break;
+				default:
+					break;
 			}
 		};
 
-		return () => ws.close();
+		ws.onclose = () => {
+			setConnection("reconnecting");
+			const delay = Math.min(1000 * 2 ** retryRef.current, 15000);
+			retryRef.current += 1;
+			reconnectTimerRef.current = setTimeout(connect, delay);
+		};
+
+		ws.onerror = () => {
+			// Deliberately handled by onclose (ws always closes after an error).
+		};
 	}, []);
+
+	useEffect(() => {
+		connect();
+		return () => {
+			socketRef.current?.close();
+			clearTimeout(reconnectTimerRef.current);
+			clearTimeout(typingTimerRef.current);
+			clearTimeout(noticeTimerRef.current);
+		};
+	}, [connect]);
 
 	// Auto-scroll to bottom
 	useEffect(() => {
@@ -60,13 +109,29 @@ export default function Chat() {
 	}, [messages]);
 
 	const sendMessage = useCallback(() => {
-		if (messageInput.trim().length === 0) return;
-
-		socketRef.current?.send(
-			JSON.stringify({ type: "chat", text: messageInput.trim() }),
-		);
+		const text = messageInput.trim();
+		if (!text) return;
+		const ws = socketRef.current;
+		if (!ws || ws.readyState !== WebSocket.OPEN) {
+			setNotice("Sambungan hilang. Mencuba menyambung semula…");
+			return;
+		}
+		ws.send(JSON.stringify({ type: "chat", text }));
 		setMessageInput("");
 	}, [messageInput]);
+
+	// Debounced "user is typing" notify (server relays it to others, throttled).
+	const notifyTyping = () => {
+		const ws = socketRef.current;
+		if (!ws || ws.readyState !== WebSocket.OPEN) return;
+		const now = Date.now();
+		if (now - lastTypingSentRef.current > 2000) {
+			lastTypingSentRef.current = now;
+			ws.send(JSON.stringify({ type: "typing" }));
+		}
+	};
+
+	const connected = connection === "connected";
 
 	return (
 		<>
@@ -84,19 +149,42 @@ export default function Chat() {
 					<div>
 						<h1 className="font-bold text-slate-100">Chat Room</h1>
 						<p className="text-xs text-acre-600 flex items-center gap-1">
-							<span className="w-2 h-2 rounded-full bg-acre-500 animate-pulse"></span>
-							Online sebagai {username}
+							<span
+								className={`w-2 h-2 rounded-full animate-pulse ${
+									connected ? "bg-acre-500" : "bg-amber-500"
+								}`}
+							></span>
+							{connected
+								? `Online sebagai ${username}`
+								: "Menyambung semula…"}
 						</p>
 					</div>
+					{onlineCount !== null && (
+						<span className="text-xs text-slate-400 bg-slate-800 px-2.5 py-1 rounded-full">
+							{onlineCount} online
+						</span>
+					)}
 				</div>
 
+				{/* Transient notice (errors / disconnected) */}
+				{notice && (
+					<div className="bg-amber-500/15 border-b border-amber-500/30 px-4 py-2 text-center text-sm text-amber-200">
+						{notice}
+					</div>
+				)}
+
 				{/* Messages Area */}
-				<div className="flex-1 overflow-y-auto p-4 space-y-4">
+				<div
+					className="flex-1 overflow-y-auto p-4 space-y-4"
+					role="log"
+					aria-live="polite"
+					aria-relevant="additions"
+				>
 					{messages.map((singleMessage, index) => {
 						const isSystem = singleMessage.username === "system";
 						const isMe = singleMessage.username === username;
 
-						// Logic to clean up message text based on your server's format
+						// Strip the "Name: " prefix the server prepends to own messages.
 						const messageText =
 							!isSystem && singleMessage.message.startsWith(username)
 								? singleMessage.message.replace(`${username}:`, "")
@@ -141,6 +229,16 @@ export default function Chat() {
 							</div>
 						);
 					})}
+
+					{/* "Somebody is typing…" — only ever shown when not the sender */}
+					{typingUser && typingUser !== username && (
+						<div className="flex justify-start pl-1">
+							<span className="text-xs text-slate-500 italic">
+								{typingUser} sedang menaip…
+							</span>
+						</div>
+					)}
+
 					{/* Invisible element to scroll to */}
 					<div ref={messagesEndRef} />
 				</div>
@@ -157,10 +255,14 @@ export default function Chat() {
 						<input
 							type="text"
 							value={messageInput}
-							onChange={(e) => setMessageInput(e.target.value)}
+							onChange={(e) => {
+								setMessageInput(e.target.value);
+								notifyTyping();
+							}}
 							placeholder="Taip mesej anda..."
 							className="flex-1 bg-slate-800 text-white border-slate-700 focus:bg-slate-900 focus:border-acre-500 focus:ring-2 focus:ring-acre-200 rounded-2xl px-4 py-3 transition-all outline-none"
 							autoComplete="off"
+							maxLength={1000}
 						/>
 
 						<button

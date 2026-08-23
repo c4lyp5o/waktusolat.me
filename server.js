@@ -12,10 +12,11 @@ const PORT = process.env.PORT || 5000;
 const limiter = new RateLimiter(100, 60_000);
 
 // ---- WebSocket chat (native, replaces socket.io) ----
-const users = new Map(); // ws.id -> username
+// ws.id -> { name, ws } — store BOTH so broadcast() can reach the live socket.
+const users = new Map();
 
 function broadcast(type, payload) {
-	for (const [, ws] of users) {
+	for (const { ws } of users.values()) {
 		try {
 			ws.send(JSON.stringify({ type, ...payload }));
 		} catch {
@@ -52,27 +53,35 @@ const app = new Elysia()
 			logger.info(`[ws] client ${ws.id} connected.`);
 		},
 		message(ws, raw) {
-			let msg;
-			try {
-				msg = JSON.parse(raw);
-			} catch {
-				ws.send(JSON.stringify({ type: "error", message: "Invalid JSON" }));
+			// Elysia delivers the WS message already JSON-parsed (an object),
+			// so do not JSON.parse again. Defensively still accept a raw string.
+			let msg = raw;
+			if (typeof msg === "string") {
+				try {
+					msg = JSON.parse(msg);
+				} catch {
+					ws.send(JSON.stringify({ type: "error", message: "Invalid JSON" }));
+					return;
+				}
+			}
+			if (typeof msg !== "object" || msg === null || Array.isArray(msg)) {
+				ws.send(JSON.stringify({ type: "error", message: "Invalid message format." }));
 				return;
 			}
 
 			if (msg.type === "join") {
 				const name = String(msg.name || "Anon").slice(0, 30);
-				users.set(ws.id, name);
+				users.set(ws.id, { name, ws });
 				logger.info(`[ws] ${name} joined. Total users: ${users.size}`);
 				broadcast("user_actions", {
 					username: "system",
 					message: `${name} joined the chat. Total users: ${users.size}`,
 				});
-				broadcast("user_list", { users: [...users.values()] });
+				broadcast("user_list", { users: [...users.values()].map((u) => u.name) });
 				return;
 			}
 
-			const name = users.get(ws.id);
+			const name = users.get(ws.id)?.name;
 			if (msg.type === "chat") {
 				const text = String(msg.text || "");
 				if (!text.trim()) {
@@ -84,20 +93,20 @@ const app = new Elysia()
 			}
 
 			if (msg.type === "typing") {
-				for (const [id, ws2] of users) {
-					if (id !== ws.id) ws2.send(JSON.stringify({ type: "typing", username: name }));
+				for (const { ws: ws2 } of users.values()) {
+					if (ws2.id !== ws.id) ws2.send(JSON.stringify({ type: "typing", username: name }));
 				}
 			}
 		},
 		close(ws) {
-			const nickname = users.get(ws.id);
+			const nickname = users.get(ws.id)?.name;
 			if (nickname) {
 				users.delete(ws.id);
 				broadcast("user_actions", {
 					username: "system",
 					message: `${nickname} left the chat. Total users: ${users.size}`,
 				});
-				broadcast("user_list", { users: [...users.values()] });
+				broadcast("user_list", { users: [...users.values()].map((u) => u.name) });
 				logger.info(`[ws] ${nickname} left. Total users: ${users.size}`);
 			}
 		},
