@@ -48,11 +48,11 @@ export default function ZonePrayerTimes() {
 
 			if (isDay) {
 				return {
-					gradient: "from-emerald-700 to-teal-900",
-					textAccent: "text-emerald-100",
-					highlightText: "text-emerald-300",
-					cardActive: "bg-emerald-600 ring-emerald-100",
-					progressBar: "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.7)]",
+					gradient: "from-acre-700 to-teal-900",
+					textAccent: "text-acre-100",
+					highlightText: "text-acre-300",
+					cardActive: "bg-acre-600 ring-acre-100",
+					progressBar: "bg-acre-400 shadow-[0_0_10px_rgba(52,211,153,0.7)]",
 				};
 			} else {
 				return {
@@ -65,11 +65,11 @@ export default function ZonePrayerTimes() {
 			}
 		} catch (e) {
 			return {
-				gradient: "from-emerald-700 to-teal-900",
-				textAccent: "text-emerald-100",
-				highlightText: "text-emerald-300",
-				cardActive: "bg-emerald-600 ring-emerald-100",
-				progressBar: "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.7)]",
+				gradient: "from-acre-700 to-teal-900",
+				textAccent: "text-acre-100",
+				highlightText: "text-acre-300",
+				cardActive: "bg-acre-600 ring-acre-100",
+				progressBar: "bg-acre-400 shadow-[0_0_10px_rgba(52,211,153,0.7)]",
 			};
 		}
 	};
@@ -85,7 +85,7 @@ export default function ZonePrayerTimes() {
 		if (isCurrent) {
 			return `${theme.cardActive} text-white border-transparent z-10 animate-breath ring-4 ring-offset-2 ring-offset-slate-900`;
 		}
-		return "bg-slate-800/50 text-slate-300 hover:bg-slate-800 border-slate-700 hover:border-emerald-500/50";
+		return "bg-slate-800/50 text-slate-300 hover:bg-slate-800 border-slate-700 hover:border-acre-500/50";
 	};
 
 	const calculateProgress = () => {

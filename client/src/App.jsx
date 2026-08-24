@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router";
+import { useEffect } from "react";
 
 import Landing from "./pages/Landing";
 import ZonePrayerTimes from "./pages/ZonePrayerTimes";
@@ -11,6 +12,35 @@ import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 
 import Navbar from "./components/Navbar";
+
+// Top-level routes that count as a "visit". Deep links (e.g. a bookmarked
+// /times/wly01) arrive here as a hard load — the beacon fires on whatever
+// path the user actually landed on, not just the landing page.
+const VISIT_PREFIXES = [
+	"/times/",
+	"/quran",
+	"/hadith",
+	"/radio",
+	"/chat",
+	"/about",
+];
+
+function isTrackedVisit(pathname) {
+	if (pathname === "/") return true;
+	return VISIT_PREFIXES.some((p) => pathname.startsWith(p));
+}
+
+// Fires the visit beacon on mount and on any top-level route change.
+// The server dedups by IP within a 15-min window, so SPA nav across pages
+// (quran -> chat -> about) still counts as one visit for that sitting.
+function VisitTracker() {
+	const { pathname } = useLocation();
+	useEffect(() => {
+		if (!isTrackedVisit(pathname)) return;
+		fetch("/api/v1/thanks").catch(() => {});
+	}, [pathname]);
+	return null;
+}
 
 function App() {
 	return (
@@ -38,6 +68,7 @@ function App() {
 				</div>
 			)}
 			<Navbar />
+			<VisitTracker />
 			<Routes>
 				<Route index element={<Landing />} />
 
