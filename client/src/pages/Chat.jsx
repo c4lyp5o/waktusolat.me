@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import { io } from "socket.io-client";
 
-const NEW_CHAT_MESSAGE_EVENT = "chat message";
-const USER_ACTION_EVENT = "user actions";
 const SOCKET_SERVER_URL =
 	import.meta.env.VITE_PUBLIC_BUILD === "development"
-		? "ws://localhost:5000/ws"
-		// Match the page's own scheme: wss:// when served over https, else ws://.
-		// (Hardcoding wss:// broke LAN/http testing — the secure handshake can
-		// never succeed against a plain-HTTP server.)
-		: `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/ws`;
+		? "http://localhost:5000"
+		// Same origin by default: socket.io negotiates over HTTP (long-polling
+		// fallback) and upgrades to websocket when it's available — so it
+		// keeps working even behind proxies/CSPs that block the raw upgrade.
+		: window.location.origin;
 
 // Cap retained messages so a long-running session doesn't grow unboundedly.
 const MAX_MESSAGES = 300;
@@ -25,8 +24,6 @@ export default function Chat() {
 	const socketRef = useRef(null);
 	const usernameRef = useRef("");
 	const messagesEndRef = useRef(null);
-	const retryRef = useRef(0);
-	const reconnectTimerRef = useRef(null);
 	const typingTimerRef = useRef(null);
 	const noticeTimerRef = useRef(null);
 	const lastTypingSentRef = useRef(0);
@@ -38,73 +35,48 @@ export default function Chat() {
 		usernameRef.current = name;
 	}, []);
 
-	// Connect (and reconnect with capped exponential backoff).
-	const connect = useCallback(() => {
-		const ws = new WebSocket(SOCKET_SERVER_URL);
-		socketRef.current = ws;
-
-		ws.onopen = () => {
-			retryRef.current = 0;
-			setConnection("connected");
-			ws.send(JSON.stringify({ type: "join", name: usernameRef.current }));
-		};
-
-		ws.onmessage = (event) => {
-			let parsed;
-			try {
-				parsed = JSON.parse(event.data);
-			} catch {
-				return;
-			}
-
-			switch (parsed.type) {
-				case NEW_CHAT_MESSAGE_EVENT:
-				case USER_ACTION_EVENT:
-					// chat => { username, message }; user_actions => join/leave notices
-					setMessages((prev) => [
-						...prev.slice(-(MAX_MESSAGES - 1)),
-						{ username: parsed.username, message: parsed.message },
-					]);
-					break;
-				case "user_list":
-					setOnlineCount(Array.isArray(parsed.users) ? parsed.users.length : null);
-					break;
-				case "typing":
-					setTypingUser(parsed.username);
-					clearTimeout(typingTimerRef.current);
-					typingTimerRef.current = setTimeout(() => setTypingUser(""), 2500);
-					break;
-				case "error":
-					setNotice(parsed.message || "Something went wrong.");
-					clearTimeout(noticeTimerRef.current);
-					noticeTimerRef.current = setTimeout(() => setNotice(""), 3500);
-					break;
-				default:
-					break;
-			}
-		};
-
-		ws.onclose = () => {
-			setConnection("reconnecting");
-			const delay = Math.min(1000 * 2 ** retryRef.current, 15000);
-			retryRef.current += 1;
-			reconnectTimerRef.current = setTimeout(connect, delay);
-		};
-
-		ws.onerror = () => {
-			// Deliberately handled by onclose (ws always closes after an error).
-		};
-	}, []);
-
+	// Connect. socket.io manages reconnection with exponential backoff itself
+	// (enabled by default), so we don't hand-roll retries here.
 	useEffect(() => {
-		connect();
-		return () => {
-			socketRef.current?.close();
-			clearTimeout(reconnectTimerRef.current);
+		const socket = io(SOCKET_SERVER_URL, { path: "/socket.io" });
+		socketRef.current = socket;
+
+		socket.on("connect", () => {
+			setConnection("connected");
+			socket.emit("join", { name: usernameRef.current });
+		});
+		socket.on("disconnect", () => {
+			setConnection("reconnecting");
+		});
+
+		socket.on("chat", ({ username: u, message }) => {
+			setMessages((prev) => [
+				...prev.slice(-(MAX_MESSAGES - 1)),
+				{ username: u, message },
+			]);
+		});
+		socket.on("system", ({ username: u, message }) => {
+			setMessages((prev) => [
+				...prev.slice(-(MAX_MESSAGES - 1)),
+				{ username: u, message },
+			]);
+		});
+		socket.on("users", ({ list }) => {
+			setOnlineCount(Array.isArray(list) ? list.length : null);
+		});
+		socket.on("typing", ({ username: u }) => {
+			setTypingUser(u);
 			clearTimeout(typingTimerRef.current);
+			typingTimerRef.current = setTimeout(() => setTypingUser(""), 2500);
+		});
+		socket.on("error", ({ message }) => {
+			setNotice(message || "Something went wrong.");
 			clearTimeout(noticeTimerRef.current);
-		};
-	}, [connect]);
+			noticeTimerRef.current = setTimeout(() => setNotice(""), 3500);
+		});
+
+		return () => socket.disconnect();
+	}, []);
 
 	// Auto-scroll to bottom
 	useEffect(() => {
@@ -114,23 +86,23 @@ export default function Chat() {
 	const sendMessage = useCallback(() => {
 		const text = messageInput.trim();
 		if (!text) return;
-		const ws = socketRef.current;
-		if (!ws || ws.readyState !== WebSocket.OPEN) {
+		const socket = socketRef.current;
+		if (!socket || !socket.connected) {
 			setNotice("Sambungan hilang. Mencuba menyambung semula…");
 			return;
 		}
-		ws.send(JSON.stringify({ type: "chat", text }));
+		socket.emit("chat", text);
 		setMessageInput("");
 	}, [messageInput]);
 
 	// Debounced "user is typing" notify (server relays it to others, throttled).
 	const notifyTyping = () => {
-		const ws = socketRef.current;
-		if (!ws || ws.readyState !== WebSocket.OPEN) return;
+		const socket = socketRef.current;
+		if (!socket || !socket.connected) return;
 		const now = Date.now();
 		if (now - lastTypingSentRef.current > 2000) {
 			lastTypingSentRef.current = now;
-			ws.send(JSON.stringify({ type: "typing" }));
+			socket.emit("typing");
 		}
 	};
 
@@ -187,11 +159,9 @@ export default function Chat() {
 						const isSystem = singleMessage.username === "system";
 						const isMe = singleMessage.username === username;
 
-						// Strip the "Name: " prefix the server prepends to own messages.
-						const messageText =
-							!isSystem && singleMessage.message.startsWith(username)
-								? singleMessage.message.replace(`${username}:`, "")
-								: singleMessage.message;
+						// The server sends the raw message body; the bubble header
+						// already shows the author's name, so no prefix to strip.
+						const messageText = singleMessage.message;
 
 						if (isSystem) {
 							return (
