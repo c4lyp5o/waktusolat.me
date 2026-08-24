@@ -1,57 +1,81 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import { io } from "socket.io-client";
 
-const NEW_CHAT_MESSAGE_EVENT = "chat message";
-const USER_ACTION_EVENT = "user actions";
 const SOCKET_SERVER_URL =
 	import.meta.env.VITE_PUBLIC_BUILD === "development"
-		? "ws://localhost:5000/ws"
-		: `wss://${window.location.host}/ws`;
+		? "http://localhost:5000"
+		// Same origin by default: socket.io negotiates over HTTP (long-polling
+		// fallback) and upgrades to websocket when it's available — so it
+		// keeps working even behind proxies/CSPs that block the raw upgrade.
+		: window.location.origin;
+
+// Cap retained messages so a long-running session doesn't grow unboundedly.
+const MAX_MESSAGES = 300;
 
 export default function Chat() {
 	const [username, setUsername] = useState("");
 	const [messages, setMessages] = useState([]);
 	const [messageInput, setMessageInput] = useState("");
+	const [connection, setConnection] = useState("connecting"); // connecting | connected | reconnecting
+	const [onlineCount, setOnlineCount] = useState(null);
+	const [typingUser, setTypingUser] = useState("");
+	const [notice, setNotice] = useState("");
 
-	const socketRef = useRef();
+	const socketRef = useRef(null);
+	const usernameRef = useRef("");
 	const messagesEndRef = useRef(null);
+	const typingTimerRef = useRef(null);
+	const noticeTimerRef = useRef(null);
+	const lastTypingSentRef = useRef(0);
 
+	// Stable random username for this session.
 	useEffect(() => {
-		// Generate a simpler, shorter username for display
-		const generatedUsername = `Anon${Math.floor(Math.random() * 1000)}`;
-		setUsername(generatedUsername);
+		const name = `Anon${Math.floor(Math.random() * 1000)}`;
+		setUsername(name);
+		usernameRef.current = name;
+	}, []);
 
-		// Native WebSocket (replaces socket.io-client)
-		const ws = new WebSocket(SOCKET_SERVER_URL);
-		socketRef.current = ws;
+	// Connect. socket.io manages reconnection with exponential backoff itself
+	// (enabled by default), so we don't hand-roll retries here.
+	useEffect(() => {
+		const socket = io(SOCKET_SERVER_URL, { path: "/socket.io" });
+		socketRef.current = socket;
 
-		ws.onopen = () => {
-			ws.send(JSON.stringify({ type: "join", name: generatedUsername }));
-		};
+		socket.on("connect", () => {
+			setConnection("connected");
+			socket.emit("join", { name: usernameRef.current });
+		});
+		socket.on("disconnect", () => {
+			setConnection("reconnecting");
+		});
 
-		ws.onmessage = (event) => {
-			let parsed;
-			try {
-				parsed = JSON.parse(event.data);
-			} catch {
-				return;
-			}
+		socket.on("chat", ({ username: u, message }) => {
+			setMessages((prev) => [
+				...prev.slice(-(MAX_MESSAGES - 1)),
+				{ username: u, message },
+			]);
+		});
+		socket.on("system", ({ username: u, message }) => {
+			setMessages((prev) => [
+				...prev.slice(-(MAX_MESSAGES - 1)),
+				{ username: u, message },
+			]);
+		});
+		socket.on("users", ({ list }) => {
+			setOnlineCount(Array.isArray(list) ? list.length : null);
+		});
+		socket.on("typing", ({ username: u }) => {
+			setTypingUser(u);
+			clearTimeout(typingTimerRef.current);
+			typingTimerRef.current = setTimeout(() => setTypingUser(""), 2500);
+		});
+		socket.on("error", ({ message }) => {
+			setNotice(message || "Something went wrong.");
+			clearTimeout(noticeTimerRef.current);
+			noticeTimerRef.current = setTimeout(() => setNotice(""), 3500);
+		});
 
-			if (parsed.type === "chat") {
-				// payload: { type, username, message }
-				setMessages((prev) => [
-					...prev,
-					{ username: parsed.username, message: parsed.message },
-				]);
-			} else if (parsed.type === "user_actions") {
-				// payload: { type, username, message }
-				setMessages((prev) => [
-					...prev,
-					{ username: parsed.username, message: parsed.message },
-				]);
-			}
-		};
-
-		return () => ws.close();
+		return () => socket.disconnect();
 	}, []);
 
 	// Auto-scroll to bottom
@@ -60,13 +84,29 @@ export default function Chat() {
 	}, [messages]);
 
 	const sendMessage = useCallback(() => {
-		if (messageInput.trim().length === 0) return;
-
-		socketRef.current?.send(
-			JSON.stringify({ type: "chat", text: messageInput.trim() }),
-		);
+		const text = messageInput.trim();
+		if (!text) return;
+		const socket = socketRef.current;
+		if (!socket || !socket.connected) {
+			setNotice("Sambungan hilang. Mencuba menyambung semula…");
+			return;
+		}
+		socket.emit("chat", text);
 		setMessageInput("");
 	}, [messageInput]);
+
+	// Debounced "user is typing" notify (server relays it to others, throttled).
+	const notifyTyping = () => {
+		const socket = socketRef.current;
+		if (!socket || !socket.connected) return;
+		const now = Date.now();
+		if (now - lastTypingSentRef.current > 2000) {
+			lastTypingSentRef.current = now;
+			socket.emit("typing");
+		}
+	};
+
+	const connected = connection === "connected";
 
 	return (
 		<>
@@ -84,23 +124,44 @@ export default function Chat() {
 					<div>
 						<h1 className="font-bold text-slate-100">Chat Room</h1>
 						<p className="text-xs text-acre-600 flex items-center gap-1">
-							<span className="w-2 h-2 rounded-full bg-acre-500 animate-pulse"></span>
-							Online sebagai {username}
+							<span
+								className={`w-2 h-2 rounded-full animate-pulse ${
+									connected ? "bg-acre-500" : "bg-amber-500"
+								}`}
+							></span>
+							{connected
+								? `Online sebagai ${username}`
+								: "Menyambung semula…"}
 						</p>
 					</div>
+					{onlineCount !== null && (
+						<span className="text-xs text-slate-400 bg-slate-800 px-2.5 py-1 rounded-full">
+							{onlineCount} online
+						</span>
+					)}
 				</div>
 
+				{/* Transient notice (errors / disconnected) */}
+				{notice && (
+					<div className="bg-amber-500/15 border-b border-amber-500/30 px-4 py-2 text-center text-sm text-amber-200">
+						{notice}
+					</div>
+				)}
+
 				{/* Messages Area */}
-				<div className="flex-1 overflow-y-auto p-4 space-y-4">
+				<div
+					className="flex-1 overflow-y-auto p-4 space-y-4"
+					role="log"
+					aria-live="polite"
+					aria-relevant="additions"
+				>
 					{messages.map((singleMessage, index) => {
 						const isSystem = singleMessage.username === "system";
 						const isMe = singleMessage.username === username;
 
-						// Logic to clean up message text based on your server's format
-						const messageText =
-							!isSystem && singleMessage.message.startsWith(username)
-								? singleMessage.message.replace(`${username}:`, "")
-								: singleMessage.message;
+						// The server sends the raw message body; the bubble header
+						// already shows the author's name, so no prefix to strip.
+						const messageText = singleMessage.message;
 
 						if (isSystem) {
 							return (
@@ -141,6 +202,16 @@ export default function Chat() {
 							</div>
 						);
 					})}
+
+					{/* "Somebody is typing…" — only ever shown when not the sender */}
+					{typingUser && typingUser !== username && (
+						<div className="flex justify-start pl-1">
+							<span className="text-xs text-slate-500 italic">
+								{typingUser} sedang menaip…
+							</span>
+						</div>
+					)}
+
 					{/* Invisible element to scroll to */}
 					<div ref={messagesEndRef} />
 				</div>
@@ -157,10 +228,14 @@ export default function Chat() {
 						<input
 							type="text"
 							value={messageInput}
-							onChange={(e) => setMessageInput(e.target.value)}
+							onChange={(e) => {
+								setMessageInput(e.target.value);
+								notifyTyping();
+							}}
 							placeholder="Taip mesej anda..."
 							className="flex-1 bg-slate-800 text-white border-slate-700 focus:bg-slate-900 focus:border-acre-500 focus:ring-2 focus:ring-acre-200 rounded-2xl px-4 py-3 transition-all outline-none"
 							autoComplete="off"
+							maxLength={1000}
 						/>
 
 						<button

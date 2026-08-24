@@ -12,21 +12,6 @@ export default function Landing() {
 
 	useEffect(() => {
 		let cancelled = false;
-		const visit = async () => {
-			try {
-				await fetch("/api/v1/thanks");
-			} catch (error) {
-				// Silent fail — page works fine without counting
-			}
-		};
-		visit();
-		return () => {
-			cancelled = true;
-		};
-	}, []);
-
-	useEffect(() => {
-		let cancelled = false;
 		const load = async () => {
 			try {
 				const json = await fetch("/api/v1/visitors/stats").then((r) => r.json());
