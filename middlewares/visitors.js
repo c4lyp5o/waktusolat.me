@@ -1,5 +1,5 @@
-import initializeDatabase from "../db/db.js"
-import logger from "../utils/logger.js"
+import initializeDatabase from "../db/db.js";
+import logger from "../utils/logger.js";
 
 const waktusolatDb = await initializeDatabase();
 
@@ -10,14 +10,14 @@ const VISIT_WINDOW_MS = 15 * 60 * 1000;
 const insertVisitor = async (req, res) => {
 	const date = new Date().toISOString();
 	const clientIp =
-		req.headers['x-forwarded-for']?.split(',')[0] ||
-		req.headers['x-real-ip'] ||
+		req.headers["x-forwarded-for"]?.split(",")[0] ||
+		req.headers["x-real-ip"] ||
 		req.socket?.remoteAddress;
 
 	if (!clientIp) {
 		return res.status(400).json({
 			code: 400,
-			message: "Unable to determine client IP"
+			message: "Unable to determine client IP",
 		});
 	}
 
@@ -25,9 +25,7 @@ const insertVisitor = async (req, res) => {
 	// visit_date is ISO-8601 UTC (toISOString), so lexicographic compare works.
 	const cutoff = new Date(Date.now() - VISIT_WINDOW_MS).toISOString();
 	const recent = waktusolatDb
-		.prepare(
-			"SELECT 1 FROM visitors WHERE ip_address = ? AND visit_date >= ? LIMIT 1",
-		)
+		.prepare("SELECT 1 FROM visitors WHERE ip_address = ? AND visit_date >= ? LIMIT 1")
 		.get(clientIp, cutoff);
 	if (recent) {
 		return res.status(200).json({
@@ -57,9 +55,7 @@ const insertVisitor = async (req, res) => {
 };
 
 const getVisitors = (_req, res) => {
-	const result = waktusolatDb
-		.prepare("SELECT * FROM visitors")
-		.all();
+	const result = waktusolatDb.prepare("SELECT * FROM visitors").all();
 	res.status(200).json(result);
 };
 
@@ -98,4 +94,4 @@ const getVisitorStats = (_req, res) => {
 	});
 };
 
-export { insertVisitor, getVisitors, getVisitorStats };
+export { getVisitorStats, getVisitors, insertVisitor };

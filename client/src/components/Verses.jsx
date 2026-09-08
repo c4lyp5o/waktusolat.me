@@ -1,10 +1,9 @@
-import { useParams } from "react-router";
 import { useState } from "react";
+import { useParams } from "react-router";
 import useSWR from "swr";
-
+import LoadFailed from "./LoadFailed";
 import Pagination from "./Pagination";
 import Spin from "./Spin";
-import LoadFailed from "./LoadFailed";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -29,9 +28,7 @@ function QuranData({ data }) {
 
 			{/* Translation: Light Gray text */}
 			<div className="w-full text-left">
-				<p className="text-slate-400 text-lg leading-relaxed font-light">
-					{translation}
-				</p>
+				<p className="text-slate-400 text-lg leading-relaxed font-light">{translation}</p>
 			</div>
 		</div>
 	);
@@ -52,10 +49,7 @@ export default function Verses() {
 	return (
 		<>
 			<title>{data.data.transliteration}</title>
-			<meta
-				name="description"
-				content={`Baca Surah ${data.data.transliteration}`}
-			/>
+			<meta name="description" content={`Baca Surah ${data.data.transliteration}`} />
 			<link rel="icon" href="/favicon.ico" />
 
 			<main className="min-h-screen bg-slate-950 font-sans pb-20">

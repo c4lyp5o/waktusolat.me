@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 
 const SOCKET_SERVER_URL =
 	import.meta.env.VITE_PUBLIC_BUILD === "development"
 		? "http://localhost:5000"
-		// Same origin by default: socket.io negotiates over HTTP (long-polling
-		// fallback) and upgrades to websocket when it's available — so it
-		// keeps working even behind proxies/CSPs that block the raw upgrade.
-		: window.location.origin;
+		: // Same origin by default: socket.io negotiates over HTTP (long-polling
+			// fallback) and upgrades to websocket when it's available — so it
+			// keeps working even behind proxies/CSPs that block the raw upgrade.
+			window.location.origin;
 
 // Cap retained messages so a long-running session doesn't grow unboundedly.
 const MAX_MESSAGES = 300;
@@ -50,16 +50,10 @@ export default function Chat() {
 		});
 
 		socket.on("chat", ({ username: u, message }) => {
-			setMessages((prev) => [
-				...prev.slice(-(MAX_MESSAGES - 1)),
-				{ username: u, message },
-			]);
+			setMessages((prev) => [...prev.slice(-(MAX_MESSAGES - 1)), { username: u, message }]);
 		});
 		socket.on("system", ({ username: u, message }) => {
-			setMessages((prev) => [
-				...prev.slice(-(MAX_MESSAGES - 1)),
-				{ username: u, message },
-			]);
+			setMessages((prev) => [...prev.slice(-(MAX_MESSAGES - 1)), { username: u, message }]);
 		});
 		socket.on("users", ({ list }) => {
 			setOnlineCount(Array.isArray(list) ? list.length : null);
@@ -79,6 +73,7 @@ export default function Chat() {
 	}, []);
 
 	// Auto-scroll to bottom
+	// biome-ignore lint/correctness/useExhaustiveDependencies: messages is the scroll trigger — effect body only touches the ref
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
@@ -87,7 +82,7 @@ export default function Chat() {
 		const text = messageInput.trim();
 		if (!text) return;
 		const socket = socketRef.current;
-		if (!socket || !socket.connected) {
+		if (!socket?.connected) {
 			setNotice("Sambungan hilang. Mencuba menyambung semula…");
 			return;
 		}
@@ -98,7 +93,7 @@ export default function Chat() {
 	// Debounced "user is typing" notify (server relays it to others, throttled).
 	const notifyTyping = () => {
 		const socket = socketRef.current;
-		if (!socket || !socket.connected) return;
+		if (!socket?.connected) return;
 		const now = Date.now();
 		if (now - lastTypingSentRef.current > 2000) {
 			lastTypingSentRef.current = now;
@@ -111,10 +106,7 @@ export default function Chat() {
 	return (
 		<>
 			<title>Chat Room</title>
-			<meta
-				name="description"
-				content="Chat dengan orang awam tanpa diketahui nama"
-			/>
+			<meta name="description" content="Chat dengan orang awam tanpa diketahui nama" />
 			<link rel="icon" href="/favicon.ico" />
 
 			{/* Main Container: Calculates height to fill screen minus Navbar (approx 64px/4rem) */}
@@ -129,9 +121,7 @@ export default function Chat() {
 									connected ? "bg-acre-500" : "bg-amber-500"
 								}`}
 							></span>
-							{connected
-								? `Online sebagai ${username}`
-								: "Menyambung semula…"}
+							{connected ? `Online sebagai ${username}` : "Menyambung semula…"}
 						</p>
 					</div>
 					{onlineCount !== null && (
@@ -206,9 +196,7 @@ export default function Chat() {
 					{/* "Somebody is typing…" — only ever shown when not the sender */}
 					{typingUser && typingUser !== username && (
 						<div className="flex justify-start pl-1">
-							<span className="text-xs text-slate-500 italic">
-								{typingUser} sedang menaip…
-							</span>
+							<span className="text-xs text-slate-500 italic">{typingUser} sedang menaip…</span>
 						</div>
 					)}
 

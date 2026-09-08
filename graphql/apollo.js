@@ -4,7 +4,7 @@
 // `(parent, args)`, so we map each into a Query resolver.
 import { WSAPIresolvers } from "./resolver/index.js";
 
-const rewrap = (fn) => (parent, args) => fn(args ?? {});
+const rewrap = (fn) => (_parent, args) => fn(args ?? {});
 
 export const apolloResolvers = {
 	Query: {

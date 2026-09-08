@@ -1,24 +1,31 @@
 import { createServer } from "node:http";
-import { Server } from "socket.io";
-import { Elysia } from "elysia";
-import { cors } from "@elysiajs/cors";
 import { apollo, gql } from "@elysiajs/apollo";
-import { RateLimiter } from "./utils/rateLimit.js";
-import logger from "./utils/logger.js";
-
-import apiRoutes from "./routes/api.js";
-import { SDL } from "./graphql/schema/index.js";
+import { cors } from "@elysiajs/cors";
+import { Elysia } from "elysia";
+import { Server } from "socket.io";
+import { Zones } from "./controllers/library.js";
 import { apolloResolvers } from "./graphql/apollo.js";
+import { SDL } from "./graphql/schema/index.js";
+import apiRoutes from "./routes/api.js";
+import logger from "./utils/logger.js";
+import { RateLimiter } from "./utils/rateLimit.js";
+import { startTimesRefresher } from "./utils/timesRefresh.js";
 
 const PORT = process.env.PORT || 5000;
 const limiter = new RateLimiter(100, 60_000);
+
+// Self-healing prayer-times refresh: daily check, refetch stale zones from
+// JAKIM in the background (see utils/timesRefresh.js).
+startTimesRefresher(Zones);
 
 const app = new Elysia()
 	.use(cors())
 	// global rate limit (In-Memory, per request)
 	.onBeforeHandle(({ request, set }) => {
-		const key = request.headers.get("x-forwarded-for")?.split(",")[0]
-			?.trim() || request.headers.get("x-real-ip") || "local";
+		const key =
+			request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+			request.headers.get("x-real-ip") ||
+			"local";
 		if (!limiter.allow(key)) {
 			set.status = 429;
 			return { message: "Too Many Requests" };
@@ -88,10 +95,7 @@ const httpServer = createServer((req, res) => {
 			const request = new Request(url, {
 				method,
 				headers,
-				body:
-					method === "GET" || method === "HEAD"
-						? undefined
-						: Buffer.concat(body),
+				body: method === "GET" || method === "HEAD" ? undefined : Buffer.concat(body),
 			});
 			const response = await app.fetch(request);
 			const responseHeaders = {};
@@ -99,9 +103,7 @@ const httpServer = createServer((req, res) => {
 				responseHeaders[key] = value;
 			});
 			res.writeHead(response.status, responseHeaders);
-			const data = response.body
-				? Buffer.from(await response.arrayBuffer())
-				: Buffer.alloc(0);
+			const data = response.body ? Buffer.from(await response.arrayBuffer()) : Buffer.alloc(0);
 			res.end(data);
 		} catch (error) {
 			logger.error("[http] bridge error:", error);
@@ -162,7 +164,9 @@ io.on("connection", (socket) => {
 });
 
 httpServer.listen(PORT, () => {
-	logger.info(`[app] waktusolat.me is running on port ${PORT}. Running in ${process.env.NODE_ENV ? process.env.NODE_ENV : "production"} mode.`);
+	logger.info(
+		`[app] waktusolat.me is running on port ${PORT}. Running in ${process.env.NODE_ENV ? process.env.NODE_ENV : "production"} mode.`,
+	);
 	logger.info(`[graphql] GraphQL API is running on http://localhost:${PORT}/graphql`);
 	logger.info(`[ws] Chat is running on http://localhost:${PORT}/socket.io`);
 });

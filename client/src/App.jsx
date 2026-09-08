@@ -1,29 +1,20 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router";
 import { useEffect } from "react";
-
+import { BrowserRouter, Route, Routes, useLocation } from "react-router";
+import Navbar from "./components/Navbar";
+import About from "./pages/About";
+import Chat from "./pages/Chat";
+import Hadith from "./pages/Hadith";
 import Landing from "./pages/Landing";
-import ZonePrayerTimes from "./pages/ZonePrayerTimes";
+import NotFound from "./pages/NotFound";
 import QuranSurahSelect from "./pages/QuranSurahSelect";
 import QuranWithSurah from "./pages/QuranWithSurah";
-import Hadith from "./pages/Hadith";
 import Radio from "./pages/Radio";
-import Chat from "./pages/Chat";
-import About from "./pages/About";
-import NotFound from "./pages/NotFound";
-
-import Navbar from "./components/Navbar";
+import ZonePrayerTimes from "./pages/ZonePrayerTimes";
 
 // Top-level routes that count as a "visit". Deep links (e.g. a bookmarked
 // /times/wly01) arrive here as a hard load — the beacon fires on whatever
 // path the user actually landed on, not just the landing page.
-const VISIT_PREFIXES = [
-	"/times/",
-	"/quran",
-	"/hadith",
-	"/radio",
-	"/chat",
-	"/about",
-];
+const VISIT_PREFIXES = ["/times/", "/quran", "/hadith", "/radio", "/chat", "/about"];
 
 function isTrackedVisit(pathname) {
 	if (pathname === "/") return true;
