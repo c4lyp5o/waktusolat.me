@@ -1,26 +1,20 @@
 import {
-	Zones,
-	Months,
+	AbudaudBook,
+	BukhariBook,
+	IbnumajahBook,
+	MuslimBook,
+	NasaiBook,
 	Quranen,
 	Quranmy,
-	BukhariBook,
-	MuslimBook,
-	AbudaudBook,
-	NasaiBook,
 	TirmiziBook,
-	IbnumajahBook,
+	Zones,
 } from "./library.js";
 
 // functions to use
 const getDateFromHours = (time) => {
 	const timeParts = time.split(":");
 	const now = new Date();
-	return new Date(
-		now.getFullYear(),
-		now.getMonth(),
-		now.getDate(),
-		...timeParts,
-	);
+	return new Date(now.getFullYear(), now.getMonth(), now.getDate(), ...timeParts);
 };
 const getDateFromHoursAndAdd1Day = async (time) => {
 	try {
@@ -38,22 +32,6 @@ const getDateFromHoursAndAdd1Day = async (time) => {
 		console.error(error);
 		return null;
 	}
-};
-const getMonthName = () => {
-	let numberOfDays = 0;
-	const currentDate = new Date();
-	const currentMonth = currentDate.getMonth();
-	for (let i = 0; i < currentMonth; i++) {
-		numberOfDays += Months[i].count;
-	}
-	return numberOfDays;
-};
-const getDayNumberInYear = () => {
-	return Math.floor(
-		(new Date() - new Date(new Date().getFullYear(), 0, 0)) /
-			(1000 * 60 * 60 * 24) -
-			1,
-	);
 };
 const getTimeNow = () => {
 	const today = new Date();
@@ -101,65 +79,20 @@ const interpretHijriMonth = (month) => {
 			return "Error";
 	}
 };
+
+// JAKIM month abbreviations — live payloads since 2026 use Malay
+// abbreviations (Mac, Mei, Ogos, Okt, Dis); older seeds were English.
+// Accept both so either vintage parses. Maps live in utils/jakimDates.js
+// (shared with utils/timesRefresh.js).
+import { CHRIST_MONTH_NAME, MONTH_ABBREV_NUM } from "../utils/jakimDates.js";
+
 const interpretChristMonth = (month) => {
-	switch (month) {
-		case "Jan":
-			return "Januari";
-		case "Feb":
-			return "Februari";
-		case "Mar":
-			return "Mac";
-		case "Apr":
-			return "April";
-		case "May":
-			return "Mei";
-		case "Jun":
-			return "Jun";
-		case "Jul":
-			return "Julai";
-		case "Aug":
-			return "Ogos";
-		case "Sep":
-			return "September";
-		case "Oct":
-			return "Oktober";
-		case "Nov":
-			return "November";
-		case "Dec":
-			return "Disember";
-		default:
-			return "Error";
-	}
+	const num = MONTH_ABBREV_NUM[month];
+	return num ? CHRIST_MONTH_NAME[num] : "Error";
 };
 const invertedInterpretChristMonth = (month) => {
-	switch (month) {
-		case "Jan":
-			return "1";
-		case "Feb":
-			return "2";
-		case "Mar":
-			return "3";
-		case "Apr":
-			return "4";
-		case "May":
-			return "5";
-		case "Jun":
-			return "6";
-		case "Jul":
-			return "7";
-		case "Aug":
-			return "8";
-		case "Sep":
-			return "9";
-		case "Oct":
-			return "10";
-		case "Nov":
-			return "11";
-		case "Dec":
-			return "12";
-		default:
-			return "Error";
-	}
+	const num = MONTH_ABBREV_NUM[month];
+	return num ? String(num) : "Error";
 };
 const interpretNumberedChristMonth = (month) => {
 	switch (month) {
@@ -378,154 +311,102 @@ const convertMstoHours = async (milliseconds) => {
 		milliseconds: milliseconds,
 	};
 };
+// JAKIM rows carry dates as "01-Mac-2026". Build a date-keyed map so
+// serving is anchored to actual dates, not array positions — the year
+// rollover (31-Dis -> 01-Jan) is seamless the moment fresh data lands.
+const jakimDateToIso = (date) => {
+	const parts = String(date ?? "").split("-");
+	if (parts.length !== 3) return null;
+	const [day, abbrev, year] = parts;
+	const month = MONTH_ABBREV_NUM[abbrev];
+	if (!month) return null;
+	return `${year}-${String(month).padStart(2, "0")}-${day.padStart(2, "0")}`;
+};
+
+const todayIso = () => {
+	const now = new Date();
+	return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(
+		now.getDate(),
+	).padStart(2, "0")}`;
+};
+
+// Build { isoDate -> index } for a zone's rows. Exported for tests.
+export const buildDateIndex = (rows) => {
+	const index = new Map();
+	for (let i = 0; i < rows.length; i++) {
+		const iso = jakimDateToIso(rows[i]?.date);
+		if (iso && !index.has(iso)) index.set(iso, i);
+	}
+	return index;
+};
+
+const formatRow = (row) => {
+	const fixedDate = interpretChristDate(row.date);
+	const fixedHijri = interpretHijriDate(row.hijri);
+	const fixedDay = interpretDay(row.day);
+	return {
+		day: `${fixedDay} / ${row.day}`,
+		hijri: `${fixedHijri.withMonthCount} / ${fixedHijri.withName}`,
+		date: `${fixedDate.withNumber} / ${fixedDate.withName}`,
+		imsak: row.imsak,
+		fajr: row.fajr,
+		syuruk: row.syuruk,
+		dhuhr: row.dhuhr,
+		asr: row.asr,
+		maghrib: row.maghrib,
+		isha: row.isha,
+	};
+};
+
+// Resolve today's position for a zone: exact date match when the data
+// contains it; otherwise clamp to the last row (stale-data grace — prayer
+// times drift ~1 min/day, harmless for a day or two). Returns -1 when the
+// zone has no data at all.
+export const resolveTodayIndex = (rows) => {
+	if (!Array.isArray(rows) || rows.length === 0) return -1;
+	const index = buildDateIndex(rows);
+	const today = todayIso();
+	if (index.has(today)) return index.get(today);
+	// Stale data: serve the last known day instead of crashing or serving
+	// a wrong-position row.
+	return rows.length - 1;
+};
+
 const timeCruncher = (period, zone) => {
-	let timeArray = [];
+	const rows = zone.db;
+	if (!Array.isArray(rows) || rows.length === 0) return [];
+	const todayIdx = resolveTodayIndex(rows);
+
 	switch (period) {
 		case "today": {
-			let dayNumber = getDayNumberInYear();
-			for (let j = 0; j < 2; j++) {
-				const {
-					date,
-					hijri,
-					day,
-					imsak,
-					fajr,
-					syuruk,
-					dhuhr,
-					asr,
-					maghrib,
-					isha,
-				} = zone.db[dayNumber];
-				const fixedDate = interpretChristDate(date);
-				const fixedHijri = interpretHijriDate(hijri);
-				const fixedDay = interpretDay(day);
-				timeArray = [
-					...timeArray,
-					{
-						day: `${fixedDay} / ${day}`,
-						hijri: `${fixedHijri.withMonthCount} / ${fixedHijri.withName}`,
-						date: `${fixedDate.withNumber} / ${fixedDate.withName}`,
-						imsak,
-						fajr,
-						syuruk,
-						dhuhr,
-						asr,
-						maghrib,
-						isha,
-					},
-				];
-				dayNumber++;
+			const out = [];
+			// Today + tomorrow when present (timeReminder needs [0] and [1]).
+			for (let j = todayIdx; j < Math.min(todayIdx + 2, rows.length); j++) {
+				out.push(formatRow(rows[j]));
 			}
-			return timeArray;
+			return out;
 		}
 		case "week": {
-			let weekStartDayNumber = getDayNumberInYear();
-			for (let j = 0; j < 7; j++) {
-				const {
-					date,
-					hijri,
-					day,
-					imsak,
-					fajr,
-					syuruk,
-					dhuhr,
-					asr,
-					maghrib,
-					isha,
-				} = zone.db[weekStartDayNumber];
-				const fixedDate = interpretChristDate(date);
-				const fixedHijri = interpretHijriDate(hijri);
-				const fixedDay = interpretDay(day);
-				timeArray = [
-					...timeArray,
-					{
-						day: `${fixedDay} / ${day}`,
-						hijri: `${fixedHijri.withMonthCount} / ${fixedHijri.withName}`,
-						date: `${fixedDate.withNumber} / ${fixedDate.withName}`,
-						imsak,
-						fajr,
-						syuruk,
-						dhuhr,
-						asr,
-						maghrib,
-						isha,
-					},
-				];
-				weekStartDayNumber++;
+			const out = [];
+			for (let j = todayIdx; j < Math.min(todayIdx + 7, rows.length); j++) {
+				out.push(formatRow(rows[j]));
 			}
-			return timeArray;
+			return out;
 		}
 		case "month": {
-			const pastCount = getMonthName();
-			const currentCount = pastCount + Months[new Date().getMonth()].count;
-			for (let j = pastCount; j < currentCount; j++) {
-				const {
-					date,
-					hijri,
-					day,
-					imsak,
-					fajr,
-					syuruk,
-					dhuhr,
-					asr,
-					maghrib,
-					isha,
-				} = zone.db[j];
-				const fixedDate = interpretChristDate(date);
-				const fixedHijri = interpretHijriDate(hijri);
-				const fixedDay = interpretDay(day);
-				timeArray = [
-					...timeArray,
-					{
-						day: `${fixedDay} / ${day}`,
-						hijri: `${fixedHijri.withMonthCount} / ${fixedHijri.withName}`,
-						date: `${fixedDate.withNumber} / ${fixedDate.withName}`,
-						imsak,
-						fajr,
-						syuruk,
-						dhuhr,
-						asr,
-						maghrib,
-						isha,
-					},
-				];
+			// All rows sharing today's month + year (date-anchored, so it is
+			// correct even when the array spans a rollover or leap year).
+			const today = todayIso();
+			const prefix = today.slice(0, 7); // "YYYY-MM"
+			const out = [];
+			for (const row of rows) {
+				const iso = jakimDateToIso(row?.date);
+				if (iso?.startsWith(prefix)) out.push(formatRow(row));
 			}
-			return timeArray;
+			return out;
 		}
 		case "year": {
-			for (let j = 0; j < zone.db.length; j++) {
-				const {
-					date,
-					hijri,
-					day,
-					imsak,
-					fajr,
-					syuruk,
-					dhuhr,
-					asr,
-					maghrib,
-					isha,
-				} = zone.db[j];
-				const fixedDate = interpretChristDate(date);
-				const fixedHijri = interpretHijriDate(hijri);
-				const fixedDay = interpretDay(day);
-				timeArray = [
-					...timeArray,
-					{
-						day: `${fixedDay} / ${day}`,
-						hijri: `${fixedHijri.withMonthCount} / ${fixedHijri.withName}`,
-						date: `${fixedDate.withNumber} / ${fixedDate.withName}`,
-						imsak,
-						fajr,
-						syuruk,
-						dhuhr,
-						asr,
-						maghrib,
-						isha,
-					},
-				];
-			}
-			return timeArray;
+			return rows.map(formatRow);
 		}
 		default:
 			return "error";
@@ -546,9 +427,7 @@ class QuranHelpers {
 	static getFullSurah = (req, res) => {
 		const { lang, id } = req.params;
 		const Quran = lang === "en" ? Quranen : Quranmy;
-		const data = Quran.find(
-			({ id: surahId }) => surahId === Number.parseInt(id),
-		);
+		const data = Quran.find(({ id: surahId }) => surahId === Number.parseInt(id, 10));
 		if (!data) {
 			return res.status(404).json({
 				code: 404,
@@ -562,9 +441,7 @@ class QuranHelpers {
 	static getAyatFromSurah = (req, res) => {
 		const { lang, id, ayat } = req.params;
 		const Quran = lang === "en" ? Quranen : Quranmy;
-		const surah = Quran.find(
-			({ id: surahId }) => surahId === Number.parseInt(id),
-		);
+		const surah = Quran.find(({ id: surahId }) => surahId === Number.parseInt(id, 10));
 		if (!surah) {
 			return res.status(404).json({
 				code: 404,
@@ -572,9 +449,7 @@ class QuranHelpers {
 				message: "Surah not found.",
 			});
 		}
-		const data = surah.verses.find(
-			({ id: ayatId }) => ayatId === Number.parseInt(ayat),
-		);
+		const data = surah.verses.find(({ id: ayatId }) => ayatId === Number.parseInt(ayat, 10));
 		if (!data) {
 			return res.status(404).json({
 				code: 404,
@@ -595,8 +470,7 @@ class QuranHelpers {
 		const randomAyatIndex = Math.floor(Math.random() * verses.length);
 		const { id: ayatNumber, text: arabic } = verses[randomAyatIndex];
 		const { translation: englishTranslation } = verses[randomAyatIndex];
-		const { translation: malayTranslation } =
-			mys[randomSurahIndex].verses[randomAyatIndex];
+		const { translation: malayTranslation } = mys[randomSurahIndex].verses[randomAyatIndex];
 		const data = {
 			fromSurah: `${name} / ${transliteration}`,
 			ayatNumber,
@@ -609,19 +483,10 @@ class QuranHelpers {
 }
 // biome-ignore lint/complexity/noStaticOnlyClass: i dont even
 class HadithsHelpers {
-	static HADITH_BOOKS = [
-		"bukhari",
-		"muslim",
-		"abudaud",
-		"nasai",
-		"tirmizi",
-		"ibnumajah",
-	];
+	static HADITH_BOOKS = ["bukhari", "muslim", "abudaud", "nasai", "tirmizi", "ibnumajah"];
 
-	static getHadithBook(req, res) {
-		return res
-			.status(200)
-			.json({ msg: HadithsHelpers.HADITH_BOOKS.join(", ") });
+	static getHadithBook(_req, res) {
+		return res.status(200).json({ msg: HadithsHelpers.HADITH_BOOKS.join(", ") });
 	}
 
 	static getHadith(req, res) {
@@ -664,6 +529,11 @@ class TimeHelpers {
 		try {
 			const currentZone = Zones[zone];
 			const data = timeCruncher(period, currentZone);
+			// Zone with no data at all (e.g. JAKIM does not publish it) — explicit
+			// empty set instead of a 500 from destructuring an empty array.
+			if (data.length === 0) {
+				return res.status(404).json({ message: "No data for this zone", zone });
+			}
 			const todayData = getTimeNow();
 			const today = timeCruncher("today", currentZone);
 			const timeDifference = await timeReminder(today);
@@ -688,11 +558,4 @@ class TimeHelpers {
 	}
 }
 
-export {
-	QuranHelpers,
-	HadithsHelpers,
-	TimeHelpers,
-	timeCruncher,
-	timeReminder,
-	getTimeNow,
-};
+export { getTimeNow, HadithsHelpers, QuranHelpers, TimeHelpers, timeCruncher, timeReminder };

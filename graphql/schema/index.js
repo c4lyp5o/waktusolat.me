@@ -1,6 +1,6 @@
-import { buildSchema } from 'graphql';
+import { buildSchema } from "graphql";
 
-const WSAPIschema = buildSchema(`
+const SDL = `
     type Query {
         hello: String
         waktuSolat(period: String, zone: String): dataWaktuSolat
@@ -68,9 +68,11 @@ const WSAPIschema = buildSchema(`
         zone: String
         queriedTimes: [waktuSolatArray]
     }
-`);
+`;
 
-export { WSAPIschema };
+const WSAPIschema = buildSchema(SDL);
+
+export { SDL, WSAPIschema };
 
 // Language: javascript
 // Path: engine/graphql/resolvers/index.js

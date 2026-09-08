@@ -3,8 +3,8 @@ export default function Spin() {
 		<div className="flex flex-col items-center justify-center min-h-[60vh] p-4 space-y-6">
 			<div className="relative w-16 h-16">
 				<div className="absolute inset-0 rounded-full border-4 border-slate-800"></div>
-				<div className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin"></div>
-				<div className="absolute inset-0 flex items-center justify-center text-emerald-500/50 animate-pulse">
+				<div className="absolute inset-0 rounded-full border-4 border-acre-500 border-t-transparent animate-spin"></div>
+				<div className="absolute inset-0 flex items-center justify-center text-acre-500/50 animate-pulse">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						className="h-6 w-6"

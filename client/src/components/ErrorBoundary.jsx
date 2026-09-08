@@ -45,12 +45,10 @@ export class ErrorBoundary extends React.Component {
 
 					{/* Heading */}
 					<div className="space-y-3 max-w-md">
-						<h2 className="text-3xl font-bold text-slate-100">
-							Alamak! Ada Masalah.
-						</h2>
+						<h2 className="text-3xl font-bold text-slate-100">Alamak! Ada Masalah.</h2>
 						<p className="text-slate-400 leading-relaxed">
-							Aplikasi telah menghadapi ralat yang tidak dijangka. Jangan risau,
-							ini bukan salah anda.
+							Aplikasi telah menghadapi ralat yang tidak dijangka. Jangan risau, ini bukan salah
+							anda.
 						</p>
 					</div>
 
@@ -60,9 +58,7 @@ export class ErrorBoundary extends React.Component {
 							<div className="w-2 h-2 rounded-full bg-red-500"></div>
 							<div className="w-2 h-2 rounded-full bg-yellow-500"></div>
 							<div className="w-2 h-2 rounded-full bg-green-500"></div>
-							<span className="text-xs text-slate-500 font-mono ml-2 uppercase">
-								Error Log
-							</span>
+							<span className="text-xs text-slate-500 font-mono ml-2 uppercase">Error Log</span>
 						</div>
 						<pre className="text-xs text-red-400 font-mono whitespace-pre-wrap break-words">
 							{this.state.error.message}
@@ -73,7 +69,7 @@ export class ErrorBoundary extends React.Component {
 					<button
 						type="button"
 						onClick={this.tryAgain}
-						className="px-8 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium transition-all hover:scale-105 shadow-lg shadow-emerald-900/20 flex items-center gap-2"
+						className="px-8 py-3 rounded-full bg-acre-600 hover:bg-acre-700 text-white font-medium transition-all hover:scale-105 shadow-lg shadow-acre-900/20 flex items-center gap-2"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

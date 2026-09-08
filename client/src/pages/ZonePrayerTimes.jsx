@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import useSWR from "swr";
-
-import { nameConverter } from "../lib/helper.jsx";
+import LoadFailed from "../components/LoadFailed.jsx";
 
 import Spin from "../components/Spin";
-import LoadFailed from "../components/LoadFailed.jsx";
+import { nameConverter } from "../lib/helper.jsx";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -13,11 +12,9 @@ export default function ZonePrayerTimes() {
 	const { zone } = useParams();
 	const [timeNow, setTimeNow] = useState(new Date());
 
-	const { data, error } = useSWR(
-		`/api/v1/waktusolat/today/${zone.toLowerCase()}`,
-		fetcher,
-		{ suspense: true },
-	);
+	const { data, error } = useSWR(`/api/v1/waktusolat/today/${zone.toLowerCase()}`, fetcher, {
+		suspense: true,
+	});
 
 	useEffect(() => {
 		const startTimer = () => {
@@ -48,11 +45,11 @@ export default function ZonePrayerTimes() {
 
 			if (isDay) {
 				return {
-					gradient: "from-emerald-700 to-teal-900",
-					textAccent: "text-emerald-100",
-					highlightText: "text-emerald-300",
-					cardActive: "bg-emerald-600 ring-emerald-100",
-					progressBar: "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.7)]",
+					gradient: "from-acre-700 to-teal-900",
+					textAccent: "text-acre-100",
+					highlightText: "text-acre-300",
+					cardActive: "bg-acre-600 ring-acre-100",
+					progressBar: "bg-acre-400 shadow-[0_0_10px_rgba(52,211,153,0.7)]",
 				};
 			} else {
 				return {
@@ -63,13 +60,13 @@ export default function ZonePrayerTimes() {
 					progressBar: "bg-indigo-400 shadow-[0_0_10px_rgba(129,140,248,0.7)]",
 				};
 			}
-		} catch (e) {
+		} catch (_e) {
 			return {
-				gradient: "from-emerald-700 to-teal-900",
-				textAccent: "text-emerald-100",
-				highlightText: "text-emerald-300",
-				cardActive: "bg-emerald-600 ring-emerald-100",
-				progressBar: "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.7)]",
+				gradient: "from-acre-700 to-teal-900",
+				textAccent: "text-acre-100",
+				highlightText: "text-acre-300",
+				cardActive: "bg-acre-600 ring-acre-100",
+				progressBar: "bg-acre-400 shadow-[0_0_10px_rgba(52,211,153,0.7)]",
 			};
 		}
 	};
@@ -79,20 +76,18 @@ export default function ZonePrayerTimes() {
 	const getCardStyle = (prayerName) => {
 		const isCurrent =
 			data.nextSolat.name === prayerName ||
-			(prayerName === "dhuhr" &&
-				["dhuhr", "jumaat"].includes(data.nextSolat.name));
+			(prayerName === "dhuhr" && ["dhuhr", "jumaat"].includes(data.nextSolat.name));
 
 		if (isCurrent) {
 			return `${theme.cardActive} text-white border-transparent z-10 animate-breath ring-4 ring-offset-2 ring-offset-slate-900`;
 		}
-		return "bg-slate-800/50 text-slate-300 hover:bg-slate-800 border-slate-700 hover:border-emerald-500/50";
+		return "bg-slate-800/50 text-slate-300 hover:bg-slate-800 border-slate-700 hover:border-acre-500/50";
 	};
 
 	const calculateProgress = () => {
 		try {
 			const prayerOrder = ["fajr", "syuruk", "dhuhr", "asr", "maghrib", "isha"];
-			const nextName =
-				data.nextSolat.name === "jumaat" ? "dhuhr" : data.nextSolat.name;
+			const nextName = data.nextSolat.name === "jumaat" ? "dhuhr" : data.nextSolat.name;
 
 			const nextIndex = prayerOrder.indexOf(nextName);
 			const prevIndex = nextIndex === 0 ? 5 : nextIndex - 1;
@@ -119,7 +114,7 @@ export default function ZonePrayerTimes() {
 
 			const percent = (elapsed / totalDuration) * 100;
 			return Math.min(Math.max(percent, 0), 100);
-		} catch (e) {
+		} catch (_e) {
 			return 0;
 		}
 	};
@@ -149,8 +144,7 @@ export default function ZonePrayerTimes() {
 								<span>{data.today.day}</span>
 								<span className="hidden md:inline opacity-60">•</span>
 								<span>
-									{data.today.hijri.split(" / ")[1]},{" "}
-									{data.today.date.split(" / ")[1]}
+									{data.today.hijri.split(" / ")[1]}, {data.today.date.split(" / ")[1]}
 								</span>
 							</div>
 
@@ -204,9 +198,7 @@ export default function ZonePrayerTimes() {
 									<span className="text-xs uppercase tracking-wider opacity-80 mb-1">
 										{item.label}
 									</span>
-									<span className="text-2xl font-bold">
-										{item.time.slice(0, 5)}
-									</span>
+									<span className="text-2xl font-bold">{item.time.slice(0, 5)}</span>
 								</div>
 							))}
 						</div>

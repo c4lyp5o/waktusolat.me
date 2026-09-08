@@ -29,10 +29,7 @@ export default function Radio() {
 	return (
 		<>
 			<title>Radio Islamik</title>
-			<meta
-				name="description"
-				content="Dengar stesen radio internet islamik secara langsung"
-			/>
+			<meta name="description" content="Dengar stesen radio internet islamik secara langsung" />
 			<link rel="icon" href="/favicon.ico" />
 
 			<main className="min-h-screen bg-slate-950 flex flex-col items-center p-4 font-sans pb-20">
@@ -40,7 +37,7 @@ export default function Radio() {
 					{/* Header Section */}
 					<div className="text-center space-y-3 pt-2">
 						<h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-100">
-							Radio <span className="text-emerald-600">Islamik</span>
+							Radio <span className="text-acre-600">Islamik</span>
 						</h1>
 					</div>
 
@@ -62,10 +59,8 @@ export default function Radio() {
 
 								{/* Station Info */}
 								<div className="mb-6 space-y-1">
-									<h3 className="font-bold text-xl text-slate-100">
-										{station.name}
-									</h3>
-									<p className="text-sm text-gray-400 font-medium uppercase tracking-wider">
+									<h3 className="font-bold text-xl text-slate-100">{station.name}</h3>
+									<p className="text-sm text-slate-400 font-medium uppercase tracking-wider">
 										{station.location}
 									</p>
 								</div>
@@ -76,7 +71,7 @@ export default function Radio() {
 									{/** biome-ignore lint/a11y/useMediaCaption: no caption for online radio */}
 									<audio
 										controls
-										className="w-full h-10 rounded-full focus:outline-none accent-emerald-600"
+										className="w-full h-10 rounded-full focus:outline-none accent-acre-600"
 									>
 										<source src={station.stream} />
 										Browser anda tidak menyokong elemen audio.
@@ -88,7 +83,7 @@ export default function Radio() {
 									href={station.url}
 									target="_blank"
 									rel="noreferrer"
-									className="mt-6 text-xs font-bold text-emerald-600 hover:text-emerald-800 flex items-center gap-1 transition-colors"
+									className="mt-6 text-xs font-bold text-acre-600 hover:text-acre-800 flex items-center gap-1 transition-colors"
 								>
 									Lawati Laman Asal
 									<svg
