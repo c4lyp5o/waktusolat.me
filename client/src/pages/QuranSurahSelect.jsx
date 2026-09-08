@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import Spin from "../components/Spin";
 
@@ -93,9 +93,7 @@ export default function QuranSurahSelect() {
 					{/* --- SECTION 2: SURAH SELECTOR --- */}
 					<section className="space-y-6">
 						<div className="flex flex-col md:flex-row justify-between items-end md:items-center gap-4">
-							<h2 className="text-2xl font-bold text-slate-100">
-								Senarai Surah
-							</h2>
+							<h2 className="text-2xl font-bold text-slate-100">Senarai Surah</h2>
 
 							{/* Search Bar */}
 							<div className="relative w-full md:w-72">
@@ -125,7 +123,7 @@ export default function QuranSurahSelect() {
 
 						{/* Grid of Surahs */}
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-							{filteredSurahs.map((singleSurah, idx) => {
+							{filteredSurahs.map((singleSurah, _idx) => {
 								// Calculate the actual index in the full array for the link
 								// We use indexOf to find the original index if we are filtering
 								const originalIndex = surah.data.indexOf(singleSurah);

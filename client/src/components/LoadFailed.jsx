@@ -24,12 +24,9 @@ export default function LoadFailed() {
 			</div>
 
 			<div className="space-y-2 max-w-md">
-				<h1 className="text-2xl md:text-3xl font-bold text-slate-100">
-					Gagal Memuatkan
-				</h1>
+				<h1 className="text-2xl md:text-3xl font-bold text-slate-100">Gagal Memuatkan</h1>
 				<p className="text-slate-400">
-					Maaf, terdapat masalah semasa memuatkan data. Sila periksa sambungan
-					internet anda.
+					Maaf, terdapat masalah semasa memuatkan data. Sila periksa sambungan internet anda.
 				</p>
 			</div>
 

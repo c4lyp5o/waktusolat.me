@@ -33,15 +33,14 @@ export function adaptElysia(fn) {
 		// to the real socket IP via ctx.server.requestIP() when no proxy headers
 		// are present (e.g. direct localhost / non-reverse-proxied requests).
 		let ip =
-			// biome-ignore lint/style/noNonNullAssertion: guarded below
-			String(headersObj["x-forwarded-for"] || "").split(",")[0]?.trim() ||
+			String(headersObj["x-forwarded-for"] || "")
+				.split(",")[0]
+				?.trim() ||
 			String(headersObj["x-real-ip"] || "").trim() ||
 			String(headersObj["cf-connecting-ip"] || "").trim();
 
 		if (!ip) {
-			const reqIp =
-				ctx.server?.requestIP?.(request)?.address ||
-				ctx.requestIP?.(request)?.address;
+			const reqIp = ctx.server?.requestIP?.(request)?.address || ctx.requestIP?.(request)?.address;
 			if (reqIp && typeof reqIp === "string") ip = reqIp;
 		}
 
@@ -98,7 +97,7 @@ export function adaptElysia(fn) {
 				return { ...responseHeaders };
 			},
 			redirect(url) {
-				responseHeaders["location"] = url;
+				responseHeaders.location = url;
 				statusCode = 302;
 				return this;
 			},
@@ -129,7 +128,7 @@ export function adaptElysia(fn) {
 
 /** Serve the SPA's index.html for any non-API, non-static route. */
 export function sendIndexHtml(set) {
-	return (ctx) => {
+	return (_ctx) => {
 		set.headers["content-type"] = "text/html; charset=utf-8";
 		return Bun.file(path.join(process.cwd(), "public", "index.html"));
 	};

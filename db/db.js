@@ -10,7 +10,6 @@ let dbInstance;
  */
 const initializeDatabase = async () => {
 	if (!dbInstance) {
-
 		try {
 			dbInstance = new Database(process.env.DB_PATH || "./db/visitors.sqlite", { create: true });
 

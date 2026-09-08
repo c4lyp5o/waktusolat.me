@@ -19,12 +19,9 @@ export default function NotFound() {
 						</h1>
 
 						<div className="space-y-3">
-							<h2 className="text-2xl md:text-3xl font-bold text-white">
-								Alamak! Tersesat ke?
-							</h2>
+							<h2 className="text-2xl md:text-3xl font-bold text-white">Alamak! Tersesat ke?</h2>
 							<p className="text-slate-400 max-w-sm mx-auto text-lg leading-relaxed">
-								Halaman yang anda cari tidak wujud atau mungkin telah
-								dipindahkan.
+								Halaman yang anda cari tidak wujud atau mungkin telah dipindahkan.
 							</p>
 						</div>
 
