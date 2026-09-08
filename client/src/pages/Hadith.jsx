@@ -17,7 +17,7 @@ export default function Hadith() {
 				if (Array.isArray(msg)) {
 					setKeetab(msg);
 				}
-			} catch (error) {
+			} catch (_error) {
 				console.error("Failed to load books");
 			}
 		};
@@ -34,7 +34,7 @@ export default function Hadith() {
 			// Assuming giveTheKeetab returns an object like { hadis: "..." }
 			const data = await giveTheKeetab(bookId);
 			setHadithContent(data.hadis || "Tiada hadis dijumpai.");
-		} catch (error) {
+		} catch (_error) {
 			setHadithContent("Harap Maaf, Sila Cuba Lagi. Terdapat masalah sambungan.");
 		} finally {
 			setLoading(false);

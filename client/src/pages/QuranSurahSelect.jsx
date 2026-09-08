@@ -123,7 +123,7 @@ export default function QuranSurahSelect() {
 
 						{/* Grid of Surahs */}
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-							{filteredSurahs.map((singleSurah, idx) => {
+							{filteredSurahs.map((singleSurah, _idx) => {
 								// Calculate the actual index in the full array for the link
 								// We use indexOf to find the original index if we are filtering
 								const originalIndex = surah.data.indexOf(singleSurah);

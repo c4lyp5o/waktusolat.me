@@ -45,7 +45,7 @@ const getMonthName = () => {
 };
 const getDayNumberInYear = () => {
 	return Math.floor(
-		(new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24) - 1,
+		(Date.now() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24) - 1,
 	);
 };
 const getTimeNow = () => {
@@ -497,7 +497,7 @@ class QuranHelpers {
 	static getFullSurah = (req, res) => {
 		const { lang, id } = req.params;
 		const Quran = lang === "en" ? Quranen : Quranmy;
-		const data = Quran.find(({ id: surahId }) => surahId === Number.parseInt(id));
+		const data = Quran.find(({ id: surahId }) => surahId === Number.parseInt(id, 10));
 		if (!data) {
 			return res.status(404).json({
 				code: 404,
@@ -511,7 +511,7 @@ class QuranHelpers {
 	static getAyatFromSurah = (req, res) => {
 		const { lang, id, ayat } = req.params;
 		const Quran = lang === "en" ? Quranen : Quranmy;
-		const surah = Quran.find(({ id: surahId }) => surahId === Number.parseInt(id));
+		const surah = Quran.find(({ id: surahId }) => surahId === Number.parseInt(id, 10));
 		if (!surah) {
 			return res.status(404).json({
 				code: 404,
@@ -519,7 +519,7 @@ class QuranHelpers {
 				message: "Surah not found.",
 			});
 		}
-		const data = surah.verses.find(({ id: ayatId }) => ayatId === Number.parseInt(ayat));
+		const data = surah.verses.find(({ id: ayatId }) => ayatId === Number.parseInt(ayat, 10));
 		if (!data) {
 			return res.status(404).json({
 				code: 404,
@@ -555,7 +555,7 @@ class QuranHelpers {
 class HadithsHelpers {
 	static HADITH_BOOKS = ["bukhari", "muslim", "abudaud", "nasai", "tirmizi", "ibnumajah"];
 
-	static getHadithBook(req, res) {
+	static getHadithBook(_req, res) {
 		return res.status(200).json({ msg: HadithsHelpers.HADITH_BOOKS.join(", ") });
 	}
 

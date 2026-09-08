@@ -16,7 +16,7 @@ export default function Landing() {
 			try {
 				const json = await fetch("/api/v1/visitors/stats").then((r) => r.json());
 				if (!cancelled && json?.data) setStats(json.data);
-			} catch (error) {
+			} catch (_error) {
 				// Silent fail — page works fine without the counter
 			}
 		};

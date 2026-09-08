@@ -60,7 +60,7 @@ export default function ZonePrayerTimes() {
 					progressBar: "bg-indigo-400 shadow-[0_0_10px_rgba(129,140,248,0.7)]",
 				};
 			}
-		} catch (e) {
+		} catch (_e) {
 			return {
 				gradient: "from-acre-700 to-teal-900",
 				textAccent: "text-acre-100",
@@ -114,7 +114,7 @@ export default function ZonePrayerTimes() {
 
 			const percent = (elapsed / totalDuration) * 100;
 			return Math.min(Math.max(percent, 0), 100);
-		} catch (e) {
+		} catch (_e) {
 			return 0;
 		}
 	};

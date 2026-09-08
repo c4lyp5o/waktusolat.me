@@ -73,6 +73,7 @@ export default function Chat() {
 	}, []);
 
 	// Auto-scroll to bottom
+	// biome-ignore lint/correctness/useExhaustiveDependencies: messages is the scroll trigger — effect body only touches the ref
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
@@ -81,7 +82,7 @@ export default function Chat() {
 		const text = messageInput.trim();
 		if (!text) return;
 		const socket = socketRef.current;
-		if (!socket || !socket.connected) {
+		if (!socket?.connected) {
 			setNotice("Sambungan hilang. Mencuba menyambung semula…");
 			return;
 		}
@@ -92,7 +93,7 @@ export default function Chat() {
 	// Debounced "user is typing" notify (server relays it to others, throttled).
 	const notifyTyping = () => {
 		const socket = socketRef.current;
-		if (!socket || !socket.connected) return;
+		if (!socket?.connected) return;
 		const now = Date.now();
 		if (now - lastTypingSentRef.current > 2000) {
 			lastTypingSentRef.current = now;
