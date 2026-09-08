@@ -1,4 +1,4 @@
-import { buildSchema } from 'graphql';
+import { buildSchema } from "graphql";
 
 const SDL = `
     type Query {
@@ -72,7 +72,7 @@ const SDL = `
 
 const WSAPIschema = buildSchema(SDL);
 
-export { WSAPIschema, SDL };
+export { SDL, WSAPIschema };
 
 // Language: javascript
 // Path: engine/graphql/resolvers/index.js

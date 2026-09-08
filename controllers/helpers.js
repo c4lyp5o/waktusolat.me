@@ -1,26 +1,21 @@
 import {
-	Zones,
+	AbudaudBook,
+	BukhariBook,
+	IbnumajahBook,
 	Months,
+	MuslimBook,
+	NasaiBook,
 	Quranen,
 	Quranmy,
-	BukhariBook,
-	MuslimBook,
-	AbudaudBook,
-	NasaiBook,
 	TirmiziBook,
-	IbnumajahBook,
+	Zones,
 } from "./library.js";
 
 // functions to use
 const getDateFromHours = (time) => {
 	const timeParts = time.split(":");
 	const now = new Date();
-	return new Date(
-		now.getFullYear(),
-		now.getMonth(),
-		now.getDate(),
-		...timeParts,
-	);
+	return new Date(now.getFullYear(), now.getMonth(), now.getDate(), ...timeParts);
 };
 const getDateFromHoursAndAdd1Day = async (time) => {
 	try {
@@ -50,9 +45,7 @@ const getMonthName = () => {
 };
 const getDayNumberInYear = () => {
 	return Math.floor(
-		(new Date() - new Date(new Date().getFullYear(), 0, 0)) /
-			(1000 * 60 * 60 * 24) -
-			1,
+		(new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24) - 1,
 	);
 };
 const getTimeNow = () => {
@@ -384,18 +377,8 @@ const timeCruncher = (period, zone) => {
 		case "today": {
 			let dayNumber = getDayNumberInYear();
 			for (let j = 0; j < 2; j++) {
-				const {
-					date,
-					hijri,
-					day,
-					imsak,
-					fajr,
-					syuruk,
-					dhuhr,
-					asr,
-					maghrib,
-					isha,
-				} = zone.db[dayNumber];
+				const { date, hijri, day, imsak, fajr, syuruk, dhuhr, asr, maghrib, isha } =
+					zone.db[dayNumber];
 				const fixedDate = interpretChristDate(date);
 				const fixedHijri = interpretHijriDate(hijri);
 				const fixedDay = interpretDay(day);
@@ -421,18 +404,8 @@ const timeCruncher = (period, zone) => {
 		case "week": {
 			let weekStartDayNumber = getDayNumberInYear();
 			for (let j = 0; j < 7; j++) {
-				const {
-					date,
-					hijri,
-					day,
-					imsak,
-					fajr,
-					syuruk,
-					dhuhr,
-					asr,
-					maghrib,
-					isha,
-				} = zone.db[weekStartDayNumber];
+				const { date, hijri, day, imsak, fajr, syuruk, dhuhr, asr, maghrib, isha } =
+					zone.db[weekStartDayNumber];
 				const fixedDate = interpretChristDate(date);
 				const fixedHijri = interpretHijriDate(hijri);
 				const fixedDay = interpretDay(day);
@@ -459,18 +432,7 @@ const timeCruncher = (period, zone) => {
 			const pastCount = getMonthName();
 			const currentCount = pastCount + Months[new Date().getMonth()].count;
 			for (let j = pastCount; j < currentCount; j++) {
-				const {
-					date,
-					hijri,
-					day,
-					imsak,
-					fajr,
-					syuruk,
-					dhuhr,
-					asr,
-					maghrib,
-					isha,
-				} = zone.db[j];
+				const { date, hijri, day, imsak, fajr, syuruk, dhuhr, asr, maghrib, isha } = zone.db[j];
 				const fixedDate = interpretChristDate(date);
 				const fixedHijri = interpretHijriDate(hijri);
 				const fixedDay = interpretDay(day);
@@ -494,18 +456,7 @@ const timeCruncher = (period, zone) => {
 		}
 		case "year": {
 			for (let j = 0; j < zone.db.length; j++) {
-				const {
-					date,
-					hijri,
-					day,
-					imsak,
-					fajr,
-					syuruk,
-					dhuhr,
-					asr,
-					maghrib,
-					isha,
-				} = zone.db[j];
+				const { date, hijri, day, imsak, fajr, syuruk, dhuhr, asr, maghrib, isha } = zone.db[j];
 				const fixedDate = interpretChristDate(date);
 				const fixedHijri = interpretHijriDate(hijri);
 				const fixedDay = interpretDay(day);
@@ -546,9 +497,7 @@ class QuranHelpers {
 	static getFullSurah = (req, res) => {
 		const { lang, id } = req.params;
 		const Quran = lang === "en" ? Quranen : Quranmy;
-		const data = Quran.find(
-			({ id: surahId }) => surahId === Number.parseInt(id),
-		);
+		const data = Quran.find(({ id: surahId }) => surahId === Number.parseInt(id));
 		if (!data) {
 			return res.status(404).json({
 				code: 404,
@@ -562,9 +511,7 @@ class QuranHelpers {
 	static getAyatFromSurah = (req, res) => {
 		const { lang, id, ayat } = req.params;
 		const Quran = lang === "en" ? Quranen : Quranmy;
-		const surah = Quran.find(
-			({ id: surahId }) => surahId === Number.parseInt(id),
-		);
+		const surah = Quran.find(({ id: surahId }) => surahId === Number.parseInt(id));
 		if (!surah) {
 			return res.status(404).json({
 				code: 404,
@@ -572,9 +519,7 @@ class QuranHelpers {
 				message: "Surah not found.",
 			});
 		}
-		const data = surah.verses.find(
-			({ id: ayatId }) => ayatId === Number.parseInt(ayat),
-		);
+		const data = surah.verses.find(({ id: ayatId }) => ayatId === Number.parseInt(ayat));
 		if (!data) {
 			return res.status(404).json({
 				code: 404,
@@ -595,8 +540,7 @@ class QuranHelpers {
 		const randomAyatIndex = Math.floor(Math.random() * verses.length);
 		const { id: ayatNumber, text: arabic } = verses[randomAyatIndex];
 		const { translation: englishTranslation } = verses[randomAyatIndex];
-		const { translation: malayTranslation } =
-			mys[randomSurahIndex].verses[randomAyatIndex];
+		const { translation: malayTranslation } = mys[randomSurahIndex].verses[randomAyatIndex];
 		const data = {
 			fromSurah: `${name} / ${transliteration}`,
 			ayatNumber,
@@ -609,19 +553,10 @@ class QuranHelpers {
 }
 // biome-ignore lint/complexity/noStaticOnlyClass: i dont even
 class HadithsHelpers {
-	static HADITH_BOOKS = [
-		"bukhari",
-		"muslim",
-		"abudaud",
-		"nasai",
-		"tirmizi",
-		"ibnumajah",
-	];
+	static HADITH_BOOKS = ["bukhari", "muslim", "abudaud", "nasai", "tirmizi", "ibnumajah"];
 
 	static getHadithBook(req, res) {
-		return res
-			.status(200)
-			.json({ msg: HadithsHelpers.HADITH_BOOKS.join(", ") });
+		return res.status(200).json({ msg: HadithsHelpers.HADITH_BOOKS.join(", ") });
 	}
 
 	static getHadith(req, res) {
@@ -688,11 +623,4 @@ class TimeHelpers {
 	}
 }
 
-export {
-	QuranHelpers,
-	HadithsHelpers,
-	TimeHelpers,
-	timeCruncher,
-	timeReminder,
-	getTimeNow,
-};
+export { getTimeNow, HadithsHelpers, QuranHelpers, TimeHelpers, timeCruncher, timeReminder };

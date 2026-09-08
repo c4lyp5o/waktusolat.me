@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import Spin from "../components/Spin";
 
@@ -93,9 +93,7 @@ export default function QuranSurahSelect() {
 					{/* --- SECTION 2: SURAH SELECTOR --- */}
 					<section className="space-y-6">
 						<div className="flex flex-col md:flex-row justify-between items-end md:items-center gap-4">
-							<h2 className="text-2xl font-bold text-slate-100">
-								Senarai Surah
-							</h2>
+							<h2 className="text-2xl font-bold text-slate-100">Senarai Surah</h2>
 
 							{/* Search Bar */}
 							<div className="relative w-full md:w-72">

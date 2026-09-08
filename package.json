@@ -38,6 +38,7 @@
 		"socket.io": "^4.8.3"
 	},
 	"devDependencies": {
+		"@biomejs/biome": "^2.5.12",
 		"concurrently": "^9.2.1"
 	}
 }

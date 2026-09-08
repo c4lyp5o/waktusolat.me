@@ -29,10 +29,7 @@ export default function Landing() {
 	return (
 		<>
 			<title>Waktu Solat Malaysia</title>
-			<meta
-				name="description"
-				content="Waktu Solat Untuk Malaysia Straight Dari JAKIM"
-			/>
+			<meta name="description" content="Waktu Solat Untuk Malaysia Straight Dari JAKIM" />
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			<link rel="icon" href="/favicon.ico" />
 
@@ -43,11 +40,10 @@ export default function Landing() {
 				{/* Centered hero — as minimal as it gets */}
 				<div className="flex flex-1 flex-col items-center justify-center px-4 pt-10 pb-16">
 					<div className="rise-1 relative w-full max-w-3xl text-center">
-										<h1 className="text-5xl font-extrabold tracking-tight text-slate-50 md:text-7xl">
-											Waktu Solat{" "}
-											<span className="text-acre-500">Malaysia</span>
-										</h1>
-									</div>
+						<h1 className="text-5xl font-extrabold tracking-tight text-slate-50 md:text-7xl">
+							Waktu Solat <span className="text-acre-500">Malaysia</span>
+						</h1>
+					</div>
 
 					{/* The one thing to do here */}
 					<div className="rise-2 relative mt-8 w-full max-w-md px-2">

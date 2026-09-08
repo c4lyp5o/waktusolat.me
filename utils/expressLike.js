@@ -34,14 +34,14 @@ export function adaptElysia(fn) {
 		// are present (e.g. direct localhost / non-reverse-proxied requests).
 		let ip =
 			// biome-ignore lint/style/noNonNullAssertion: guarded below
-			String(headersObj["x-forwarded-for"] || "").split(",")[0]?.trim() ||
+			String(headersObj["x-forwarded-for"] || "")
+				.split(",")[0]
+				?.trim() ||
 			String(headersObj["x-real-ip"] || "").trim() ||
 			String(headersObj["cf-connecting-ip"] || "").trim();
 
 		if (!ip) {
-			const reqIp =
-				ctx.server?.requestIP?.(request)?.address ||
-				ctx.requestIP?.(request)?.address;
+			const reqIp = ctx.server?.requestIP?.(request)?.address || ctx.requestIP?.(request)?.address;
 			if (reqIp && typeof reqIp === "string") ip = reqIp;
 		}
 

@@ -1,9 +1,5 @@
-import { Zones, Quranen, Quranmy } from "../../controllers/library.js";
-import {
-	timeCruncher,
-	timeReminder,
-	getTimeNow,
-} from "../../controllers/helpers.js";
+import { getTimeNow, timeCruncher, timeReminder } from "../../controllers/helpers.js";
+import { Quranen, Quranmy, Zones } from "../../controllers/library.js";
 
 const WSAPIresolvers = {
 	hello: () => {

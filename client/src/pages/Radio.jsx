@@ -29,10 +29,7 @@ export default function Radio() {
 	return (
 		<>
 			<title>Radio Islamik</title>
-			<meta
-				name="description"
-				content="Dengar stesen radio internet islamik secara langsung"
-			/>
+			<meta name="description" content="Dengar stesen radio internet islamik secara langsung" />
 			<link rel="icon" href="/favicon.ico" />
 
 			<main className="min-h-screen bg-slate-950 flex flex-col items-center p-4 font-sans pb-20">
@@ -62,9 +59,7 @@ export default function Radio() {
 
 								{/* Station Info */}
 								<div className="mb-6 space-y-1">
-									<h3 className="font-bold text-xl text-slate-100">
-										{station.name}
-									</h3>
+									<h3 className="font-bold text-xl text-slate-100">{station.name}</h3>
 									<p className="text-sm text-slate-400 font-medium uppercase tracking-wider">
 										{station.location}
 									</p>

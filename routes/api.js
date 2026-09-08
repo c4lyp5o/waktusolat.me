@@ -1,18 +1,14 @@
 // Elysia routes for waktusolat.me — replaces the Express Router.
 import { Elysia } from "elysia";
-import { insertVisitor, getVisitors, getVisitorStats } from "../middlewares/visitors.js";
+import { HadithsHelpers, QuranHelpers, TimeHelpers } from "../controllers/helpers.js";
 import {
-	QuranHelpers,
-	HadithsHelpers,
-	TimeHelpers,
-} from "../controllers/helpers.js";
-import {
-	cacheBeforeHandle,
 	cacheAfterHandle,
+	cacheBeforeHandle,
 	getCacheStats,
 	invalidateCache,
 	localAuthBefore,
 } from "../middlewares/cache.js";
+import { getVisitorStats, getVisitors, insertVisitor } from "../middlewares/visitors.js";
 import { adaptElysia } from "../utils/expressLike.js";
 
 const wrap = (fn) => adaptElysia(fn);
@@ -37,25 +33,26 @@ const protectedRoutes = new Elysia()
 
 export const apiRoutes = new Elysia({ prefix: "/api/v1" })
 	// root usage text
-	.get("/", wrap((_req, res) => {
-		res.write("waktusolat.me API for everything.\nReach us c4lyp5o @ github\n\n");
-		res.write(
-			"Usage:\n\n/quran : lists all surah\n/quran/(language)/(surah number) : Get surah with specific language\n",
-		);
-		res.write(
-			"/quran/(language)/(surah number)/(verse number) : Get specific verse of surah with specific language\n",
-		);
-		res.write("/quran/random : Get random verse of surah with both language\n");
-		res.write("\nAvailable languages:\nmy : malay\nen : english\n");
-		res.write("\n/hadis/(book) : Get random hadith from specific book\n");
-		res.write("\nAvailable books:\nriwayat : riwayat\n");
-		res.write(
-			"\n/waktusolat/(period)/(location) : Get prayer times for specific location\n",
-		);
-		res.write("\nAvailable periods:\ntoday\nweek\nmonth\nyear\n");
-		res.write("\nAvailable locations: \nPlease refer to github page.\n");
-		res.status(200).end();
-	}))
+	.get(
+		"/",
+		wrap((_req, res) => {
+			res.write("waktusolat.me API for everything.\nReach us c4lyp5o @ github\n\n");
+			res.write(
+				"Usage:\n\n/quran : lists all surah\n/quran/(language)/(surah number) : Get surah with specific language\n",
+			);
+			res.write(
+				"/quran/(language)/(surah number)/(verse number) : Get specific verse of surah with specific language\n",
+			);
+			res.write("/quran/random : Get random verse of surah with both language\n");
+			res.write("\nAvailable languages:\nmy : malay\nen : english\n");
+			res.write("\n/hadis/(book) : Get random hadith from specific book\n");
+			res.write("\nAvailable books:\nriwayat : riwayat\n");
+			res.write("\n/waktusolat/(period)/(location) : Get prayer times for specific location\n");
+			res.write("\nAvailable periods:\ntoday\nweek\nmonth\nyear\n");
+			res.write("\nAvailable locations: \nPlease refer to github page.\n");
+			res.status(200).end();
+		}),
+	)
 	// record visitor
 	.get("/thanks", wrap(insertVisitor))
 	// raw visitors (dev only, localhost auth)

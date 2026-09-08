@@ -1,5 +1,5 @@
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-import { useState, useMemo } from "react";
 
 // Move the data outside the component to prevent re-creation on every render
 // In the future, you should move this to a separate file like `src/data/zones.js`
@@ -230,10 +230,7 @@ export default function ZoneSelector() {
 		<div className="w-full bg-slate-900 rounded-3xl shadow-xl overflow-hidden border border-slate-800">
 			{/* Search Header */}
 			<div className="p-6 bg-linear-to-r from-acre-600 to-teal-600">
-				<label
-					htmlFor="search"
-					className="block text-white text-sm font-semibold mb-2"
-				>
+				<label htmlFor="search" className="block text-white text-sm font-semibold mb-2">
 					Cari Kawasan Atau Negeri
 				</label>
 				<div className="relative">
@@ -292,9 +289,7 @@ export default function ZoneSelector() {
 										className="w-full text-left px-4 py-3 hover:bg-acre-50 hover:text-acre-700 transition-colors duration-200 flex items-center justify-between group"
 									>
 										<span className="text-sm font-medium text-slate-300 group-hover:text-acre-700 normal-case leading-relaxed">
-											{child.name
-												.toLowerCase()
-												.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())}
+											{child.name.toLowerCase().replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())}
 										</span>
 										<span className="text-slate-300 group-hover:text-acre-400">
 											<svg

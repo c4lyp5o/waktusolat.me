@@ -1,4 +1,4 @@
-import deadslog from 'deadslog';
+import deadslog from "deadslog";
 
 const logger = deadslog();
 

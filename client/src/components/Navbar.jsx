@@ -34,9 +34,7 @@ export default function Navbar() {
 	const location = useLocation();
 
 	function ActiveLink({ root, to, title }) {
-		const isPathActive = root
-			? location.pathname.startsWith(root)
-			: location.pathname === to;
+		const isPathActive = root ? location.pathname.startsWith(root) : location.pathname === to;
 
 		const baseClasses =
 			"whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border shrink-0";
