@@ -12,6 +12,11 @@ import logger from "../utils/logger.js";
 
 const cpray = new Cpray();
 
+// data/times/ is gitignored (generated at container start), so it does not
+// exist on a fresh checkout/image — create it before the first write.
+const timesDir = join(process.cwd(), "data", "times");
+await fs.mkdir(timesDir, { recursive: true });
+
 const zones = [
 	"kdh01",
 	"kdh02",
@@ -88,11 +93,7 @@ async function getTimesAndWrite(zone) {
 		);
 		return;
 	}
-	await fs.writeFile(
-		join(process.cwd(), "data", "times", `${zone}.json`),
-		JSON.stringify(times),
-		"utf8",
-	);
+	await fs.writeFile(join(timesDir, `${zone}.json`), JSON.stringify(times), "utf8");
 	logger.info(`[timesGetter] ${zone}: wrote ${times.prayerTime.length} rows`);
 }
 

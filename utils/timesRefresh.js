@@ -19,8 +19,11 @@ import logger from "./logger.js";
 
 const cpray = new Cpray();
 
-// data/times/<zone>.json lives beside this file's parent dir
+// data/times/<zone>.json lives beside this file's parent dir. The dir is
+// gitignored and may not exist on a fresh image — the refresher creates it
+// on demand so a runtime write never ENOENTs.
 const timesDir = join(import.meta.dir, "../data/times");
+const ensureTimesDir = async () => fs.mkdir(timesDir, { recursive: true });
 
 // "01-Mac-2026" / "01-Jan-2026" -> "2026-03-01"; null if unparseable
 export const jakimDateToIso = (date) => {
@@ -53,6 +56,7 @@ export async function refreshZone(zone) {
 			return false;
 		}
 		const file = join(timesDir, `${zone}.json`);
+		await ensureTimesDir();
 		await fs.writeFile(file, JSON.stringify(payload), "utf8");
 		logger.info(`[timesRefresh] ${zone}: wrote ${payload.prayerTime.length} rows`);
 		return true;
