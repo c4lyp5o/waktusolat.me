@@ -4,7 +4,7 @@
 // (data/ is gitignored). The zone list, negeri and display names are
 // preserved verbatim from the previous hand-maintained table.
 
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const quranmy = JSON.parse(
@@ -32,20 +32,28 @@ const TirmiziBook = tirmizi;
 const IbnumajahBook = ibnu_majah;
 
 // Prayer-time DBs live in data/times/ (gitignored, refreshed by
-// data/getter.js). Missing/error files (e.g. KTN03, which JAKIM does not
-// publish) get an empty db — TimeHelpers returns an explicit empty set
-// for them instead of crashing.
-const readPrayerTimes = (zone) => {
+// data/getter.js at container start and by server.js when stale).
+// Files are cached in memory keyed by mtime, so a background refresh is
+// picked up on the next access without a restart. Missing/error files
+// (e.g. zones JAKIM does not publish) get an empty db — TimeHelpers
+// returns an explicit empty set for them instead of crashing.
+const timesCache = new Map(); // zone -> { mtimeMs, rows }
+
+export function readPrayerTimes(zone) {
 	try {
-		const parsed = JSON.parse(
-			readFileSync(join(import.meta.dir, "../data/times/", zone + ".json"), "utf8"),
-		);
-		const rows = parsed.prayerTime;
-		return Array.isArray(rows) ? rows : [];
+		const file = join(import.meta.dir, "../data/times/", `${zone}.json`);
+		const mtimeMs = statSync(file).mtimeMs;
+		const cached = timesCache.get(zone);
+		if (cached && cached.mtimeMs === mtimeMs) return cached.rows;
+		const parsed = JSON.parse(readFileSync(file, "utf8"));
+		const rows = Array.isArray(parsed.prayerTime) ? parsed.prayerTime : [];
+		timesCache.set(zone, { mtimeMs, rows });
+		return rows;
 	} catch {
+		timesCache.delete(zone);
 		return [];
 	}
-};
+}
 
 const Zones = {
 	kdh01: {

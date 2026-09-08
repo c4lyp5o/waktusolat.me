@@ -69,6 +69,8 @@ export const apiRoutes = new Elysia({ prefix: "/api/v1" })
 	.get("/waktusolat/:period/:zone", wrap(TimeHelpers.getTime))
 	// cache management
 	.get("/cache", () => getCacheStats())
-	.get("/cache/invalidate", () => invalidateCache());
+	.get("/cache/invalidate", () => invalidateCache())
+	// real healthcheck for the Docker HEALTHCHECK (JSON, not the SPA shell)
+	.get("/healthcheck", () => ({ ok: true }));
 
 export default apiRoutes;

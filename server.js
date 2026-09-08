@@ -3,15 +3,20 @@ import { apollo, gql } from "@elysiajs/apollo";
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import { Server } from "socket.io";
+import { Zones } from "./controllers/library.js";
 import { apolloResolvers } from "./graphql/apollo.js";
 import { SDL } from "./graphql/schema/index.js";
-
 import apiRoutes from "./routes/api.js";
 import logger from "./utils/logger.js";
 import { RateLimiter } from "./utils/rateLimit.js";
+import { startTimesRefresher } from "./utils/timesRefresh.js";
 
 const PORT = process.env.PORT || 5000;
 const limiter = new RateLimiter(100, 60_000);
+
+// Self-healing prayer-times refresh: daily check, refetch stale zones from
+// JAKIM in the background (see utils/timesRefresh.js).
+startTimesRefresher(Zones);
 
 const app = new Elysia()
 	.use(cors())

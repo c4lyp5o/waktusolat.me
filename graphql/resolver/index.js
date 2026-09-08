@@ -7,7 +7,13 @@ const WSAPIresolvers = {
 	},
 	waktuSolat: async (args) => {
 		const currentZone = Zones[args.zone];
+		if (!currentZone) {
+			throw new Error(`Invalid zone: ${args.zone}`);
+		}
 		const data = timeCruncher(args.period, currentZone);
+		if (!Array.isArray(data) || data.length === 0) {
+			throw new Error(`No data for zone: ${args.zone}`);
+		}
 		const today = timeCruncher("today", currentZone);
 		const todayData = getTimeNow();
 		const timeDifference = await timeReminder(today);
