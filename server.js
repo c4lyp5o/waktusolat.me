@@ -7,6 +7,7 @@ import { Zones } from "./controllers/library.js";
 import { apolloResolvers } from "./graphql/apollo.js";
 import { SDL } from "./graphql/schema/index.js";
 import apiRoutes from "./routes/api.js";
+import { CLIENT_IP_HEADER, resolveClientIp } from "./utils/clientIp.js";
 import logger from "./utils/logger.js";
 import { RateLimiter } from "./utils/rateLimit.js";
 import { startTimesRefresher } from "./utils/timesRefresh.js";
@@ -20,12 +21,9 @@ startTimesRefresher(Zones);
 
 const app = new Elysia()
 	.use(cors())
-	// global rate limit (In-Memory, per request)
+	// global rate limit (In-Memory, per client IP resolved by the bridge)
 	.onBeforeHandle(({ request, set }) => {
-		const key =
-			request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-			request.headers.get("x-real-ip") ||
-			"local";
+		const key = request.headers.get(CLIENT_IP_HEADER) || "unknown";
 		if (!limiter.allow(key)) {
 			set.status = 429;
 			return { message: "Too Many Requests" };
@@ -92,6 +90,11 @@ const httpServer = createServer((req, res) => {
 			for (const [k, v] of Object.entries(req.headers)) {
 				if (v) headers.set(k, v);
 			}
+			// Overwrites any client-sent value — see utils/clientIp.js.
+			headers.set(
+				CLIENT_IP_HEADER,
+				resolveClientIp(req.socket.remoteAddress, req.headers["x-forwarded-for"]),
+			);
 			const request = new Request(url, {
 				method,
 				headers,

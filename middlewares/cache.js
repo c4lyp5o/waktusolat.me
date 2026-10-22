@@ -1,8 +1,8 @@
-// Elysia-native in-memory cache + dev-auth helpers for waktusolat.me.
+// Elysia-native in-memory response cache for waktusolat.me.
 //
 // NOTE: Rather than exporting Elysia plugin instances (whose hooks are
 // unreliable when .use()'d into a sub-app), we export plain hook functions
-// that routes apply inline. Similarly the localhost auth guard.
+// that routes apply inline. (Admin auth lives in middlewares/auth.js.)
 
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 const MAX_CACHE_SIZE = 100;
@@ -125,14 +125,3 @@ export const invalidateCache = (pattern) => {
 	cacheStore.invalidate(pattern || ".*");
 	return { message: "Cache invalidated", pattern: pattern || ".*" };
 };
-
-// Localhost-only auth guard (onBeforeHandle). Allows loopback; rejects all else.
-export function localAuthBefore({ request, set }) {
-	const ip =
-		request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-		request.headers.get("x-real-ip")?.trim() ||
-		"";
-	if (ip === "127.0.0.1" || ip === "::1" || ip === "localhost") return;
-	set.status = 403;
-	return { message: "Forbidden" };
-}

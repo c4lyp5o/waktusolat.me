@@ -9,10 +9,7 @@ const VISIT_WINDOW_MS = 15 * 60 * 1000;
 
 const insertVisitor = async (req, res) => {
 	const date = new Date().toISOString();
-	const clientIp =
-		req.headers["x-forwarded-for"]?.split(",")[0] ||
-		req.headers["x-real-ip"] ||
-		req.socket?.remoteAddress;
+	const clientIp = req.ip;
 
 	if (!clientIp) {
 		return res.status(400).json({
