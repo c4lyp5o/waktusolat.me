@@ -1,6 +1,6 @@
 // Lead.jsx — the screen's answer: how long until the next prayer or iqamah.
 import { m, useReducedMotion } from "motion/react";
-import { formatCountdown, formatTime } from "./lib/format.js";
+import { formatCountdown, formatTime } from "../lib/waktu/format.js";
 
 const HEADLINE = {
 	countdown: (label) => label,

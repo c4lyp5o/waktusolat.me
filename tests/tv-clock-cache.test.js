@@ -1,8 +1,8 @@
 // TV display: server-offset clock and the per-zone year cache.
 import { describe, expect, test } from "bun:test";
-import { needsRefresh, readYear, writeYear } from "../client/src/tv/lib/cache.js";
-import { computeOffset, createClock } from "../client/src/tv/lib/clock.js";
-import { mytEpoch } from "../client/src/tv/lib/mytime.js";
+import { needsRefresh, readYear, writeYear } from "../client/src/lib/waktu/cache.js";
+import { computeOffset, createClock } from "../client/src/lib/waktu/clock.js";
+import { mytEpoch } from "../client/src/lib/waktu/mytime.js";
 
 // Map-backed Storage; `fail` makes every call throw (private mode, quota, blocked).
 function fakeStorage({ fail = false } = {}) {

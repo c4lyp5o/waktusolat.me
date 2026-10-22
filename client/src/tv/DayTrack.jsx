@@ -2,28 +2,8 @@
 // sun where the light really is. Labels are HTML (crisp at any size); the
 // sky layer is drawn from the same geometry (lib/daytrack.js).
 import { useEffect, useRef, useState } from "react";
-import { dayTrack } from "./lib/daytrack.js";
-import { prayerLabel } from "./lib/names.js";
-
-const ARC_TOP = 0.9; // share of the sky's height the arc may rise to
-const SAMPLES = 48;
-
-// Stars for the night sky: fixed positions (x 0..1, y 0..1 from the top),
-// so the sky does not reshuffle on every render.
-const STARS = Array.from({ length: 28 }, (_, i) => ({
-	x: ((i * 0.618034) % 1) * 0.96 + 0.02,
-	y: ((i * 0.381966 + 0.13) % 1) * 0.8 + 0.05,
-	big: i % 5 === 0,
-}));
-
-function arcPoints(from, to) {
-	return Array.from({ length: SAMPLES + 1 }, (_, i) => {
-		const f = i / SAMPLES;
-		const x = (from + (to - from) * f) * 1000;
-		const y = 100 - ARC_TOP * 100 * Math.sin(Math.PI * f);
-		return `${x.toFixed(1)},${y.toFixed(1)}`;
-	}).join(" ");
-}
+import { ARC_TOP, arcPoints, dayTrack, STARS } from "../lib/waktu/daytrack.js";
+import { prayerLabel } from "../lib/waktu/names.js";
 
 // The SVG sky: also the fallback when WebGL is missing or too slow. The SVG
 // stretches to the band (preserveAspectRatio none), so only lines and the

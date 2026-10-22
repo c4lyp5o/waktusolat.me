@@ -4,8 +4,8 @@
 // discarded and the second start backed off, so the TV sat on "Menunggu
 // data waktu solat" for 5 minutes.
 import { describe, expect, test } from "bun:test";
-import { mytEpoch } from "../client/src/tv/lib/mytime.js";
-import { createYearLoader } from "../client/src/tv/lib/yearLoader.js";
+import { mytEpoch } from "../client/src/lib/waktu/mytime.js";
+import { createYearLoader } from "../client/src/lib/waktu/yearLoader.js";
 import { timeCruncher } from "../controllers/helpers.js";
 import { makeYearPayload } from "./fixtures.js";
 

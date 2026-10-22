@@ -1,8 +1,8 @@
 // TV display: Malaysia-time helpers, prayer names and URL config.
 import { describe, expect, test } from "bun:test";
-import { DEFAULTS, parseConfig } from "../client/src/tv/lib/config.js";
-import { mytEpoch, mytParts } from "../client/src/tv/lib/mytime.js";
-import { ADVISORY, ORDER, PRAYERS, prayerLabel } from "../client/src/tv/lib/names.js";
+import { DEFAULTS, parseConfig } from "../client/src/lib/waktu/config.js";
+import { mytEpoch, mytParts } from "../client/src/lib/waktu/mytime.js";
+import { ADVISORY, ORDER, PRAYERS, prayerLabel } from "../client/src/lib/waktu/names.js";
 
 describe("mytime", () => {
 	test("wall time in Malaysia is UTC+8 regardless of process TZ", () => {

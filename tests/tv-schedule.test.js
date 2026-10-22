@@ -4,10 +4,10 @@
 // Fixture times: imsak 05:50, subuh 06:00, syuruk 07:10, zohor 13:15,
 // asar 16:30, maghrib 19:20, isyak 20:30; hijri 12 Ramadhan 1447.
 import { describe, expect, test } from "bun:test";
-import { DEFAULTS } from "../client/src/tv/lib/config.js";
-import { mytEpoch } from "../client/src/tv/lib/mytime.js";
-import { dayFor, nextDay, parseRow, parseYear } from "../client/src/tv/lib/rows.js";
-import { prayerWindows, rowStates, screenState } from "../client/src/tv/lib/schedule.js";
+import { DEFAULTS } from "../client/src/lib/waktu/config.js";
+import { mytEpoch } from "../client/src/lib/waktu/mytime.js";
+import { dayFor, nextDay, parseRow, parseYear } from "../client/src/lib/waktu/rows.js";
+import { prayerWindows, rowStates, screenState } from "../client/src/lib/waktu/schedule.js";
 import { timeCruncher } from "../controllers/helpers.js";
 import { makeRows, makeYearPayload } from "./fixtures.js";
 

@@ -9,7 +9,7 @@ import {
 	normalizeHadith,
 	savePool,
 	sourceFor,
-} from "../client/src/tv/lib/bannerPool.js";
+} from "../client/src/lib/waktu/bannerPool.js";
 
 const ayatBody = {
 	data: {

@@ -1,6 +1,6 @@
 // PrayerList.jsx — today's seven times, the next (or current) one lit.
-import { formatTime } from "./lib/format.js";
-import { ADVISORY, ORDER, prayerLabel } from "./lib/names.js";
+import { formatTime } from "../lib/waktu/format.js";
+import { ADVISORY, ORDER, prayerLabel } from "../lib/waktu/names.js";
 
 export default function PrayerList({ today, rows, estimate }) {
 	return (

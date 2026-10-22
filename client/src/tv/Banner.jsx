@@ -6,7 +6,7 @@
 // a first-ever offline load it shows a quiet notice instead.
 import { m, useReducedMotion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { addToPool, loadPool, nextFromPool, savePool, sourceFor } from "./lib/bannerPool.js";
+import { addToPool, loadPool, nextFromPool, savePool, sourceFor } from "../lib/waktu/bannerPool.js";
 import { safeStorage } from "./useTv.js";
 
 const ROTATE_MS = 20_000;

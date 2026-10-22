@@ -22,9 +22,9 @@ import {
 	ShaderMaterial,
 	WebGLRenderer,
 } from "three";
+import { ARC_TOP } from "../lib/waktu/daytrack.js";
 
 const AMBER = [0.949, 0.702, 0.239]; // #f2b33d
-const ARC_TOP = 0.9; // must match DayTrack.jsx
 const STAR_FPS = 15;
 const SLOW_FRAME_MS = 50;
 const PROBE_WINDOW_MS = 5000;

@@ -6,8 +6,8 @@ import {
 	formatCountdown,
 	formatDate,
 	formatTime,
-} from "../client/src/tv/lib/format.js";
-import { mytEpoch } from "../client/src/tv/lib/mytime.js";
+} from "../client/src/lib/waktu/format.js";
+import { mytEpoch } from "../client/src/lib/waktu/mytime.js";
 
 test("times are 24-hour Malaysia wall time", () => {
 	expect(formatTime(mytEpoch(2026, 10, 22, 6, 0))).toBe("06:00");

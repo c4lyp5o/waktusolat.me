@@ -1,21 +1,13 @@
 // useTv.js — the TV display's live inputs: corrected time and the zone's year.
+export { safeStorage } from "../lib/storage.js";
+
 import { useEffect, useMemo, useRef, useState } from "react";
-import { createClock } from "./lib/clock.js";
-import { createYearLoader } from "./lib/yearLoader.js";
+import { safeStorage } from "../lib/storage.js";
+import { createClock } from "../lib/waktu/clock.js";
+import { createYearLoader } from "../lib/waktu/yearLoader.js";
 
 const CLOCK_SYNC_MS = 30 * 60 * 1000;
 const DATA_CHECK_MS = 60 * 1000;
-
-// localStorage, or null where the TV browser blocks it.
-export function safeStorage() {
-	try {
-		const storage = window.localStorage;
-		storage.getItem("tv:probe");
-		return storage;
-	} catch {
-		return null;
-	}
-}
 
 // Ticks once per displayed second on server-corrected time. With `fixedNow`
 // (dev-only ?now=) time starts there and runs forward in real time.

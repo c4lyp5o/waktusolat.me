@@ -1,5 +1,5 @@
 // Header.jsx — who this screen belongs to, today's dates, and the clock.
-import { areaName, formatClock, formatDate } from "./lib/format.js";
+import { areaName, formatClock, formatDate } from "../lib/waktu/format.js";
 
 export default function Header({ now, zone, nama, meta, hijri }) {
 	const area = areaName(meta?.area);

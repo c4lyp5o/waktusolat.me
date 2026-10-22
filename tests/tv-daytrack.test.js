@@ -1,7 +1,7 @@
 // TV display: day-track geometry (shared by the SVG and three.js renderers).
 import { describe, expect, test } from "bun:test";
-import { dayTrack, TRACK_PAD } from "../client/src/tv/lib/daytrack.js";
-import { mytEpoch } from "../client/src/tv/lib/mytime.js";
+import { dayTrack, TRACK_PAD } from "../client/src/lib/waktu/daytrack.js";
+import { mytEpoch } from "../client/src/lib/waktu/mytime.js";
 
 // Real WLY01 times for 22 Oct 2026.
 const at = (h, m) => mytEpoch(2026, 10, 22, h, m);

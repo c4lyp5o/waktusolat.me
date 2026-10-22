@@ -26,3 +26,24 @@ export function dayTrack(now, day) {
 		phase,
 	};
 }
+
+// Drawing helpers shared by the TV and the site (SVG renderers).
+export const ARC_TOP = 0.9; // share of the sky's height the arc may rise to
+const SAMPLES = 48;
+
+// Stars for the night sky: fixed positions (x 0..1, y 0..1 from the top),
+// so the sky does not reshuffle on every render.
+export const STARS = Array.from({ length: 28 }, (_, i) => ({
+	x: ((i * 0.618034) % 1) * 0.96 + 0.02,
+	y: ((i * 0.381966 + 0.13) % 1) * 0.8 + 0.05,
+	big: i % 5 === 0,
+}));
+
+export function arcPoints(from, to) {
+	return Array.from({ length: SAMPLES + 1 }, (_, i) => {
+		const f = i / SAMPLES;
+		const x = (from + (to - from) * f) * 1000;
+		const y = 100 - ARC_TOP * 100 * Math.sin(Math.PI * f);
+		return `${x.toFixed(1)},${y.toFixed(1)}`;
+	}).join(" ");
+}
