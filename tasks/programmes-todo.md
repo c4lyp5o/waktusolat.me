@@ -21,4 +21,4 @@ Found on the way: the first cleaner cut after the LAST end marker, which would h
 Not yet tried: a real phone photo (progressive JPEG with EXIF/MPF). The test fixtures cover each structure, and `mosque-editor` re-encodes through a canvas anyway.
 
 ## Checkpoint
-- [ ] Owner review, then `mosque-editor` and `tv-mosque-mode`.
+- [x] Owner review (2026-10-23: "yes proceed"). Next: `mosque-editor`.
