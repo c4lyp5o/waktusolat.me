@@ -22,7 +22,7 @@ import {
 	ShaderMaterial,
 	WebGLRenderer,
 } from "three";
-import { ARC_TOP } from "../lib/waktu/daytrack.js";
+import { ARC_TOP, STARS } from "../lib/waktu/daytrack.js";
 
 const AMBER = [0.949, 0.702, 0.239]; // #f2b33d
 const STAR_FPS = 15;
@@ -48,17 +48,15 @@ function glowMaterial(strength) {
 	});
 }
 
-function starField(count, aspect) {
+// Stars at the shared positions (lib/waktu/daytrack.js STARS), so the GL
+// sky and the SVG fallback show the same sky.
+function starField(aspect) {
 	const positions = [];
 	const phases = [];
-	for (let i = 0; i < count; i++) {
-		positions.push(
-			((i * 0.618034) % 1) * aspect,
-			1 - (((i * 0.381966 + 0.13) % 1) * 0.8 + 0.05),
-			0,
-		);
+	STARS.forEach((star, i) => {
+		positions.push(star.x * aspect, 1 - star.y, 0);
 		phases.push((i * 2.399) % 6.283);
-	}
+	});
 	const geometry = new BufferGeometry();
 	geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
 	geometry.setAttribute("phase", new Float32BufferAttribute(phases, 1));
@@ -124,7 +122,7 @@ export function createSkyRenderer(canvas, { onSlow }) {
 	// WebGL ignores line width, so the arc is a thin triangle ribbon (3 px,
 	// matching the SVG fallback's stroke).
 	const arc = new Mesh(new BufferGeometry(), new MeshBasicMaterial({ color: 0x444444 }));
-	let stars = starField(28, 1);
+	let stars = starField(1);
 	scene.add(arc, horizon, sunLight, stars);
 
 	function layout() {
@@ -136,7 +134,7 @@ export function createSkyRenderer(canvas, { onSlow }) {
 		camera.updateProjectionMatrix();
 		scene.remove(stars);
 		stars.geometry.dispose();
-		stars = starField(28, aspect);
+		stars = starField(aspect);
 		stars.material.uniforms.size.value = Math.max(2, h * 0.025) * renderer.getPixelRatio();
 		scene.add(stars);
 	}

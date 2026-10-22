@@ -113,7 +113,10 @@ function TodayList({ today, rows }) {
 								{prayerJawi(key, today.times[key])}
 							</span>
 						</span>
-						<span className={`tabular-nums ${lit ? "text-accent" : ""}`}>
+						<span className={`flex items-center gap-3 tabular-nums ${lit ? "text-accent" : ""}`}>
+							{/* The next prayer breathes: a small amber dot before its time,
+							    clear of the text; still under reduced motion. */}
+							{lit && <span className="pulse-dot" aria-hidden="true" />}
 							{formatTime(today.times[key])}
 						</span>
 					</li>

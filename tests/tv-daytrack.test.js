@@ -1,6 +1,6 @@
 // TV display: day-track geometry (shared by the SVG and three.js renderers).
 import { describe, expect, test } from "bun:test";
-import { dayTrack, TRACK_PAD } from "../client/src/lib/waktu/daytrack.js";
+import { dayTrack, STARS, TRACK_PAD } from "../client/src/lib/waktu/daytrack.js";
 import { mytEpoch } from "../client/src/lib/waktu/mytime.js";
 
 // Real WLY01 times for 22 Oct 2026.
@@ -79,5 +79,42 @@ describe("dayTrack", () => {
 		const { arc, ticks } = dayTrack(at(12, 0), day);
 		expect(arc.from).toBeCloseTo(ticks.find((t) => t.key === "syuruk").x, 6);
 		expect(arc.to).toBeCloseTo(ticks.find((t) => t.key === "maghrib").x, 6);
+	});
+});
+
+// Regression: the old star formula ((i*0.618)%1, (i*0.382+0.13)%1) put every
+// star on a few diagonal lines, which read as a dotted line, not a sky.
+describe("STARS", () => {
+	test("scattered: x and y uncorrelated, spread across the sky, above the horizon", () => {
+		const n = STARS.length;
+		const mean = (a) => a.reduce((s, v) => s + v, 0) / a.length;
+		const xs = STARS.map((s) => s.x);
+		const ys = STARS.map((s) => s.y);
+		const mx = mean(xs);
+		const my = mean(ys);
+		const cov = mean(STARS.map((s) => (s.x - mx) * (s.y - my)));
+		const sd = (a, m) => Math.sqrt(mean(a.map((v) => (v - m) ** 2)));
+		expect(Math.abs(cov / (sd(xs, mx) * sd(ys, my)))).toBeLessThan(0.3);
+		// No three stars on one line through consecutive indices (the old bug).
+		let collinear = 0;
+		for (let i = 0; i + 2 < n; i++) {
+			const [a, b, c] = [STARS[i], STARS[i + 1], STARS[i + 2]];
+			const area = Math.abs((b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y));
+			if (area < 0.002) collinear++;
+		}
+		expect(collinear).toBeLessThanOrEqual(1);
+		for (const s of STARS) {
+			expect(s.x).toBeGreaterThanOrEqual(0.02);
+			expect(s.x).toBeLessThanOrEqual(0.98);
+			expect(s.y).toBeLessThanOrEqual(0.7); // y from the top: stars stay high
+		}
+		// Every third of the width has stars.
+		for (const [lo, hi] of [
+			[0, 1 / 3],
+			[1 / 3, 2 / 3],
+			[2 / 3, 1],
+		]) {
+			expect(xs.filter((x) => x >= lo && x < hi).length).toBeGreaterThanOrEqual(4);
+		}
 	});
 });

@@ -32,11 +32,17 @@ export const ARC_TOP = 0.9; // share of the sky's height the arc may rise to
 const SAMPLES = 48;
 
 // Stars for the night sky: fixed positions (x 0..1, y 0..1 from the top),
-// so the sky does not reshuffle on every render.
-export const STARS = Array.from({ length: 28 }, (_, i) => ({
-	x: ((i * 0.618034) % 1) * 0.96 + 0.02,
-	y: ((i * 0.381966 + 0.13) % 1) * 0.8 + 0.05,
-	big: i % 5 === 0,
+// so the sky does not reshuffle on every render. A hash scatter: an earlier
+// version stepped x and y by fixed fractions, which put every star on a few
+// diagonal lines (it read as a dotted line, not a sky).
+const scatter = (n) => {
+	const v = Math.sin(n * 12.9898 + 78.233) * 43758.5453;
+	return v - Math.floor(v);
+};
+export const STARS = Array.from({ length: 24 }, (_, i) => ({
+	x: 0.02 + 0.96 * scatter(i + 1),
+	y: 0.04 + 0.62 * scatter(i + 101),
+	big: scatter(i + 201) > 0.8,
 }));
 
 export function arcPoints(from, to) {
