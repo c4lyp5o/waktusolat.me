@@ -6,7 +6,14 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"includes": ["**", "!**/node_modules", "!public/assets", "!data", "!client/dist"]
+		"includes": [
+			"**",
+			"!**/node_modules",
+			"!public/assets",
+			"!data",
+			"!client/dist",
+			"!.taste-skill"
+		]
 	},
 	"formatter": {
 		"enabled": true,
