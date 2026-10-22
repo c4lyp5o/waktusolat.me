@@ -4,8 +4,9 @@
 # The sqlite visitor DB lives at ./db/visitors.sqlite (gitignored).
 # Bind-mount ./db below so visitor counts persist across container
 # rebuilds. Do NOT bind ./data — that dir holds git-tracked static
-# content (quran/hadith/times JSON) and binding it would shadow and
-# break those routes.
+# content (quran/hadith JSON) and binding it would shadow and break
+# those routes. Only ./data/times (generated from JAKIM at runtime) is
+# bound, so restarts reuse fetched prayer times instead of refetching.
 services:
   app:
     build: .
@@ -23,6 +24,8 @@ services:
     volumes:
       # Persistent, gitignored sqlite DB — survives rebuilds
       - ./db:/app/db
+      # Generated prayer-time JSONs — survive restarts / JAKIM outages
+      - ./data/times:/app/data/times
       # - ./db/visitors.sqlite:/app/db/visitors.sqlite  # single-file variant
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/healthcheck"]

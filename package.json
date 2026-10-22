@@ -13,8 +13,8 @@
 		"client": "cd client && npm run dev",
 		"build-client": "cd client && bun run build",
 		"dev": "conc \"bun run client\" \"bun run server\"",
-		"prestart": "bun run get-times",
-		"start": "bun server.js"
+		"start": "bun server.js",
+		"test": "bun test"
 	},
 	"repository": {
 		"type": "git",

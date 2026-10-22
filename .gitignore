@@ -4,6 +4,6 @@ public/
 db/visitors.sqlite
 /.migrate-express/
 
-# Prayer-time data is machine-generated from JAKIM at container start
-# (data/getter.js); seed files for quran/hadith stay tracked.
+# Prayer-time data is machine-generated from JAKIM at runtime
+# (utils/timesRefresh.js); seed files for quran/hadith stay tracked.
 data/times/
