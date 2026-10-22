@@ -36,7 +36,7 @@ export default function Navbar() {
 		<>
 			<header className="border-b border-line bg-ground">
 				<nav
-					className="mx-auto flex h-16 max-w-6xl items-center gap-2 px-4 md:px-6"
+					className="mx-auto flex h-12 max-w-6xl items-center gap-2 px-4 md:h-16 md:px-6"
 					aria-label="Utama"
 				>
 					<Wordmark />
@@ -67,7 +67,7 @@ export default function Navbar() {
 				className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-ground pb-[env(safe-area-inset-bottom)] md:hidden"
 				aria-label="Utama (telefon)"
 			>
-				<ul className="grid h-16 grid-cols-5">
+				<ul className="grid h-14 grid-cols-5">
 					{LINKS.slice(0, 5).map((l) => (
 						<li key={l.to} className="flex">
 							<NavLink

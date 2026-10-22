@@ -55,7 +55,7 @@ const LEAD = {
 function Lead({ now, state }) {
 	return (
 		<section aria-labelledby="lead-title">
-			<p id="lead-title" className="text-2xl font-semibold md:text-3xl">
+			<p id="lead-title" className="text-xl font-semibold md:text-3xl">
 				<span className="text-accent">{(LEAD[state.kind] ?? LEAD.countdown)(state.label)}</span>{" "}
 				<span className="font-medium text-muted">dalam</span>
 				<span
@@ -65,11 +65,17 @@ function Lead({ now, state }) {
 				>
 					{prayerJawi(state.prayer, state.azan)}
 				</span>
+				{/* On a phone the azan time joins this line (all seven times must
+				    fit above the bottom bar); its own line returns from md up. */}
+				<span className="ml-2 text-base font-normal text-muted tabular-nums md:hidden">
+					· Azan {state.estimate ? "~" : ""}
+					{formatTime(state.azan)}
+				</span>
 			</p>
-			<p className="mt-3 text-[clamp(4.5rem,18vw,8.5rem)] font-medium leading-none tracking-[-0.04em] tabular-nums">
+			<p className="mt-1 text-[clamp(3.25rem,15vw,8.5rem)] font-medium leading-none tracking-[-0.04em] tabular-nums md:mt-3 [@media(max-height:620px)]:text-[2.75rem]">
 				{formatCountdown(state.target - now)}
 			</p>
-			<p className="mt-3 text-lg text-muted tabular-nums">
+			<p className="mt-3 hidden text-lg text-muted tabular-nums md:block">
 				Azan {state.estimate ? "~" : ""}
 				{formatTime(state.azan)}
 			</p>
@@ -79,7 +85,7 @@ function Lead({ now, state }) {
 
 function TodayList({ today, rows }) {
 	return (
-		<ol className="flex flex-col gap-1" aria-label="Waktu solat hari ini">
+		<ol className="flex flex-col gap-0.5 md:gap-1" aria-label="Waktu solat hari ini">
 			{ORDER.map((key) => {
 				const state = rows[key];
 				const lit = state === "next" || state === "current";
@@ -93,7 +99,7 @@ function TodayList({ today, rows }) {
 				return (
 					<li
 						key={key}
-						className={`flex items-baseline justify-between rounded-xl px-4 py-2.5 text-xl ${tone} ${
+						className={`flex items-baseline justify-between rounded-xl px-4 py-1.5 text-[17px] md:py-2.5 md:text-xl [@media(max-height:620px)]:py-0.5 [@media(max-height:620px)]:text-base ${tone} ${
 							ADVISORY.includes(key) ? "font-normal" : "font-medium"
 						}`}
 					>
@@ -322,17 +328,29 @@ export default function ZoneTimes({ zone, changeZone }) {
 
 	const found = days?.length ? dayFor(days, now) : null;
 	const header = (
-		<header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+		<header className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 md:flex md:flex-wrap md:items-end md:justify-between md:gap-x-6 md:gap-y-3">
 			<div className="min-w-0">
-				{/* The state is the title; the full area list (often long) follows
-				    in full rather than being cut or wrapping a headline. */}
-				<h1 className="text-2xl font-semibold tracking-tight md:text-3xl">{info.negeri}</h1>
-				<p className="mt-1 max-w-2xl text-[17px] text-muted">
-					{areaName(info.name)} <span className="text-faint">· {zone.toUpperCase()}</span>
+				{/* The state is the title; the full area list (often long) follows.
+				    On a phone: three short lines so all seven times fit above the
+				    bottom bar (state shortened to "WP …", areas on one line). */}
+				<h1 className="text-xl font-semibold tracking-tight md:text-3xl">
+					<span className="md:hidden">
+						{info.negeri.replace("Wilayah Persekutuan", "WP")}
+						<span className="font-normal text-faint"> · {zone.toUpperCase()}</span>
+					</span>
+					<span className="hidden md:inline">{info.negeri}</span>
+				</h1>
+				<p className="mt-0.5 truncate text-[15px] text-muted md:mt-1 md:max-w-2xl md:whitespace-normal md:text-[17px]">
+					{areaName(info.name)}{" "}
+					<span className="hidden text-faint md:inline">· {zone.toUpperCase()}</span>
+				</p>
+				<p className="mt-0.5 text-[13px] text-faint md:hidden [@media(max-height:620px)]:hidden">
+					{formatDate(now)}
+					{found?.day.hijri ? ` · ${found.day.hijri}` : ""}
 				</p>
 			</div>
 			<div className="flex items-center gap-4">
-				<p className="text-[15px] text-muted md:text-right">
+				<p className="hidden text-[15px] text-muted md:block md:text-right">
 					{formatDate(now)}
 					{found?.day.hijri && (
 						<>
@@ -368,9 +386,9 @@ export default function ZoneTimes({ zone, changeZone }) {
 		<main className="pb-16">
 			{/* The sky over the zone right now: a flat field of its colour. */}
 			<section className="sky" data-sky={skyPhase(now, today)}>
-				<div className="mx-auto max-w-6xl px-4 pt-8 pb-10 md:px-6 md:pt-10 md:pb-12">
+				<div className="mx-auto max-w-6xl px-4 pt-4 pb-10 md:px-6 md:pt-10 md:pb-12">
 					{header}
-					<div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-center">
+					<div className="mt-5 grid gap-4 [@media(max-height:620px)]:mt-3 [@media(max-height:620px)]:gap-2 md:mt-10 md:gap-10 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-center">
 						<Lead now={now} state={shown} />
 						<TodayList today={today} rows={rows} />
 					</div>

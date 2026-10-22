@@ -10,7 +10,7 @@ import { zoneInfo } from "../lib/zones.js";
 export const changeZoneLink = (
 	<Link
 		to="/?pilih"
-		className="shrink-0 rounded-full bg-raised px-4 py-2 text-[15px] font-semibold text-ink hover:bg-line"
+		className="shrink-0 rounded-full bg-raised px-3 py-1.5 text-sm font-semibold text-ink hover:bg-line md:px-4 md:py-2 md:text-[15px]"
 	>
 		Tukar zon
 	</Link>

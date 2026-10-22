@@ -74,6 +74,7 @@ The first build was correct but thin. The owner chose three additions, each take
 5. Body text ≥ 16px on phones, and nothing under 12px anywhere.
 6. Bundle: the main chunk does not grow by more than 15 kB gzipped. three.js and the GL chunk stay TV-only.
 7. Existing tests stay green, with new tests for zone memory and zone search.
+8. **On a phone, all seven times are visible without scrolling**, above the bottom bar, on visible heights down to 552px (e.g. 375×667 or 360×640 with browser bars), in every state (countdown, after Isyak, Jumaat). Owner requirement, 2026-10-22; checked by measuring the Isyak row against the bottom bar.
 
 ## Resolved questions (2026-10-22)
 

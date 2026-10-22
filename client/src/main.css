@@ -232,7 +232,7 @@ body {
 /* Room for the phone bottom bar (Navbar.jsx). */
 @media (max-width: 767px) {
 	body {
-		padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+		padding-bottom: calc(3.5rem + env(safe-area-inset-bottom));
 	}
 }
 
