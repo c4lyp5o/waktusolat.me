@@ -16,8 +16,7 @@ Every task: `bun run test` green · Biome clean · `bun run build-client` · tas
   - Verify: "gomb" finds SGR01, "kl" or "kuala lumpur" finds WLY01, "jhr" finds the Johor zones.
 - [x] **R5. `/times/:zone`.** Lead countdown, today's list, SVG day track, week/month table. Uses `lib/waktu`; remembers the zone.
   - Verify: shows the same times and labels as `/tv` for a fixture day.
-- [x] **R6. `/` landing.** Desktop adds a "Paparan TV untuk masjid" panel with a real screenshot. Visitor counters go to `/about` in R11.
-  - Old form of this item: A returning visitor sees their zone's times (zero taps) plus "Tukar zon". A first visit leads with search. The visitor counters move to `/about`.
+- [x] **R6. `/` landing.** A returning visitor sees their zone's times (zero taps) plus "Tukar zon". A first visit leads with search, and on desktop a "Paparan TV untuk masjid" panel with a real screenshot. The visitor counters move to `/about` (R11).
 
 ### Checkpoint 1
 - [ ] Owner review on phone and desktop, in both themes.
