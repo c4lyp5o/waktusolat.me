@@ -18,7 +18,7 @@ import {
 } from "./utils/chatLimits.js";
 import { CLIENT_IP_HEADER, resolveClientIp } from "./utils/clientIp.js";
 import logger from "./utils/logger.js";
-import { RateLimiter } from "./utils/rateLimit.js";
+import { isRateLimited, RateLimiter } from "./utils/rateLimit.js";
 import { readBody } from "./utils/readBody.js";
 import { startTimesRefresher } from "./utils/timesRefresh.js";
 
@@ -31,8 +31,9 @@ startTimesRefresher(Zones);
 
 const app = new Elysia()
 	.use(cors())
-	// global rate limit (In-Memory, per client IP resolved by the bridge)
+	// rate limit API + GraphQL (In-Memory, per client IP resolved by the bridge)
 	.onBeforeHandle(({ request, set }) => {
+		if (!isRateLimited(new URL(request.url).pathname)) return;
 		const key = request.headers.get(CLIENT_IP_HEADER) || "unknown";
 		if (!limiter.allow(key)) {
 			set.status = 429;

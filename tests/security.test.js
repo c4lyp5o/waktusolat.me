@@ -1,7 +1,7 @@
 // Client-IP resolution, rate limiting, admin auth and random-route caching.
 import { afterEach, describe, expect, setSystemTime, test } from "bun:test";
 import { isPrivateIp, resolveClientIp } from "../utils/clientIp.js";
-import { RateLimiter } from "../utils/rateLimit.js";
+import { isRateLimited, RateLimiter } from "../utils/rateLimit.js";
 import { apiRoutes } from "./app.js";
 
 describe("resolveClientIp", () => {
@@ -38,6 +38,32 @@ describe("resolveClientIp", () => {
 		}
 		for (const ip of ["172.15.0.1", "172.32.0.1", "8.8.8.8", "2001:db8::1", ""]) {
 			expect(isPrivateIp(ip)).toBe(false);
+		}
+	});
+});
+
+describe("isRateLimited (which paths count)", () => {
+	test("API and GraphQL count", () => {
+		for (const p of [
+			"/api/v1/waktusolat/today/wly01",
+			"/api/v1/time",
+			"/graphql",
+			"/graphql?x=1",
+		]) {
+			expect(isRateLimited(p)).toBe(true);
+		}
+	});
+
+	test("static assets and SPA routes do not (mosque Wi-Fi shares one IP)", () => {
+		for (const p of [
+			"/",
+			"/tv/wly01",
+			"/assets/index-abc.js",
+			"/favicon.ico",
+			"/apix",
+			"/graphqlx",
+		]) {
+			expect(isRateLimited(p)).toBe(false);
 		}
 	});
 });

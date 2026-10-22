@@ -1,5 +1,11 @@
 // Minimal in-memory sliding-window rate limiter (replaces express-rate-limit).
-//
+
+// Only the API and GraphQL count against the limit. Static assets and SPA
+// routes do not: one page load fetches a dozen files, and a mosque's TV and
+// its jemaah's phones on the mosque Wi-Fi all share one public IP.
+export const isRateLimited = (pathname) =>
+	pathname.startsWith("/api/") || /^\/graphql(?:[/?]|$)/.test(pathname);
+
 // Keys whose hits have all aged out are swept once per window, and the map is
 // capped at maxKeys (oldest-inserted evicted first), so a flood of distinct
 // keys cannot grow memory without bound.
