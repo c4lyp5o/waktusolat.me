@@ -4,70 +4,6 @@
 	/* ── Typography ── */
 	--font-uthmanic: "Uthmanic", serif;
 	--font-sans: "Inter", system-ui, -apple-system, sans-serif;
-
-	/* ── Design tokens — Navy / Emerald / Gold (spiritual, trustworthy) ── */
-	/* Night = deep navy surfaces & text */
-	--color-night-950: #070b14;
-	--color-night-900: #0b1120;
-	--color-night-800: #111a2e;
-	--color-night-700: #1a2740;
-	--color-night-600: #24365a;
-	/* Acre = emerald (primary action, "live") — mirrors Tailwind emerald scale */
-	--color-acre-50: #ecfdf5;
-	--color-acre-100: #d1fae5;
-	--color-acre-200: #a7f3d0;
-	--color-acre-300: #6ee7b7;
-	--color-acre-400: #34d399;
-	--color-acre-500: #22c55e;
-	--color-acre-600: #059669;
-	--color-acre-700: #047857;
-	--color-acre-800: #065f46;
-	--color-acre-900: #064e3b;
-	/* Dinar = gold (accent, highlights, Arabic) */
-	--color-dinar-300: #f7d98c;
-	--color-dinar-400: #f5c95b;
-	--color-dinar-500: #e9b44c;
-	--color-dinar-600: #d99e30;
-
-	/* ── Motion ── */
-	--animate-breath: breath 3s ease-in-out infinite;
-	--animate-glow: glow 6s ease-in-out infinite;
-	--animate-rise: rise 0.6s ease-out both;
-
-	@keyframes breath {
-		0%,
-		100% {
-			transform: scale(1);
-			box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-		}
-		50% {
-			transform: scale(1.05);
-			box-shadow: 0 0 20px 5px rgba(16, 185, 129, 0.4);
-		}
-	}
-
-	@keyframes glow {
-		0%,
-		100% {
-			opacity: 0.4;
-			transform: translateY(0);
-		}
-		50% {
-			opacity: 0.8;
-			transform: translateY(-8px);
-		}
-	}
-
-	@keyframes rise {
-		from {
-			opacity: 0;
-			transform: translateY(14px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
 }
 
 /* ── Site palette (SPEC-site-revamp.md): the TV's language in light and
@@ -264,6 +200,14 @@ body {
 	}
 }
 
+/* Chat names (Chat.jsx): one hue per person, lightness per theme. */
+.chat-name {
+	color: hsl(var(--hue) 55% 32%);
+}
+:root[data-theme="dark"] .chat-name {
+	color: hsl(var(--hue) 65% 72%);
+}
+
 /* Room for the phone bottom bar (Navbar.jsx). */
 @media (max-width: 767px) {
 	body {
@@ -298,40 +242,4 @@ textarea::placeholder {
 .no-scrollbar {
 	-ms-overflow-style: none;
 	scrollbar-width: none;
-}
-
-/* ── Ambient + decorative surface ── */
-.bg-ambient {
-	background:
-		radial-gradient(1200px 600px at 50% -10%, rgba(16, 185, 129, 0.12), transparent 60%),
-		radial-gradient(900px 500px at 85% 110%, rgba(233, 180, 76, 0.06), transparent 60%),
-		var(--color-night-950);
-}
-
-/* Dot-grid star field, CSS-drawn, crisp + light */
-.islamic-pattern {
-	background-image:
-		radial-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
-		radial-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px);
-	background-size:
-		28px 28px,
-		28px 28px;
-	background-position:
-		0 0,
-		14px 14px;
-	mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
-}
-
-/* Staggered hero entrance */
-.rise-1 {
-	animation: rise 0.6s ease-out both;
-	animation-delay: 0.05s;
-}
-.rise-2 {
-	animation: rise 0.6s ease-out both;
-	animation-delay: 0.15s;
-}
-.rise-3 {
-	animation: rise 0.6s ease-out both;
-	animation-delay: 0.25s;
 }

@@ -28,7 +28,10 @@ export function dayTrack(now, day) {
 }
 
 // Drawing helpers shared by the TV and the site (SVG renderers).
-export const ARC_TOP = 0.9; // share of the sky's height the arc may rise to
+// Share of the sky's height the arc may rise to. Leaves room above the
+// arc's top for the sun's radius (TV: 3.4vh sun in a 7vh band; site: 20px in
+// 64px), so the sun is never clipped at solar noon.
+export const ARC_TOP = 0.75;
 const SAMPLES = 48;
 
 // Stars for the night sky: fixed positions (x 0..1, y 0..1 from the top),

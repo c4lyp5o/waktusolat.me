@@ -1,6 +1,6 @@
 # Spec: site revamp (non-TV pages)
 
-Status: **approved 2026-10-22**. Owner request (2026-10-22): "you can revamp the current UI UX for the non tv page." The TV display (`/tv/:zone`) is out of scope; it is the reference this revamp aligns to.
+Status: **approved 2026-10-22; built 2026-10-22** (owner review pending; see tasks/revamp-todo.md, Checkpoint 2). Owner request (2026-10-22): "you can revamp the current UI UX for the non tv page." The TV display (`/tv/:zone`) is out of scope; it is the reference this revamp aligns to.
 
 ## What the site is for
 

@@ -12,6 +12,14 @@ const SOCKET_SERVER_URL =
 // Cap retained messages so a long-running session doesn't grow unboundedly.
 const MAX_MESSAGES = 300;
 
+// A stable hue per name, so each person reads apart at a glance (main.css
+// .chat-name sets lightness per theme for contrast).
+function nameHue(name) {
+	let h = 0;
+	for (const ch of String(name)) h = (h * 31 + ch.codePointAt(0)) % 360;
+	return h;
+}
+
 export default function Chat() {
 	const [username, setUsername] = useState("");
 	const [messages, setMessages] = useState([]);
@@ -105,148 +113,123 @@ export default function Chat() {
 
 	return (
 		<>
-			<title>Chat Room</title>
-			<meta name="description" content="Chat dengan orang awam tanpa diketahui nama" />
-			<link rel="icon" href="/favicon.ico" />
-
-			{/* Main Container: Calculates height to fill screen minus Navbar (approx 64px/4rem) */}
-			<div className="flex flex-col h-[calc(100vh-4rem)] bg-slate-950 font-sans">
-				{/* Header / Disclaimer */}
-				<div className="bg-slate-900 border-b border-slate-800 px-4 py-3 flex justify-between items-center shadow-sm z-10">
-					<div>
-						<h1 className="font-bold text-slate-100">Chat Room</h1>
-						<p className="text-xs text-acre-600 flex items-center gap-1">
-							<span
-								className={`w-2 h-2 rounded-full animate-pulse ${
-									connected ? "bg-acre-500" : "bg-amber-500"
-								}`}
-							></span>
-							{connected ? `Online sebagai ${username}` : "Menyambung semula…"}
-						</p>
+			<title>Chat | Waktu Solat</title>
+			{/* Fills the screen between the top bar and (on phones) the bottom
+			    bar, so the composer is always visible. */}
+			<div className="flex h-[calc(100dvh-3rem-3.5rem-env(safe-area-inset-bottom))] flex-col md:h-[calc(100dvh-4rem)]">
+				<header className="border-b border-line">
+					<div className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-4 py-3 md:px-6">
+						<div className="min-w-0">
+							<h1 className="text-xl font-semibold">Chat</h1>
+							<p className="flex items-center gap-2 text-[15px] text-faint">
+								<span
+									className={`inline-block h-2 w-2 rounded-full ${connected ? "bg-accent-fill" : "bg-faint"}`}
+									aria-hidden="true"
+								/>
+								{connected ? `Anda ${username}` : "Menyambung semula…"}
+							</p>
+						</div>
+						{onlineCount !== null && (
+							<p className="shrink-0 text-[15px] text-muted tabular-nums">
+								{onlineCount} dalam talian
+							</p>
+						)}
 					</div>
-					{onlineCount !== null && (
-						<span className="text-xs text-slate-400 bg-slate-800 px-2.5 py-1 rounded-full">
-							{onlineCount} online
-						</span>
-					)}
-				</div>
+				</header>
 
-				{/* Transient notice (errors / disconnected) */}
 				{notice && (
-					<div className="bg-amber-500/15 border-b border-amber-500/30 px-4 py-2 text-center text-sm text-amber-200">
+					<p
+						className="border-b border-line bg-raised px-4 py-2 text-center text-[15px] text-ink"
+						role="status"
+					>
 						{notice}
-					</div>
+					</p>
 				)}
 
-				{/* Messages Area */}
 				<div
-					className="flex-1 overflow-y-auto p-4 space-y-4"
+					className="flex-1 overflow-y-auto"
 					role="log"
 					aria-live="polite"
 					aria-relevant="additions"
 				>
-					{messages.map((singleMessage, index) => {
-						const isSystem = singleMessage.username === "system";
-						const isMe = singleMessage.username === username;
-
-						// The server sends the raw message body; the bubble header
-						// already shows the author's name, so no prefix to strip.
-						const messageText = singleMessage.message;
-
-						if (isSystem) {
+					<div className="mx-auto flex min-h-full max-w-3xl flex-col justify-end gap-3 px-4 py-4 md:px-6">
+						{!messages.some((m) => m.username !== "system") && (
+							// Empty log: the sentence sits in the middle of the space, so the
+							// room reads as waiting rather than broken.
+							<p className="my-auto text-center text-[17px] text-faint">
+								Belum ada mesej. Mulakan perbualan dengan sopan.
+							</p>
+						)}
+						{messages.map((m, index) => {
+							if (m.username === "system") {
+								return (
+									// biome-ignore lint/suspicious/noArrayIndexKey: messages have no id
+									<p key={index} className="text-center text-[14px] text-faint">
+										{m.message}
+									</p>
+								);
+							}
+							const isMe = m.username === username;
 							return (
-								// biome-ignore lint/suspicious/noArrayIndexKey: no id
-								<div key={index} className="flex justify-center my-4">
-									<span className="bg-slate-200 text-slate-800 text-xs px-3 py-1 rounded-full uppercase tracking-wider font-medium">
-										{singleMessage.message}
-									</span>
+								// biome-ignore lint/suspicious/noArrayIndexKey: messages have no id
+								<div key={index} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
+									<div
+										className={`max-w-[85%] break-words rounded-2xl px-4 py-2.5 text-base md:max-w-[70%] ${
+											isMe
+												? "rounded-br-md bg-ink text-ground"
+												: "rounded-bl-md bg-surface text-ink"
+										}`}
+									>
+										{!isMe && (
+											<p
+												className="chat-name mb-0.5 text-[14px] font-semibold"
+												style={{ "--hue": nameHue(m.username) }}
+											>
+												{m.username}
+											</p>
+										)}
+										{m.message}
+									</div>
 								</div>
 							);
-						}
-
-						return (
-							<div
-								// biome-ignore lint/suspicious/noArrayIndexKey: no id
-								key={index}
-								className={`flex w-full ${isMe ? "justify-end" : "justify-start"}`}
-							>
-								<div
-									className={`
-                    max-w-[80%] md:max-w-[60%] px-4 py-3 shadow-sm relative text-sm md:text-base wrap-break-word
-                    ${
-											isMe
-												? "bg-acre-600 text-white rounded-2xl rounded-tr-sm" // My Bubble
-												: "bg-slate-900 text-slate-100 border border-slate-800 rounded-2xl rounded-tl-sm" // Their Bubble
-										}
-                  `}
-								>
-									{/* Optional: Show sender name for others if needed */}
-									{!isMe && (
-										<p className="text-[10px] text-acre-600 font-bold mb-1 opacity-80 uppercase">
-											{singleMessage.username}
-										</p>
-									)}
-
-									{messageText}
-								</div>
-							</div>
-						);
-					})}
-
-					{/* "Somebody is typing…" — only ever shown when not the sender */}
-					{typingUser && typingUser !== username && (
-						<div className="flex justify-start pl-1">
-							<span className="text-xs text-slate-500 italic">{typingUser} sedang menaip…</span>
-						</div>
-					)}
-
-					{/* Invisible element to scroll to */}
-					<div ref={messagesEndRef} />
+						})}
+						{typingUser && typingUser !== username && (
+							<p className="text-[14px] text-faint">{typingUser} sedang menaip…</p>
+						)}
+						<div ref={messagesEndRef} />
+					</div>
 				</div>
 
-				{/* Input Area */}
-				<div className="bg-slate-900 p-3 md:p-4 border-t border-slate-800">
+				<div className="border-t border-line">
 					<form
-						className="flex items-end gap-2 max-w-4xl mx-auto"
+						className="mx-auto flex max-w-3xl items-center gap-2 px-4 py-3 md:px-6"
 						onSubmit={(event) => {
 							event.preventDefault();
 							sendMessage();
 						}}
 					>
+						<label htmlFor="chat-input" className="sr-only">
+							Mesej
+						</label>
 						<input
+							id="chat-input"
 							type="text"
 							value={messageInput}
 							onChange={(e) => {
 								setMessageInput(e.target.value);
 								notifyTyping();
 							}}
-							placeholder="Taip mesej anda..."
-							className="flex-1 bg-slate-800 text-white border-slate-700 focus:bg-slate-900 focus:border-acre-500 focus:ring-2 focus:ring-acre-200 rounded-2xl px-4 py-3 transition-all outline-none"
+							placeholder="Tulis mesej…"
+							className="h-12 flex-1 rounded-full px-4 text-base"
 							autoComplete="off"
 							maxLength={1000}
 						/>
-
 						<button
 							type="submit"
 							disabled={messageInput.trim().length === 0}
-							className={`
-                p-3 rounded-full transition-all duration-200 shadow-md flex-shrink-0
-                ${
-									messageInput.trim().length > 0
-										? "bg-acre-600 text-white hover:bg-acre-700 hover:scale-105"
-										: "bg-slate-200 text-slate-400 cursor-not-allowed"
-								}
-              `}
+							className="h-12 shrink-0 rounded-full bg-ink px-5 text-base font-semibold text-ground disabled:bg-raised disabled:text-faint"
 						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-								className="w-6 h-6 transform rotate-0 md:-rotate-45 translate-x-0.5"
-							>
-								<title>Send</title>
-								<path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
-							</svg>
+							Hantar
 						</button>
 					</form>
 				</div>

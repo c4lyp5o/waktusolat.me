@@ -26,10 +26,19 @@ Every task: `bun run test` green · Biome clean · `bun run build-client` · tas
 - [x] **R8. `/hadith`.** Opens on Sahih Bukhari; six kitab with Arabic names; large text with reference; "Hadis lain" and "Salin". Inspector 0 FAIL 0 WARN.
 
 ## Slice 3: the rest
-- [ ] **R9. `/radio`** (one shared player).
-- [ ] **R10. `/chat`.**
+- [x] **R9. `/radio`** (one shared player). One stream at a time; player bar above the phone bar, panel on desktop; honest error (Radio Bass is http-only, blocked on https).
+- [x] **R10. `/chat`.** 16 px messages, a hue per name, quiet system lines (now Malay, from the server), log anchored to the composer; same socket protocol. Verified live with two tabs.
 - [x] **R11a. `/about`** (done early, 2026-10-22): intro, real visitor counters (moved from `/`), data sources, the TV display, full photo credits (`#kredit-foto`), source link.
-- [ ] **R11b. `/404`.** Then remove the old navy/emerald tokens and decorative CSS.
+- [x] **R11b. `/404`** and the error screen; old navy/emerald tokens and decorative CSS removed (no users left).
 
 ### Checkpoint 2
-- [ ] Success criteria 1-7 of the spec; owner review.
+Spec success criteria (2026-10-22):
+- [x] 1. Returning visitor: zero taps to their zone's countdown.
+- [x] 2. A zone found by typing 3 letters ("gom" finds SGR01).
+- [ ] 3. Inspector 0 FAIL on every page: met on all pages except the Quran reader, which has 2 defended FAILs. The Arabic ayat are body text measured as wrapping headlines, and long pages pass under the fixed phone bar. WARNs defended on times (Jawi), /quran, /radio, /chat and 404.
+- [ ] 4. Site and TV agree: both render from the same lib/waktu functions (screenState, listRows, dayTrack, all tested). There is no test that renders both components from one fixture yet.
+- [x] 5. Body text >= 16 px on phones; nothing under 12 px (smallest is 13 px meta and credits).
+- [x] 6. Main chunk +6.0 kB gzip (108.85 -> 114.8); three.js and the GL chunk stay TV-only.
+- [x] 7. Tests green (141), with new tests for zone search, memory, theme, sky, surah search and listRows.
+- [x] 8. All seven times above the phone bar (390x659, 360x560, 375x552).
+- [ ] Owner review.

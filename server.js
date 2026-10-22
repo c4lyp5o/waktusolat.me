@@ -154,7 +154,7 @@ io.on("connection", (socket) => {
 		logger.info(`[ws] ${name} joined. Total users: ${users.size}`);
 		io.emit("system", {
 			username: "system",
-			message: `${name} joined the chat. Total users: ${users.size}`,
+			message: `${name} menyertai sembang. ${users.size} dalam talian.`,
 		});
 		io.emit("users", { list: [...users.values()] });
 	});
@@ -188,7 +188,7 @@ io.on("connection", (socket) => {
 			users.delete(socket.id);
 			io.emit("system", {
 				username: "system",
-				message: `${nickname} left the chat. Total users: ${users.size}`,
+				message: `${nickname} meninggalkan sembang. ${users.size} dalam talian.`,
 			});
 			io.emit("users", { list: [...users.values()] });
 			logger.info(`[ws] ${nickname} left. Total users: ${users.size}`);
