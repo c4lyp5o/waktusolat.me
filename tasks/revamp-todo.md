@@ -28,7 +28,8 @@ Every task: `bun run test` green · Biome clean · `bun run build-client` · tas
 ## Slice 3: the rest
 - [ ] **R9. `/radio`** (one shared player).
 - [ ] **R10. `/chat`.**
-- [ ] **R11. `/about`, `/404`.** Then remove the old navy/emerald tokens and decorative CSS.
+- [x] **R11a. `/about`** (done early, 2026-10-22): intro, real visitor counters (moved from `/`), data sources, the TV display, full photo credits (`#kredit-foto`), source link.
+- [ ] **R11b. `/404`.** Then remove the old navy/emerald tokens and decorative CSS.
 
 ### Checkpoint 2
 - [ ] Success criteria 1-7 of the spec; owner review.

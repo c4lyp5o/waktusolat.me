@@ -5,6 +5,11 @@
 import credits from "../assets/mosques/credits.json";
 
 const urls = import.meta.glob("../assets/mosques/*.webp", { eager: true, import: "default" });
+// 480 px versions for the state tiles on the zone search page.
+const thumbs = import.meta.glob("../assets/mosques/thumbs/*.webp", {
+	eager: true,
+	import: "default",
+});
 
 // negeri (as in controllers/zones.js) -> file stem and the mosque's name.
 const BY_STATE = {
@@ -40,6 +45,7 @@ export function mosqueFor(negeri) {
 	if (!src || !c) return null;
 	return {
 		src,
+		thumb: thumbs[`../assets/mosques/thumbs/${stem}.webp`],
 		name,
 		width: c.width,
 		height: c.height,
