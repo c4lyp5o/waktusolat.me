@@ -8,6 +8,7 @@ import "./tv.css";
 import { domAnimation, LazyMotion, m } from "motion/react";
 import { useEffect, useMemo } from "react";
 import { useParams } from "react-router";
+import Banner from "./Banner.jsx";
 import DayTrack from "./DayTrack.jsx";
 import Header from "./Header.jsx";
 import Lead from "./Lead.jsx";
@@ -66,6 +67,7 @@ export default function TvApp() {
 						today={today}
 						next={state.kind === "after-isyak" ? null : state.prayer}
 					/>
+					<Banner />
 				</>
 			);
 	}

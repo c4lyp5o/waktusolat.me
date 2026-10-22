@@ -24,7 +24,7 @@ html.tv-mode body {
 	--fs-count: 22vh;
 	--fs-name: 7.5vh;
 	--fs-clock: 7vh;
-	--fs-row: 5vh;
+	--fs-row: 4.2vh;
 	--fs-title: 4.4vh;
 	--fs-meta: 3.6vh;
 	--fs-small: 3.2vh;
@@ -43,8 +43,8 @@ html.tv-mode body {
 
 .tv-view {
 	display: grid;
-	grid-template-rows: auto minmax(0, 1fr) auto;
-	gap: 3vh;
+	grid-template-rows: auto minmax(0, 1fr) auto auto;
+	gap: 2.4vh;
 	height: 100%;
 }
 
@@ -160,7 +160,7 @@ html.tv-mode body {
 	display: flex;
 	justify-content: space-between;
 	align-items: baseline;
-	padding: 0.8vh 2.6vh;
+	padding: 0.6vh 2.6vh;
 	border-radius: var(--radius);
 	color: var(--muted);
 	font-size: var(--fs-row);
@@ -190,7 +190,7 @@ html.tv-mode body {
    the labels; the glow stays inside this band (spec deviation, by design). */
 .tv-track {
 	display: grid;
-	grid-template-rows: 9vh auto;
+	grid-template-rows: 7vh auto;
 	gap: 1.2vh;
 }
 .tv-track-sky {
@@ -253,6 +253,45 @@ html.tv-mode body {
 }
 .tv-track-ticks li[data-next] {
 	color: var(--accent);
+}
+
+/* Banner: a short ayat or hadith (Banner.jsx). Two lines at most by
+   construction (?max=160), so text is never shrunk; the clamp is only a
+   guard against an unexpected item. */
+.tv-banner {
+	display: grid;
+	align-content: center;
+	height: 15vh;
+	padding: 2vh 3vh;
+	overflow: hidden;
+	border-radius: var(--radius);
+	background: var(--surface);
+}
+.tv-banner-text {
+	display: -webkit-box;
+	overflow: hidden;
+	color: var(--muted);
+	font-size: 3.4vh;
+	line-height: 1.35;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+.tv-banner-foot {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 4vh;
+	margin-top: 0.8vh;
+	color: var(--faint);
+	font-size: var(--fs-small);
+}
+.tv-banner-arabic {
+	overflow: hidden;
+	color: var(--muted);
+	font-family: "Uthmanic", serif;
+	font-size: 4vh;
+	line-height: 1.2;
+	white-space: nowrap;
 }
 
 /* Full-screen states: one centred moment. */

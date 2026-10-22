@@ -105,7 +105,8 @@ Taste skill, app-screen run. Sheet: **`true-black-flat`**, seed `749316183`, kin
   - Passed prayers: `--faint`.
   - Upcoming prayers: `--muted`.
 - **The banner** sits on a `--surface` card.
-  - In phase 1 (confirmed) it rotates every 20 s through **short** ayat and hadith from the existing `/quran/random` and `/hadis/:book` endpoints, Malay text plus a reference, filtered to ≤ 180 characters so it never shrinks to fit. Arabic ayat use the project's own Uthmanic font.
+  - In phase 1 (confirmed) it rotates every 20 s through **short** ayat and hadith (≤ 160 characters, so two lines; hadith from Bukhari, Muslim and Nasa'i, which have enough short ones). Offline it walks the last 30 items it fetched; on a first-ever offline load it shows "Sila senyapkan telefon bimbit" (the date is already in the header). Arabic appears only when it fits one line (≤ 60 characters).
+  - Sources: `/quran/random?max=160` and `/hadis/:book?max=160`. Malay text plus a reference (surah and ayat, or the kitab). Arabic ayat use the project's own Uthmanic font.
   - In `tv-mosque-mode` the same slot carries programmes.
 
 ### Where it departs from the app-screen rules, and why

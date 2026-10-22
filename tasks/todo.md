@@ -232,14 +232,14 @@ Standing verification for every task (Definition of Done):
 **Description:** A rotating card every 20 s, alternating short ayat and hadith (Malay text, reference, and the Arabic ayat in the Uthmanic font). The next card is prefetched. A pool of the last 30 items is kept in `localStorage`, so the banner keeps rotating offline.
 
 **Acceptance criteria:**
-- [ ] Text never shrinks to fit (≤ 180 characters, enforced by the API).
-- [ ] With the network down, the banner rotates through the cached pool. On a first-ever offline load, the slot shows the date line instead.
-- [ ] A card change is a `motion` slide/fade, with reduced motion respected.
+- [x] Text never shrinks to fit (≤ 180 characters, enforced by the API).
+- [x] With the network down, the banner rotates through the cached pool. On a first-ever offline load, the slot shows the date line instead.
+- [x] A card change is a `motion` slide/fade, with reduced motion respected.
 
 **Verification:**
-- [ ] Watch 3 rotations.
-- [ ] DevTools offline.
-- [ ] Longest-allowed text at 1920×1080 and 1280×720 fits without clipping.
+- [x] Watch 3 rotations.
+- [x] DevTools offline.
+- [x] Longest-allowed text at 1920×1080 and 1280×720 fits without clipping.
 
 **Dependencies:** Tasks 10, 11
 **Files:** `client/src/tv/Banner.jsx`, `client/src/tv/lib/bannerPool.js`, `client/src/tv/TvApp.jsx`, test

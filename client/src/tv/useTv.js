@@ -7,7 +7,7 @@ const CLOCK_SYNC_MS = 30 * 60 * 1000;
 const DATA_CHECK_MS = 60 * 1000;
 
 // localStorage, or null where the TV browser blocks it.
-function safeStorage() {
+export function safeStorage() {
 	try {
 		const storage = window.localStorage;
 		storage.getItem("tv:probe");
