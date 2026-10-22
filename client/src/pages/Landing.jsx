@@ -1,7 +1,7 @@
 // `/` — a returning visitor sees their zone's times with zero taps; a first
 // visit (or "Tukar zon", /?pilih) leads with the zone search.
 import { useMemo } from "react";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import tvDisplay from "../assets/tv-display.webp";
 import ZoneSearch from "../components/ZoneSearch.jsx";
 import ZoneTimes from "../components/ZoneTimes.jsx";
@@ -44,8 +44,8 @@ function TvPromo() {
 				Paparan TV untuk masjid
 			</h2>
 			<p className="mt-2 text-[17px] text-muted">
-				Waktu solat, kiraan ke azan dan iqamah, serta ayat dan hadis bergilir di TV masjid atau
-				surau anda. Percuma, tanpa daftar.
+				Waktu solat, kiraan ke azan dan iqamah, serta program masjid anda di TV dewan solat.
+				Percuma, tanpa akaun.
 			</p>
 			<img
 				src={tvDisplay}
@@ -55,10 +55,12 @@ function TvPromo() {
 				className="mt-5 w-full rounded-lg"
 				loading="lazy"
 			/>
-			<p className="mt-4 text-[15px] text-faint">
-				Buka <span className="font-semibold text-ink">waktusolat.me/tv/kod-zon</span> pada pelayar
-				TV, contohnya /tv/wly01.
-			</p>
+			<Link
+				to="/m/baru"
+				className="mt-5 inline-flex min-h-12 items-center rounded-full bg-ink px-6 text-[17px] font-semibold text-ground"
+			>
+				Daftar masjid anda
+			</Link>
 		</section>
 	);
 }

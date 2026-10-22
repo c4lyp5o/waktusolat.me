@@ -10,6 +10,7 @@ const LINKS = [
 	{ to: "/radio", label: "Radio" },
 	{ to: "/chat", label: "Chat" },
 	{ to: "/about", label: "Tentang" },
+	{ to: "/m/baru", label: "Untuk Masjid", match: (p) => p.startsWith("/m/") },
 ];
 
 function Wordmark() {
@@ -54,8 +55,14 @@ export default function Navbar() {
 						))}
 					</ul>
 					<NavLink
+						to="/m/baru"
+						className={`ml-auto rounded-lg px-3 py-2 text-[15px] md:hidden ${tone(LINKS[6])}`}
+					>
+						Masjid
+					</NavLink>
+					<NavLink
 						to="/about"
-						className={`ml-auto rounded-lg px-3 py-2 text-[15px] md:hidden ${tone(LINKS[5])}`}
+						className={`rounded-lg px-3 py-2 text-[15px] md:hidden ${tone(LINKS[5])}`}
 					>
 						Tentang
 					</NavLink>

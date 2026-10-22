@@ -1,8 +1,8 @@
 // format.js — Malay date and time strings for the TV, in Malaysia time.
 import { mytParts } from "./mytime.js";
 
-const DAYS = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
-const MONTHS = [
+export const DAYS = ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"];
+export const MONTHS = [
 	"Januari",
 	"Februari",
 	"Mac",

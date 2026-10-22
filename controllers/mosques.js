@@ -204,6 +204,9 @@ export async function updateMosque({ params, request, set }) {
 	if (denied) return denied;
 	const { value, error } = validateSettings(await readJson(request), { partial: true });
 	if (error) return fail(set, 400, error.message, error.field);
+	// An empty edit changes nothing (the editor uses it to check a token), so
+	// it must not move the version a polling TV watches.
+	if (Object.keys(value).length === 0) return toPublic(row);
 
 	const next = { ...toPublic(row), ...value };
 	const updatedAt = nextVersion(row.updated_at);

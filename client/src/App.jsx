@@ -14,6 +14,9 @@ import ZonePrayerTimes from "./pages/ZonePrayerTimes";
 // The mosque TV display: its own chunk (three.js, motion and fonts load only
 // there), rendered without the site chrome.
 const TvApp = lazy(() => import("./tv/TvApp.jsx"));
+// The mosque pages: few visitors, so out of the main bundle.
+const MosqueNew = lazy(() => import("./pages/MosqueNew.jsx"));
+const MosqueEditor = lazy(() => import("./pages/MosqueEditor.jsx"));
 
 // Top-level routes that count as a "visit". Deep links (e.g. a bookmarked
 // /times/wly01) arrive here as a hard load — the beacon fires on whatever
@@ -89,6 +92,22 @@ function App() {
 				<Route path="/radio" element={<Radio />} />
 				<Route path="/chat" element={<Chat />} />
 				<Route path="/about" element={<About />} />
+				<Route
+					path="/m/baru"
+					element={
+						<Suspense fallback={null}>
+							<MosqueNew />
+						</Suspense>
+					}
+				/>
+				<Route
+					path="/m/:id/edit"
+					element={
+						<Suspense fallback={null}>
+							<MosqueEditor />
+						</Suspense>
+					}
+				/>
 				<Route
 					path="/tv/:zone"
 					element={

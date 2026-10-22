@@ -407,6 +407,12 @@ export default function ZoneTimes({ zone, changeZone }) {
 			<div className="mx-auto max-w-6xl px-4 md:px-6">
 				<StateMosque negeri={info.negeri} />
 				<TimesTable zone={zone} todayIso={mytIsoDate(now)} />
+				<p className="mt-10 text-[15px] text-muted">
+					Waktu ini di TV masjid anda, bersama program masjid?{" "}
+					<Link to="/m/baru" className="font-semibold text-ink underline underline-offset-2">
+						Daftar masjid, percuma
+					</Link>
+				</p>
 			</div>
 		</main>
 	);

@@ -7,7 +7,13 @@ import { areaName } from "../lib/waktu/format.js";
 import { searchZones } from "../lib/zoneSearch.js";
 import { STATES, zoneIndex } from "../lib/zones.js";
 
-export default function ZoneSearch({ autoFocus = false }) {
+// With `onPick` (the mosque editor) a result is chosen in place instead of
+// opening its times page.
+export default function ZoneSearch({
+	autoFocus = false,
+	onPick,
+	label = "Cari daerah atau negeri",
+}) {
 	const [query, setQuery] = useState("");
 	const results = useMemo(() => searchZones(zoneIndex, query), [query]);
 	const typed = query.trim().length > 0;
@@ -21,7 +27,7 @@ export default function ZoneSearch({ autoFocus = false }) {
 	return (
 		<section>
 			<label htmlFor="zone-query" className="text-lg font-semibold">
-				Cari daerah atau negeri
+				{label}
 			</label>
 			<input
 				ref={input}
@@ -40,9 +46,10 @@ export default function ZoneSearch({ autoFocus = false }) {
 					<ul className="mt-4" aria-label="Zon sepadan">
 						{results.map((z) => (
 							<li key={z.code}>
-								<Link
-									to={`/times/${z.code}`}
-									className="flex items-center justify-between gap-4 border-b border-line py-4 hover:bg-raised"
+								<ResultLink
+									code={z.code}
+									onPick={onPick}
+									className="flex w-full items-center justify-between gap-4 border-b border-line py-4 text-left hover:bg-raised"
 								>
 									<span className="min-w-0">
 										<span className="block text-lg text-ink">{areaName(z.name)}</span>
@@ -51,7 +58,7 @@ export default function ZoneSearch({ autoFocus = false }) {
 									<span className="shrink-0 text-[15px] text-faint tabular-nums">
 										{z.code.toUpperCase()}
 									</span>
-								</Link>
+								</ResultLink>
 							</li>
 						))}
 					</ul>
@@ -63,42 +70,82 @@ export default function ZoneSearch({ autoFocus = false }) {
 			) : (
 				<div className="mt-6">
 					<p className="text-[15px] text-faint">Atau pilih negeri</p>
-					{/* Each state as its own mosque: the same photographs as the zone
-					    pages, at thumbnail size. */}
-					<ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
-						{STATES.map((s) => {
-							const m = mosqueFor(s);
-							return (
+					{onPick ? (
+						// Inside a form: compact chips, so the form's button stays near.
+						<ul className="mt-3 flex flex-wrap gap-2">
+							{STATES.map((s) => (
 								<li key={s}>
 									<button
 										type="button"
 										onClick={() => setQuery(s)}
-										className="group block w-full overflow-hidden rounded-xl bg-raised text-left"
+										className="min-h-12 rounded-full bg-raised px-4 text-[15px] text-ink hover:bg-line"
 									>
-										{m?.thumb && (
-											<img
-												src={m.thumb}
-												alt=""
-												loading="lazy"
-												className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-											/>
-										)}
-										<span className="block px-3 py-2 text-[15px] leading-snug text-ink">
-											{s.replace("Wilayah Persekutuan", "WP")}
-										</span>
+										{s.replace("Wilayah Persekutuan", "WP")}
 									</button>
 								</li>
-							);
-						})}
-					</ul>
-					<p className="mt-4 text-[13px] text-faint">
-						Foto masjid dari Wikimedia Commons.{" "}
-						<Link to="/about#kredit-foto" className="underline underline-offset-2">
-							Kredit penuh
-						</Link>
-					</p>
+							))}
+						</ul>
+					) : (
+						<StateTiles setQuery={setQuery} />
+					)}
 				</div>
 			)}
 		</section>
+	);
+}
+
+function StateTiles({ setQuery }) {
+	return (
+		<>
+			{/* Each state as its own mosque: the same photographs as the zone
+			    pages, at thumbnail size. */}
+			<ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+				{STATES.map((s) => {
+					const m = mosqueFor(s);
+					return (
+						<li key={s}>
+							<button
+								type="button"
+								onClick={() => setQuery(s)}
+								className="group block w-full overflow-hidden rounded-xl bg-raised text-left"
+							>
+								{m?.thumb && (
+									<img
+										src={m.thumb}
+										alt=""
+										loading="lazy"
+										className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+									/>
+								)}
+								<span className="block px-3 py-2 text-[15px] leading-snug text-ink">
+									{s.replace("Wilayah Persekutuan", "WP")}
+								</span>
+							</button>
+						</li>
+					);
+				})}
+			</ul>
+			<p className="mt-4 text-[13px] text-faint">
+				Foto masjid dari Wikimedia Commons.{" "}
+				<Link to="/about#kredit-foto" className="underline underline-offset-2">
+					Kredit penuh
+				</Link>
+			</p>
+		</>
+	);
+}
+
+function ResultLink({ code, onPick, className, children }) {
+	if (onPick) {
+		return (
+			<button type="button" onClick={() => onPick(code)} className={className}>
+				{children}
+			</button>
+		);
+	}
+	return (
+		<Link to={`/times/${code}`} className={className}>
+			{children}
+		</Link>
 	);
 }

@@ -22,6 +22,7 @@
 	--accent: #9a6200;
 	--accent-fill: #f2b33d;
 	--on-accent: #141414;
+	--danger: #b3261e; /* errors and destructive actions (mosque editor) */
 	color-scheme: light;
 }
 :root[data-theme="dark"] {
@@ -36,6 +37,7 @@
 	--accent: #f2b33d;
 	--accent-fill: #f2b33d;
 	--on-accent: #000000;
+	--danger: #ff8a80;
 	color-scheme: dark;
 }
 @theme inline {
@@ -50,6 +52,7 @@
 	--color-accent: var(--accent);
 	--color-accent-fill: var(--accent-fill);
 	--color-on-accent: var(--on-accent);
+	--color-danger: var(--danger);
 }
 
 /* Uthmanic typeface for Quranic Arabic */

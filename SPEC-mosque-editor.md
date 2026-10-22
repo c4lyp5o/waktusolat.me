@@ -1,6 +1,6 @@
 # Spec: `mosque-editor`
 
-Module 4 of the [capability map](CAPABILITY-MAP.md). Status: **draft, awaiting owner approval**.
+Module 4 of the [capability map](CAPABILITY-MAP.md). Status: **approved 2026-10-23**; built 2026-10-23 (owner review pending).
 
 ## Objective
 
@@ -39,7 +39,11 @@ The phone page where a mosque's AJK sets up their TV: register the mosque, set i
 8. **Security:**
    - "Tukar pautan edit" (rotate) shows the new link the same way as on registration, and warns that the old one stops working.
    - "Padam masjid ini" asks the AJK to type the mosque's name to confirm. It removes the mosque, its programmes and photos.
-9. **Entry point:** `/about`'s TV section gets a "Daftar masjid anda" button to `/m/baru`. Nothing else in the site changes.
+9. **Entry points (made more visible at the owner's request):**
+   - **Landing:** the TV card gets a "Daftar masjid anda" button.
+   - **Top bar:** an "Untuk Masjid" link on desktop, and "Masjid" beside "Tentang" on phones. The bottom bar stays as the jemaah's 5 destinations.
+   - **Times page:** one quiet line after the table.
+   - **`/about`:** a button.
 
 **Not in this module:** the TV page `/m/:id` (`tv-mosque-mode`; until it exists, "Buka" opens `/tv/:zone` with the mosque's settings in the URL); a QR code (see Open questions); accounts and recovery; multiple editors with separate links; posters; English.
 
@@ -96,7 +100,7 @@ Both pages are lazy-loaded routes. The main bundle grows by under 1 KB (the rout
 3. A 4000×3000 photo uploads as a JPEG of at most 600×600 and under 200 KB.
 4. Unit tests and Biome are green; the main bundle grows by under 1 KB gzip; no new dependency (unless the QR question says yes).
 
-## Open questions
-1. **QR code:** the map mentions one. A TV can't scan a code, so it would only help to pass the **edit** link from one AJK's phone to another, and WhatsApp share already does that. I propose **no QR** for now (it would also be the first new dependency). OK?
-2. **Where to register:** I propose `/m/baru`, reached from `/about` only (not the bottom bar), so the jemaah's site stays as it is. OK, or do you want it more visible?
-3. **The photo crop:** an automatic centred square. Or do you want the AJK to drag the crop? That's more work and more to get wrong on a small screen. I lean automatic for now.
+## Resolved questions (2026-10-23)
+1. **QR code:** none. WhatsApp share covers passing the edit link, and it avoids a new dependency.
+2. **Visibility:** more visible than `/about` alone (see story 9).
+3. **Photo crop:** automatic centred square.

@@ -2,6 +2,7 @@
 // from, the free TV display for mosques, and the photo credits (every
 // mosque photograph used on the site, with creator and licence).
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 import tvDisplay from "../assets/tv-display.webp";
 import { MOSQUE_CREDITS } from "../lib/mosques.js";
 import { zoneIndex } from "../lib/zones.js";
@@ -108,8 +109,14 @@ export default function About() {
 						className="mt-5 w-full rounded-lg"
 						loading="lazy"
 					/>
+					<Link
+						to="/m/baru"
+						className="mt-5 inline-flex min-h-12 items-center rounded-full bg-ink px-6 text-[17px] font-semibold text-ground"
+					>
+						Daftar masjid anda
+					</Link>
 					<p className="mt-4 text-[15px] text-faint">
-						Tetapan dalam pautan, contohnya{" "}
+						Atau tanpa daftar, tetapan dalam pautan, contohnya{" "}
 						<span className="break-all text-ink">
 							/tv/wly01?nama=Masjid%20Anda&amp;iqamah=10,10,10,5,10
 						</span>

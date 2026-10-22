@@ -103,6 +103,14 @@ describe("edit with the token", () => {
 		expect(got.updatedAt).toBeGreaterThan(data.mosque.updatedAt);
 	});
 
+	test("an empty patch checks the token without moving updatedAt", async () => {
+		const { data } = await create();
+		const res = await patch(data.mosque.id, data.token, {});
+		expect(res.status).toBe(200);
+		expect((await res.json()).updatedAt).toBe(data.mosque.updatedAt);
+		expect((await patch(data.mosque.id, "x".repeat(43), {})).status).toBe(401);
+	});
+
 	test("missing or wrong token is 401 and changes nothing", async () => {
 		const { data } = await create();
 		const id = data.mosque.id;
