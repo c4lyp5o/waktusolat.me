@@ -16,4 +16,4 @@ Small module (backend only), built as one slice.
 - [x] 4. `bun test` (175, local and New York TZ) and Biome green; no new dependency.
 
 ## Checkpoint
-- [ ] Owner review, then next module: `programmes`.
+- [x] Owner review (2026-10-23: "alright!!! ok lets go."). Next module: `programmes`.
