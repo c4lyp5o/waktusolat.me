@@ -1,5 +1,7 @@
 node_modules
 public/
+# ...but the client's static source files (the TV service worker) are tracked
+!/client/public/
 .env
 db/visitors.sqlite
 /.migrate-express/

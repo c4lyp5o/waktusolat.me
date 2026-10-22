@@ -86,6 +86,25 @@ Notes:
 - **Secrets.** Keep `ADMIN_API_KEY` in the server's environment, not in the image. CI writes `.env` into the build context (staging workflow), and anything in that file ends up in the published image.
 - **Prayer data.** Zone files are fetched from JAKIM at runtime, never at build time. The server checks every 6 hours and refetches any zone whose data no longer covers today. JAKIM publishes one year at a time, so for a day or two around 1 January the last known day is served until the new year is published.
 
+## 📺 Paparan TV (mosque TV display)
+
+A full-screen prayer-time display for a mosque or surau TV, free to use: open `https://waktusolat.me/tv/<zone>` in the TV's browser (zone codes below, e.g. `wly01`).
+
+```
+/tv/wly01?nama=Masjid%20Al-Ikhlas&iqamah=10,10,10,5,10&jumaat=30&solat=10
+```
+
+| Parameter | Meaning | Default |
+| --- | --- | --- |
+| `nama` | Mosque name, shown in the header | none |
+| `iqamah` | Minutes from azan to iqamah, five numbers in the order Subuh, Zohor, Asar, Maghrib, Isyak | `10,10,10,10,10` |
+| `jumaat` | Minutes from the Zohor azan to iqamah on Fridays | `30` |
+| `solat` | Minutes the "solat in progress" screen stays up after iqamah | `10` |
+
+What it does: a large countdown to the next azan, then to iqamah, a dim screen during solat, all seven times with the next one lit, and a day track with the sun. Verses and hadith rotate along the bottom. It runs on the server-corrected time (a wrong TV clock or timezone does not matter), keeps the screen awake where the browser allows, shifts a few pixels over time against burn-in, and reloads itself once a day at 03:00 (only when the server answers). After one online load it also boots with the network off: prayer times are cached in the browser and a small service worker (`/tv-sw.js`, scope `/tv/` only) keeps the app files. Landscape only; a phone held upright gets a link to the normal page instead.
+
+Screenshots of every state: `node scripts/tv-shots.mjs` (needs `bun dev` running and `playwright-core`).
+
 # 🔗 API Endpoints
 
 Base URL: `/api/v1`. GraphQL is at `/graphql` (playground enabled outside production).
@@ -117,7 +136,8 @@ Unknown zone or period → `400`. A zone with no data yet (e.g. right after a fr
 
 GET /visitors/stats : anonymized visit counts (refreshed at most once a minute)\
 GET /cache : response-cache statistics\
-GET /healthcheck : liveness probe (`{"ok":true}`)
+GET /healthcheck : liveness probe (`{"ok":true}`)\
+GET /time : server time as `{"now": <epoch ms>, "tz": "Asia/Kuala_Lumpur"}` (not cached; the TV display uses it to correct a wrong device clock)
 
 ## 🔐 Admin Endpoints
 

@@ -254,15 +254,17 @@ Standing verification for every task (Definition of Done):
 **Description:** `/tv-sw.js`, scoped to `/tv/`, caches the TV chunk, the fonts and the shell. The screen requests a Wake Lock (and re-requests it). The ±6 px drift runs on a 20-minute cycle. The page reloads daily at 03:00 Malaysia time, only after `/api/v1/time` answers.
 
 **Acceptance criteria:**
-- [ ] After one online load, a reload with the network off boots the full screen.
-- [ ] Non-TV routes register no service worker.
-- [ ] No reload happens while the server is unreachable.
-- [ ] Unsupported APIs fail silently.
+- [x] After one online load, a reload with the network off boots the full screen.
+- [x] Non-TV routes register no service worker.
+- [x] No reload happens while the server is unreachable.
+- [x] Unsupported APIs fail silently.
 
 **Verification:**
-- [ ] DevTools offline reload.
-- [ ] Application panel: SW scope is `/tv/`.
-- [ ] `?now=02:59:50` (dev) with the server stopped → no reload.
+- [x] Offline reload (headless Chrome, network off): the full screen boots from the cache with times and countdown.
+- [x] SW scope is `/tv/`; `/` registers none.
+- [x] `?now=2026-10-23T02:59:50` (dev), real time: with `/api/v1/time` answering the page reloaded after the 5 min uptime guard; with it blocked, no reload.
+
+Notes: the server sends `Vary: *`, which the Cache API refuses, so the worker stores cleaned copies. Files: `client/public/tv-sw.js`, `client/src/tv/kiosk.js`, `client/src/lib/waktu/kiosk.js` (drift and reload rule, tested in `tests/tv-kiosk.test.js`). Wake lock needs a secure context (https); over plain http it is silently skipped.
 
 **Dependencies:** Task 12
 **Files:** `client/public/tv-sw.js`, `client/src/tv/TvApp.jsx`, `client/src/tv/lib/kiosk.js`
@@ -274,10 +276,10 @@ Standing verification for every task (Definition of Done):
 
 **Acceptance criteria:**
 - [ ] All 8 spec success criteria are checked and recorded with their evidence.
-- [ ] The README documents `/tv/:zone` and its parameters, with an example URL.
+- [x] The README documents `/tv/:zone` and its parameters, with an example URL.
 
 **Verification:**
-- [ ] `node scripts/tv-shots.mjs` produces the image set, and each image has been reviewed.
+- [x] `node scripts/tv-shots.mjs` produces 25 images (12 states × 1080p/4K + portrait); iqamah, Jumaat, solat and after-Isyak reviewed.
 
 **Dependencies:** Tasks 1–13
 **Files:** `scripts/tv-shots.mjs`, `README.md`, `SPEC-tv-display.md` (status)

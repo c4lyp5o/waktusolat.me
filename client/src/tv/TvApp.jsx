@@ -14,6 +14,7 @@ import { listRows, screenState } from "../lib/waktu/schedule.js";
 import Banner from "./Banner.jsx";
 import DayTrack from "./DayTrack.jsx";
 import Header from "./Header.jsx";
+import { useKiosk } from "./kiosk.js";
 import Lead from "./Lead.jsx";
 import PrayerList from "./PrayerList.jsx";
 import { Message, SolatNotice } from "./SolatNotice.jsx";
@@ -28,6 +29,7 @@ export default function TvApp() {
 	const now = useNow(config.now);
 	const { days, meta, status } = useYear(zone, now);
 	const portrait = usePortrait();
+	const drift = useKiosk(now);
 
 	// Full-screen TV: no page scroll, true black behind everything.
 	useEffect(() => {
@@ -76,7 +78,7 @@ export default function TvApp() {
 	// not the full motion bundle.
 	return (
 		<LazyMotion features={domAnimation} strict>
-			<div className="tv">
+			<div className="tv" style={drift}>
 				{portrait ? (
 					<PortraitNotice zone={zone} />
 				) : (
