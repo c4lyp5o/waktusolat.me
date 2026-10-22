@@ -132,15 +132,101 @@ body {
 	-webkit-font-smoothing: antialiased;
 }
 
-/* Day track stars (ZoneTimes.jsx): night sky in dark mode only. */
+/* ── The sky (ZoneTimes.jsx): the lead band takes the colour of the sky
+   over the zone right now (lib/waktu/sky.js). Flat fields, not gradients;
+   each sky re-sets the tokens so everything inside keeps its contrast,
+   in either theme. ── */
+.sky {
+	background-color: var(--sky);
+	color: var(--ink);
+	transition:
+		background-color 3s ease,
+		color 3s ease;
+}
+.sky[data-sky="malam"] {
+	--sky: #0d0e12;
+	--ink: #ffffff;
+	--muted: #c4c5cc;
+	--faint: #a3a4ae;
+	--spent: #7d7e88;
+	--accent: #f2b33d;
+	--accent-fill: #f2b33d;
+	--surface: rgb(255 255 255 / 0.08);
+	--raised: rgb(255 255 255 / 0.12);
+	--line: rgb(255 255 255 / 0.14);
+}
+.sky[data-sky="subuh"] {
+	--sky: #22385a;
+	--ink: #ffffff;
+	--muted: #d3dbe6;
+	--faint: #b3bfcf;
+	--spent: #9aa8bb;
+	--accent: #f8c867;
+	--accent-fill: #f8c867;
+	--surface: rgb(255 255 255 / 0.1);
+	--raised: rgb(255 255 255 / 0.14);
+	--line: rgb(255 255 255 / 0.16);
+}
+.sky[data-sky="pagi"] {
+	--sky: #d9e7ea;
+	--ink: #0f1b22;
+	--muted: #2c414c;
+	--faint: #405a66;
+	--spent: #546c78;
+	--accent: #7a4a00;
+	--accent-fill: #e9a21f;
+	--surface: rgb(255 255 255 / 0.6);
+	--raised: rgb(255 255 255 / 0.5);
+	--line: rgb(15 27 34 / 0.12);
+}
+.sky[data-sky="zohor"] {
+	--sky: #cfe6f3;
+	--ink: #0d1a22;
+	--muted: #29404d;
+	--faint: #3d5867;
+	--spent: #516b79;
+	--accent: #7a4a00;
+	--accent-fill: #f2b33d;
+	--surface: rgb(255 255 255 / 0.6);
+	--raised: rgb(255 255 255 / 0.5);
+	--line: rgb(13 26 34 / 0.12);
+}
+.sky[data-sky="asar"] {
+	--sky: #f0dcb4;
+	--ink: #2a1b05;
+	--muted: #4a3819;
+	--faint: #5e4a28;
+	--spent: #6f5a37;
+	--accent: #7a3f00;
+	--accent-fill: #d27d1c;
+	--surface: rgb(255 255 255 / 0.5);
+	--raised: rgb(255 255 255 / 0.45);
+	--line: rgb(42 27 5 / 0.14);
+}
+.sky[data-sky="senja"] {
+	--sky: #7e3f3a;
+	--ink: #ffffff;
+	--muted: #f4dcd5;
+	--faint: #ecc9bf;
+	--spent: #e0b8ad;
+	--accent: #ffd38a;
+	--accent-fill: #ffc35c;
+	--surface: rgb(255 255 255 / 0.1);
+	--raised: rgb(255 255 255 / 0.16);
+	--line: rgb(255 255 255 / 0.18);
+}
+
+/* Day track stars (ZoneTimes.jsx): only under a night or pre-dawn sky. */
 .site-star {
+	display: none;
 	width: 3px;
 	height: 3px;
 	background: var(--faint);
-	opacity: 0.5;
+	opacity: 0.6;
 }
-:root[data-theme="light"] .site-star {
-	display: none;
+.sky[data-sky="malam"] .site-star,
+.sky[data-sky="subuh"] .site-star {
+	display: block;
 }
 
 /* Room for the phone bottom bar (Navbar.jsx). */

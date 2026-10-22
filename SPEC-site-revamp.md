@@ -44,6 +44,13 @@ What works and stays:
 | **`/about`** | What the site is, the data source (JAKIM e-Solat), the visitor counters, the TV display ("Paparan TV masjid: buka /tv/<zon> pada TV"), and the repo link. |
 | **Navbar** | Wordmark plus five plain links, active state by brightness. On phones, a bottom bar with the 4–5 destinations (thumb reach). |
 
+## Character (added 2026-10-22, after owner review: "too bland")
+
+The first build was correct but thin. The owner chose three additions, each taken from the subject:
+- **The sky as the page.** The lead band on zone pages is a flat field in the colour of the sky over the zone right now: malam, subuh, pagi, zohor, asar, senja (`lib/waktu/sky.js`, from the zone's prayer times). Each sky re-sets the theme tokens so text keeps its contrast.
+- **Jawi names** beside the Malay ones (صبح, ظهر, عصر…), as on the LED boards on surau walls, set in the bundled Uthmanic face.
+- **The state's mosque.** One real, openly licensed photograph per state from Wikimedia Commons, with its name and credit under it (creator, licence, link). Sources and licences are recorded in `client/src/assets/mosques/credits.json` and listed on `/about`. Each is a real place in the zone's state, never presented as the visitor's own mosque.
+
 ## Boundaries
 
 - **Always:**

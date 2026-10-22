@@ -7,13 +7,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import useSWR from "swr";
+import { mosqueFor } from "../lib/mosques.js";
 import { DEFAULTS } from "../lib/waktu/config.js";
 import { ARC_TOP, arcPoints, dayTrack, STARS } from "../lib/waktu/daytrack.js";
 import { areaName, formatCountdown, formatDate, formatTime } from "../lib/waktu/format.js";
 import { mytIsoDate } from "../lib/waktu/mytime.js";
-import { ADVISORY, ORDER, prayerLabel } from "../lib/waktu/names.js";
+import { ADVISORY, ORDER, prayerJawi, prayerLabel } from "../lib/waktu/names.js";
 import { dayFor, nextDay, parseYear } from "../lib/waktu/rows.js";
 import { rowStates, screenState } from "../lib/waktu/schedule.js";
+import { skyPhase } from "../lib/waktu/sky.js";
 import { zoneInfo } from "../lib/zones.js";
 
 const SITE_CONFIG = {
@@ -56,6 +58,13 @@ function Lead({ now, state }) {
 			<p id="lead-title" className="text-2xl font-semibold md:text-3xl">
 				<span className="text-accent">{(LEAD[state.kind] ?? LEAD.countdown)(state.label)}</span>{" "}
 				<span className="font-medium text-muted">dalam</span>
+				<span
+					lang="ar"
+					dir="rtl"
+					className="ml-4 font-uthmanic text-[1.1em] font-normal text-faint"
+				>
+					{prayerJawi(state.prayer, state.azan)}
+				</span>
 			</p>
 			<p className="mt-3 text-[clamp(4.5rem,18vw,8.5rem)] font-medium leading-none tracking-[-0.04em] tabular-nums">
 				{formatCountdown(state.target - now)}
@@ -88,7 +97,16 @@ function TodayList({ today, rows }) {
 							ADVISORY.includes(key) ? "font-normal" : "font-medium"
 						}`}
 					>
-						<span>{prayerLabel(key, today.times[key])}</span>
+						<span className="flex items-baseline gap-3">
+							<span>{prayerLabel(key, today.times[key])}</span>
+							<span
+								lang="ar"
+								dir="rtl"
+								className="font-uthmanic text-[1.15em] font-normal opacity-80"
+							>
+								{prayerJawi(key, today.times[key])}
+							</span>
+						</span>
 						<span className={`tabular-nums ${lit ? "text-accent" : ""}`}>
 							{formatTime(today.times[key])}
 						</span>
@@ -97,6 +115,15 @@ function TodayList({ today, rows }) {
 			})}
 		</ol>
 	);
+}
+
+// Subuh/Syuruk and Maghrib/Isyak sit about an hour apart, so on a phone
+// their labels collide. Show one of each pair: the next prayer if it is in
+// the pair, otherwise the inner one (Syuruk, Maghrib).
+const PAIR = { subuh: "syuruk", syuruk: "subuh", maghrib: "isyak", isyak: "maghrib" };
+function hiddenOnPhone(key, next) {
+	if (!PAIR[key] || key === next) return false;
+	return PAIR[key] === next || key === "subuh" || key === "isyak";
 }
 
 // The TV's day track, SVG only (no three.js outside /tv).
@@ -146,7 +173,9 @@ function DayTrack({ now, today, next }) {
 				{track.ticks.map((t) => (
 					<li
 						key={t.key}
-						className={`absolute -translate-x-1/2 whitespace-nowrap ${t.key === next ? "text-accent" : "text-faint"}`}
+						className={`absolute -translate-x-1/2 whitespace-nowrap ${t.key === next ? "text-accent" : "text-faint"} ${
+							hiddenOnPhone(t.key, next) ? "max-md:hidden" : ""
+						}`}
 						style={{ left: `${t.x * 100}%` }}
 					>
 						{prayerLabel(t.key, today.times[t.key])}
@@ -154,6 +183,48 @@ function DayTrack({ now, today, next }) {
 				))}
 			</ol>
 		</section>
+	);
+}
+
+// A well-known mosque of the zone's state: a real, credited photograph.
+function StateMosque({ negeri }) {
+	const m = mosqueFor(negeri);
+	if (!m) return null;
+	return (
+		<figure className="mt-12">
+			<img
+				src={m.src}
+				width={m.width}
+				height={m.height}
+				alt={m.name}
+				loading="lazy"
+				className="aspect-[4/3] w-full rounded-2xl object-cover md:aspect-[21/9]"
+			/>
+			<figcaption className="mt-3 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+				<span className="text-[17px] text-ink">{m.name}</span>
+				<span className="text-[13px] text-faint">
+					Foto:{" "}
+					<a
+						href={m.page}
+						target="_blank"
+						rel="noreferrer"
+						className="underline-offset-2 hover:underline"
+					>
+						{m.creator}
+					</a>
+					,{" "}
+					<a
+						href={m.licenseUrl}
+						target="_blank"
+						rel="noreferrer"
+						className="underline-offset-2 hover:underline"
+					>
+						{m.license}
+					</a>
+					, Wikimedia Commons
+				</span>
+			</figcaption>
+		</figure>
 	);
 }
 
@@ -294,20 +365,28 @@ export default function ZoneTimes({ zone, changeZone }) {
 	const rows = rowStates(now, today, state);
 
 	return (
-		<main className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-10">
-			{header}
-			<div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-center">
-				<Lead now={now} state={shown} />
-				<TodayList today={today} rows={rows} />
+		<main className="pb-16">
+			{/* The sky over the zone right now: a flat field of its colour. */}
+			<section className="sky" data-sky={skyPhase(now, today)}>
+				<div className="mx-auto max-w-6xl px-4 pt-8 pb-10 md:px-6 md:pt-10 md:pb-12">
+					{header}
+					<div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-center">
+						<Lead now={now} state={shown} />
+						<TodayList today={today} rows={rows} />
+					</div>
+					<div className="mt-10">
+						<DayTrack
+							now={now}
+							today={today}
+							next={state.kind === "after-isyak" ? null : state.prayer}
+						/>
+					</div>
+				</div>
+			</section>
+			<div className="mx-auto max-w-6xl px-4 md:px-6">
+				<StateMosque negeri={info.negeri} />
+				<TimesTable zone={zone} todayIso={mytIsoDate(now)} />
 			</div>
-			<div className="mt-10">
-				<DayTrack
-					now={now}
-					today={today}
-					next={state.kind === "after-isyak" ? null : state.prayer}
-				/>
-			</div>
-			<TimesTable zone={zone} todayIso={mytIsoDate(now)} />
 		</main>
 	);
 }

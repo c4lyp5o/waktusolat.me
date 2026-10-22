@@ -29,6 +29,23 @@ const LABEL = {
 	isyak: "Isyak",
 };
 
+// Jawi, as on the LED prayer boards on surau walls.
+export const JAWI = {
+	imsak: "إمساك",
+	subuh: "صبح",
+	syuruk: "شروق",
+	zohor: "ظهر",
+	asar: "عصر",
+	maghrib: "مغرب",
+	isyak: "عشاء",
+	jumaat: "جمعة",
+};
+
+// The Jawi for a row: Zohor is Jumaat on Friday (Malaysia time).
+export function prayerJawi(key, epochMs) {
+	return key === "zohor" && isFriday(epochMs) ? JAWI.jumaat : JAWI[key];
+}
+
 export const isFriday = (epochMs) => mytParts(epochMs).weekday === 5;
 
 // On Friday (Malaysia time) Zohor is Jumaat.
