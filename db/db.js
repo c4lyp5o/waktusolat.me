@@ -24,6 +24,19 @@ const initializeDatabase = async () => {
 				CREATE INDEX IF NOT EXISTS idx_visitors_ip_date ON visitors (ip_address, visit_date);
 				-- Date-range / per-day aggregates in getVisitorStats.
 				CREATE INDEX IF NOT EXISTS idx_visitors_date ON visitors (visit_date);
+				-- Mosque TV settings (SPEC-mosque-registry.md). Only the edit
+				-- token's sha256 is stored; nothing about who registered it.
+				CREATE TABLE IF NOT EXISTS mosques (
+				id TEXT PRIMARY KEY,
+				name TEXT NOT NULL,
+				zone TEXT NOT NULL,
+				iqamah TEXT NOT NULL,
+				jumaat INTEGER NOT NULL,
+				solat INTEGER NOT NULL,
+				token_hash TEXT NOT NULL,
+				created_at INTEGER NOT NULL,
+				updated_at INTEGER NOT NULL
+				);
 			`);
 		} catch (error) {
 			console.error("Error creating tables:", error.message);

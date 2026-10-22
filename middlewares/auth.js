@@ -8,10 +8,14 @@ import { createHash, timingSafeEqual } from "node:crypto";
 
 const digest = (value) => createHash("sha256").update(String(value)).digest();
 
-export function apiKeyAuth({ request, set }) {
+export function isAdmin(request) {
 	const expected = process.env.ADMIN_API_KEY;
 	const given = request.headers.get("x-api-key");
-	if (expected && given && timingSafeEqual(digest(given), digest(expected))) return;
+	return Boolean(expected && given && timingSafeEqual(digest(given), digest(expected)));
+}
+
+export function apiKeyAuth({ request, set }) {
+	if (isAdmin(request)) return;
 	set.status = 401;
 	return { message: "Unauthorized" };
 }

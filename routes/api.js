@@ -1,6 +1,13 @@
 // Elysia routes for waktusolat.me — replaces the Express Router.
 import { Elysia } from "elysia";
 import { HadithsHelpers, QuranHelpers, TimeHelpers } from "../controllers/helpers.js";
+import {
+	createMosque,
+	deleteMosque,
+	getMosque,
+	rotateToken,
+	updateMosque,
+} from "../controllers/mosques.js";
 import { apiKeyAuth } from "../middlewares/auth.js";
 import {
 	cacheAfterHandle,
@@ -76,6 +83,13 @@ export const apiRoutes = new Elysia({ prefix: "/api/v1" })
 		set.headers["cache-control"] = "no-store";
 		return { now: Date.now(), tz: "Asia/Kuala_Lumpur" };
 	})
+	// mosque registry (SPEC-mosque-registry.md); bodies are parsed in the
+	// controller so a malformed one gets the registry's 400 shape
+	.post("/mosques", createMosque, { parse: "none" })
+	.get("/mosques/:id", getMosque)
+	.patch("/mosques/:id", updateMosque, { parse: "none" })
+	.post("/mosques/:id/token", rotateToken, { parse: "none" })
+	.delete("/mosques/:id", deleteMosque, { parse: "none" })
 	// real healthcheck for the Docker HEALTHCHECK (JSON, not the SPA shell)
 	.get("/healthcheck", () => ({ ok: true }));
 

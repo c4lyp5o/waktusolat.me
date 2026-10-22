@@ -1,6 +1,6 @@
 # Spec: `mosque-registry`
 
-Module 2 of the [capability map](CAPABILITY-MAP.md). Status: **draft, awaiting owner approval**.
+Module 2 of the [capability map](CAPABILITY-MAP.md). Status: **approved 2026-10-23**.
 
 ## Objective
 
@@ -16,7 +16,7 @@ A mosque's TV settings saved on the server instead of in a long URL. Anyone can 
 2. `GET /api/v1/mosques/:id` returns the public settings, never the token or its hash. An unknown id returns `404`.
 3. `PATCH /api/v1/mosques/:id` with the right token changes any of the editable fields. With a missing or wrong token it returns `401` and changes nothing.
 4. `POST /api/v1/mosques/:id/token` with the current token returns a new token. The old token stops working immediately (a "the link leaked" reset).
-5. `DELETE /api/v1/mosques/:id` with `x-api-key: <ADMIN_API_KEY>` removes the mosque. Without the key it returns `401`, and it fails closed when the key is unset (same guard as the existing admin routes).
+5. `DELETE /api/v1/mosques/:id` with the edit token (the mosque deleting itself) **or** `x-api-key: <ADMIN_API_KEY>` (the owner) removes the mosque. Without either it returns `401`. The admin path fails closed when the key is unset, like the existing admin routes.
 6. Creation is rate-limited per client IP and capped globally per day, so a script cannot fill the database.
 7. Every invalid input returns `400` with a short message naming the field. Nothing invalid is stored.
 
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS mosques (
 - **Field bounds match `tv-display`'s URL parameters** (`client/src/lib/waktu/config.js`), so a mosque and a `/tv/:zone?…` link mean the same thing. Defaults: iqamah 10 for every prayer, Jumaat 30, solat 10.
 
 ### Ids and tokens
-- **Id:** 10 characters from a 32-letter alphabet without look-alikes (`23456789abcdefghjkmnpqrstuvwxyz`, minus one). That is about 50 bits from `crypto.getRandomValues`, so ids cannot be guessed or enumerated. On the unlikely collision, it retries.
+- **Id:** 10 characters of lower-case Crockford base32 (`0123456789abcdefghjkmnpqrstvwxyz`, no i, l, o or u, so nothing is misread), from `crypto.randomBytes`. That is 50 bits, so ids cannot be guessed or enumerated. On the unlikely collision, it retries.
 - **Edit token:** 32 random bytes, base64url (43 characters). It is stored only as its sha256. A token this random needs no slow hash or salt. It is compared with `timingSafeEqual`, like `ADMIN_API_KEY`.
 - **The token travels in the URL fragment** of the edit link (`/m/:id/edit#k=<token>`), which browsers never send to the server or in a `Referer`. The editor page will send it as `Authorization: Bearer <token>`. It never appears in a query string or server log.
 
@@ -58,7 +58,7 @@ All under `/api/v1`, JSON in and out, inside the existing global rate limit (100
 | `GET /mosques/:id` | none | — | `200 { id, name, zone, iqamah, jumaat, solat, updatedAt }` |
 | `PATCH /mosques/:id` | `Authorization: Bearer <token>` | any of `{ name, zone, iqamah, jumaat, solat }` | `200` with the public settings |
 | `POST /mosques/:id/token` | `Authorization: Bearer <token>` | — | `200 { token, editPath }` |
-| `DELETE /mosques/:id` | `x-api-key` | — | `204` |
+| `DELETE /mosques/:id` | `Authorization: Bearer <token>` or `x-api-key` | — | `204` |
 
 - **`iqamah`** is accepted as an object with all five keys, each an integer 0–60. A partial object is a `400`, so a typo never silently leaves a prayer at its default.
 - **Unknown body fields** are a `400`, so a client bug is caught instead of ignored.
@@ -81,7 +81,7 @@ tests/mosques.test.js    → route-level tests through tests/app.js (temp DB)
 README.md                → "Mosque endpoints" section
 ```
 
-Style follows the current handlers: plain functions, bun:sqlite prepared statements, `logger` for creation and deletion (id only, never the token).
+Style follows the current handlers: plain functions, validation runs before the creation limit (so typos don't use up an AJK's hourly allowance), bun:sqlite prepared statements, `logger` for creation and deletion (id only, never the token).
 
 ## Testing
 
@@ -91,7 +91,7 @@ Style follows the current handlers: plain functions, bun:sqlite prepared stateme
 - wrong, missing or rotated-away token → `401`, nothing changes
 - every field's bounds, plus a bad zone, a partial `iqamah`, an unknown field, and a non-JSON body → `400`
 - per-IP creation limit → `429` on the 6th; other IPs are unaffected
-- admin delete: with the key `204`, then `404`; without the key `401`; key unset → `401`
+- delete: with the token `204`; with the admin key `204`, then `404`; with neither `401`; admin key unset → `401`
 - `ETag` / `If-None-Match` → `304`
 
 Biome clean. All existing tests still green in both timezones.
@@ -107,7 +107,7 @@ Biome clean. All existing tests still green in both timezones.
 3. The `mosques` table appears on an existing DB at startup without touching `visitors` data.
 4. `bun run test` and Biome are green; no new dependency.
 
-## Open questions
-1. **Lost edit link:** I propose no self-service recovery (there's no account to recover to). The AJK asks you, or registers again and you delete the old one. OK?
-2. **Self-delete:** should the token holder be able to delete their own mosque, as well as you with `ADMIN_API_KEY`? I lean **yes**: it's their entry, and it saves you a request.
-3. **Creation limits:** are 5 per IP per hour and 500 per day right for you?
+## Resolved questions (2026-10-23)
+1. **Lost edit link:** no self-service recovery. The AJK asks the owner, or registers again and the owner deletes the old entry.
+2. **Self-delete:** yes, the token holder can delete their own mosque, as well as the owner with `ADMIN_API_KEY`.
+3. **Creation limits:** 5 per IP per hour and 500 per day, approved.
