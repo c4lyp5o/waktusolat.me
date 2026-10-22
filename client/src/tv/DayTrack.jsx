@@ -1,6 +1,7 @@
 // DayTrack.jsx — the signature element: today from Subuh to Isyak, with the
 // sun where the light really is. Labels are HTML (crisp at any size); the
 // sky layer is drawn from the same geometry (lib/daytrack.js).
+import { useEffect, useRef, useState } from "react";
 import { dayTrack } from "./lib/daytrack.js";
 import { prayerLabel } from "./lib/names.js";
 
@@ -67,12 +68,64 @@ export function DayTrackSvg({ track }) {
 	);
 }
 
-export default function DayTrack({ now, today, next, sky }) {
+function webglAvailable() {
+	try {
+		const canvas = document.createElement("canvas");
+		return Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl"));
+	} catch {
+		return false;
+	}
+}
+
+// The three.js sky (DayTrackGl.js, its own lazy chunk). Any failure (load,
+// init, a slow GPU, a lost context) calls onFail and the SVG takes over.
+function GlSky({ track, onFail }) {
+	const canvasRef = useRef(null);
+	const rendererRef = useRef(null);
+	const trackRef = useRef(track);
+	trackRef.current = track;
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: created once; onFail is stable
+	useEffect(() => {
+		let disposed = false;
+		import("./DayTrackGl.js")
+			.then(({ createSkyRenderer }) => {
+				if (disposed) return;
+				rendererRef.current = createSkyRenderer(canvasRef.current, { onSlow: onFail });
+				rendererRef.current.update(trackRef.current);
+			})
+			.catch(() => onFail("load"));
+		return () => {
+			disposed = true;
+			rendererRef.current?.dispose();
+			rendererRef.current = null;
+		};
+	}, []);
+
+	useEffect(() => {
+		rendererRef.current?.update(track);
+	}, [track]);
+
+	return <canvas className="tv-track-gl" ref={canvasRef} />;
+}
+
+export default function DayTrack({ now, today, next }) {
 	const track = dayTrack(now, today);
+	// Decided once per load: WebGL when available, the SVG for good after
+	// any failure (spec: Motion and three.js budget).
+	const [renderer, setRenderer] = useState(() => (webglAvailable() ? "gl" : "svg"));
+	const [onFail] = useState(() => (reason) => {
+		console.info(`[tv] day track: SVG fallback (${reason})`);
+		setRenderer("svg");
+	});
 	return (
 		<section className="tv-track" data-phase={track.phase} aria-hidden="true">
 			<div className="tv-track-sky">
-				{sky ? sky(track) : <DayTrackSvg track={track} />}
+				{renderer === "gl" ? (
+					<GlSky track={track} onFail={onFail} />
+				) : (
+					<DayTrackSvg track={track} />
+				)}
 				{track.sun && (
 					<span
 						className="tv-sun"

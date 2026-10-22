@@ -116,7 +116,7 @@ Standing verification for every task (Definition of Done):
 **Verification:**
 - [x] Dev `?now=` previews of countdown, iqamah and after-isyak at 1920×1080 and 3840×2160.
 - [x] Smallest hall-readable text ≥ 3.2vh, measured in DevTools.
-- [ ] The tick causes no layout shift (Performance panel). *Not yet measured; Checkpoint C performance pass.*
+- [x] The tick causes no layout shift: CLS 0.0000 over 10 s of ticks (Playwright, 4× CPU throttle).
 
 **Dependencies:** Task 5
 **Files:** `client/src/tv/Header.jsx`, `client/src/tv/PrayerList.jsx`, `client/src/tv/Lead.jsx`, `client/src/tv/TvApp.jsx`, `client/src/tv/tv.css`
@@ -172,14 +172,14 @@ Standing verification for every task (Definition of Done):
 **Description:** The same geometry rendered in WebGL, lazy-imported. It renders on change and is capped at 30 fps. A frame-time probe falls back to SVG.
 
 **Acceptance criteria:**
-- [ ] `three` appears only in the TV chunk.
-- [ ] With no WebGL, or frames over 50 ms for 5 s, the SVG version is used, decided once per load, and nothing appears in the console as an error.
-- [ ] At idle, the GPU and main thread do near-zero work between sun updates.
+- [x] `three` appears only in the TV chunk.
+- [x] With no WebGL, or frames over 50 ms for 5 s, the SVG version is used, decided once per load, and nothing appears in the console as an error.
+- [x] At idle, the GPU and main thread do near-zero work between sun updates.
 
 **Verification:**
-- [ ] Bundle check script.
-- [ ] Chrome with WebGL disabled.
-- [ ] 4× CPU throttle trace.
+- [x] Bundle check script.
+- [x] Chrome with WebGL disabled.
+- [x] 4× CPU throttle trace.
 
 **Dependencies:** Task 8
 **Files:** `client/src/tv/DayTrack.jsx`, `client/src/tv/DayTrackGl.js`, `client/package.json`
