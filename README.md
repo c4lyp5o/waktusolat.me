@@ -97,12 +97,12 @@ GET /quran/en/(surah number) : displays surah in english language\
 GET /quran/my/(surah number) : displays surah in malay language\
 GET /quran/en/(surah number)/(ayat number) : displays ayat in surah in english language\
 GET /quran/my/(surah number)/(ayat number) : displays ayat in surah in malay language\
-GET /quran/random : displays random ayat in english and malay language (not cached)
+GET /quran/random : displays random ayat in english and malay language (not cached). Optional `?max=180`: only ayat whose Malay translation fits in that many characters
 
 ## 📚 Hadith Endpoints
 
 GET /hadis : lists available hadith books\
-GET /hadis/(book) : displays a random hadith from the book (not cached)
+GET /hadis/(book) : displays a random hadith from the book, with its reference (`kitab`, `id`) (not cached). Optional `?max=180`: only hadith that fit in that many characters
 
 ## ⏰ Prayer Times Endpoints
 

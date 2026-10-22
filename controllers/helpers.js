@@ -404,6 +404,38 @@ const timeCruncher = (period, zone) => {
 			return "error";
 	}
 };
+// ?max=<chars> on the random ayat/hadith routes (the TV banner needs items
+// that fit without shrinking). The indexes of items that fit are computed
+// once per (source, max) and kept in a small capped cache.
+const MAX_CHARS_LIMIT = 5000;
+const FIT_CACHE_SIZE = 16;
+const fitCache = new Map();
+
+// undefined -> null (no filter); a whole number 1..5000 -> it; else NaN.
+const parseMax = (value) => {
+	if (value === undefined) return null;
+	if (!/^\d+$/.test(String(value))) return Number.NaN;
+	const n = Number(value);
+	return n >= 1 && n <= MAX_CHARS_LIMIT ? n : Number.NaN;
+};
+
+function fittingIndexes(key, items, textOf, max) {
+	const cacheKey = `${key}:${max}`;
+	let fits = fitCache.get(cacheKey);
+	if (!fits) {
+		fits = [];
+		for (let i = 0; i < items.length; i++) if ((textOf(items[i]) ?? "").length <= max) fits.push(i);
+		if (fitCache.size >= FIT_CACHE_SIZE) fitCache.delete(fitCache.keys().next().value);
+		fitCache.set(cacheKey, fits);
+	}
+	return fits;
+}
+
+const pickIndex = (length) => Math.floor(Math.random() * length);
+
+// Every verse as [surahIndex, verseIndex], for picks filtered by length.
+const ALL_AYAT = Quranmy.flatMap((surah, s) => surah.verses.map((_, v) => [s, v]));
+
 // biome-ignore lint/complexity/noStaticOnlyClass: i dont even
 class QuranHelpers {
 	static getSurahNames = (_req, res) => {
@@ -452,14 +484,22 @@ class QuranHelpers {
 		res.status(200).json({ data });
 	};
 
-	static getRandomAyat = (_req, res) => {
+	static getRandomAyat = (req, res) => {
 		const eng = Quranen;
 		const mys = Quranmy;
-		const numberOfSurahs = eng.length;
-		const randomSurahIndex = Math.floor(Math.random() * numberOfSurahs);
-		const { name, transliteration } = eng[randomSurahIndex];
-		const { verses } = eng[randomSurahIndex];
-		const randomAyatIndex = Math.floor(Math.random() * verses.length);
+		const max = parseMax(req.query?.max);
+		if (Number.isNaN(max)) return res.status(400).json({ message: "Invalid max" });
+		let randomSurahIndex;
+		let randomAyatIndex;
+		if (max === null) {
+			randomSurahIndex = pickIndex(eng.length);
+			randomAyatIndex = pickIndex(eng[randomSurahIndex].verses.length);
+		} else {
+			const fits = fittingIndexes("ayat", ALL_AYAT, ([s, v]) => mys[s].verses[v].translation, max);
+			if (fits.length === 0) return res.status(404).json({ message: "No ayat that short" });
+			[randomSurahIndex, randomAyatIndex] = ALL_AYAT[fits[pickIndex(fits.length)]];
+		}
+		const { name, transliteration, verses } = eng[randomSurahIndex];
 		const { id: ayatNumber, text: arabic } = verses[randomAyatIndex];
 		const { translation: englishTranslation } = verses[randomAyatIndex];
 		const { translation: malayTranslation } = mys[randomSurahIndex].verses[randomAyatIndex];
@@ -497,10 +537,17 @@ class HadithsHelpers {
 			ibnumajah: IbnumajahBook,
 		};
 		const bookData = booksMap[book];
-		const random = Math.floor(Math.random() * bookData.length);
-		const hadis = bookData[random].hadis;
+		const max = parseMax(req.query?.max);
+		if (Number.isNaN(max)) return res.status(400).json({ message: "Invalid max" });
+		let index = pickIndex(bookData.length);
+		if (max !== null) {
+			const fits = fittingIndexes(`hadis:${book}`, bookData, (h) => h.hadis, max);
+			if (fits.length === 0) return res.status(404).json({ message: "No hadith that short" });
+			index = fits[pickIndex(fits.length)];
+		}
+		const { hadis, kitab, id } = bookData[index];
 
-		return res.status(200).json({ hadis });
+		return res.status(200).json({ hadis, kitab, id });
 	}
 }
 // biome-ignore lint/complexity/noStaticOnlyClass: i dont even

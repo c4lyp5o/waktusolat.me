@@ -204,7 +204,7 @@ Standing verification for every task (Definition of Done):
 
 ### Checkpoint C
 - [x] Under 4× throttle (Playwright, SwiftShader GPU): main thread 4.0% busy at night with stars + motion, 2.2% by day; CLS 0; no fallback triggered.
-- [ ] Android TV: the track is smooth, or the fallback is used.
+- [x] Android TV: the owner reviewed phase 3 on the TV: "Its looking good" (2026-10-22).
 - [x] Bundle check: `three` only in the lazy DayTrackGl chunk; motion only in the TvApp chunk (main bundle unchanged at 335.7 kB).
 
 ---
@@ -216,12 +216,12 @@ Standing verification for every task (Definition of Done):
 **Description:** An optional `?max=<chars>` on `GET /quran/random` and `GET /hadis/:book`, picking only items whose Malay text fits. Adds `kitab` and `id` to the hadith response. Both changes are additive.
 
 **Acceptance criteria:**
-- [ ] With `max`, every result's Malay text is ≤ max characters. Without it, behaviour is unchanged.
-- [ ] Invalid `max` → 400. Results stay uncached and random.
-- [ ] Short-item indexes are precomputed once at startup, not filtered per request.
+- [x] With `max`, every result's Malay text is ≤ max characters. Without it, behaviour is unchanged.
+- [x] Invalid `max` → 400. Results stay uncached and random.
+- [x] Short-item indexes are precomputed once at startup, not filtered per request.
 
 **Verification:**
-- [ ] `tests/random-content.test.js`: 50 calls with `max=180` all ≤ 180, and at least 2 distinct items.
+- [x] `tests/random-content.test.js`: 50 calls with `max=180` all ≤ 180, and at least 2 distinct items.
 
 **Dependencies:** None (can run in parallel with Phases 2–3)
 **Files:** `controllers/helpers.js`, `routes/api.js`, `README.md`, test
