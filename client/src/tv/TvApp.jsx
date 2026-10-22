@@ -7,6 +7,7 @@
 import "./tv.css";
 import { useEffect, useMemo } from "react";
 import { useParams } from "react-router";
+import DayTrack from "./DayTrack.jsx";
 import Header from "./Header.jsx";
 import Lead from "./Lead.jsx";
 import { parseConfig } from "./lib/config.js";
@@ -57,6 +58,11 @@ export default function TvApp() {
 						<Lead now={now} state={shown} />
 						<PrayerList today={today} rows={rowStates(now, today, state)} estimate={estimate} />
 					</main>
+					<DayTrack
+						now={now}
+						today={today}
+						next={state.kind === "after-isyak" ? null : state.prayer}
+					/>
 				</>
 			);
 	}

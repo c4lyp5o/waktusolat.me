@@ -32,8 +32,8 @@ html.tv-mode body {
 	position: fixed;
 	inset: 0;
 	display: grid;
-	grid-template-rows: auto minmax(0, 1fr);
-	gap: 4vh;
+	grid-template-rows: auto minmax(0, 1fr) auto;
+	gap: 3vh;
 	padding: var(--pad-y) var(--pad-x);
 	background: var(--ground);
 	color: var(--text);
@@ -156,7 +156,7 @@ html.tv-mode body {
 	display: flex;
 	justify-content: space-between;
 	align-items: baseline;
-	padding: 1.1vh 2.6vh;
+	padding: 0.8vh 2.6vh;
 	border-radius: var(--radius);
 	color: var(--muted);
 	font-size: var(--fs-row);
@@ -176,6 +176,75 @@ html.tv-mode body {
 }
 .tv-row[data-state="next"] .tv-row-time,
 .tv-row[data-state="current"] .tv-row-time {
+	color: var(--accent);
+}
+
+/* Day track: the signature element (DayTrack.jsx). The sky sits above
+   the labels; the glow stays inside this band (spec deviation, by design). */
+.tv-track {
+	display: grid;
+	grid-template-rows: 9vh auto;
+	gap: 1.2vh;
+}
+.tv-track-sky {
+	position: relative;
+	overflow: hidden;
+}
+.tv-track-svg,
+.tv-track-gl {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+.tv-arc {
+	fill: none;
+	stroke: #444444; /* visible from the hall, still quieter than any text */
+	stroke-width: 3px;
+}
+.tv-star {
+	position: absolute;
+	width: 0.25vh;
+	height: 0.25vh;
+	border-radius: 50%;
+	background: var(--faint);
+	opacity: 0.6;
+}
+.tv-star[data-big] {
+	width: 0.4vh;
+	height: 0.4vh;
+}
+.tv-sun,
+.tv-now {
+	position: absolute;
+	border-radius: 50%;
+	transform: translate(-50%, 50%);
+}
+.tv-sun {
+	width: 3.4vh;
+	height: 3.4vh;
+	background: var(--accent);
+}
+.tv-now {
+	bottom: 0;
+	width: 1.4vh;
+	height: 1.4vh;
+	background: var(--muted);
+}
+.tv-track-ticks {
+	position: relative;
+	height: calc(var(--fs-small) * 1.2);
+	list-style: none;
+}
+.tv-track-ticks li {
+	position: absolute;
+	top: 0;
+	color: var(--spent);
+	font-size: var(--fs-small);
+	transform: translateX(-50%);
+	white-space: nowrap;
+}
+.tv-track-ticks li[data-next] {
 	color: var(--accent);
 }
 

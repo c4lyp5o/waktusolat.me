@@ -141,10 +141,10 @@ Standing verification for every task (Definition of Done):
 **Scope:** S
 
 ### Checkpoint B: on the TV
-- [ ] `/tv/wly01` runs on the owner's Android TV, from `bun dev --host` or staging.
-- [ ] Taste `inspect.mjs --app` has no FAIL except the spec's listed deviations, and the app-screen critique is written down with the top 3 fixed.
-- [ ] Existing pages are unchanged (screenshot diff).
-- [ ] Owner review before Phase 3.
+- [x] `/tv/wly01` runs on the owner's Android TV (Chrome), via `bun dev`. Owner: "Clear" (2026-10-22). Found and fixed on the way: the StrictMode loader bug (aa29d64).
+- [x] Taste `inspect.mjs --app` has no FAIL except the spec's listed deviations, and the app-screen critique is written down with the top 3 fixed.
+- [x] Existing pages are unchanged (screenshot diff).
+- [x] Owner review before Phase 3.
 
 ---
 
@@ -155,13 +155,13 @@ Standing verification for every task (Definition of Done):
 **Description:** `dayTrack(now, today)` returns geometry: the axis from Imsak to Isyak, ticks with names, the sun's position on its Syuruk→Maghrib arc, and the night state. `DayTrackSvg` draws it.
 
 **Acceptance criteria:**
-- [ ] Ticks sit at their true times.
-- [ ] The sun appears only between Syuruk and Maghrib, at the right fraction of the arc. Outside that, a faint moon and stars are shown.
-- [ ] Amber is used only on the sun and the next tick. The sky glow stays inside the band at low opacity.
+- [x] Ticks sit at their true times.
+- [x] The sun appears only between Syuruk and Maghrib, at the right fraction of the arc. Outside that, a faint moon and stars are shown.
+- [x] Amber is used only on the sun and the next tick. The sky glow stays inside the band at low opacity.
 
 **Verification:**
-- [ ] `tests/tv-daytrack.test.js` (positions at sample times).
-- [ ] `?now=` previews at 06:00, 13:00, 19:30 and 23:00.
+- [x] `tests/tv-daytrack.test.js` (positions at sample times).
+- [x] `?now=` previews at 06:00, 13:00, 19:30 and 23:00.
 
 **Dependencies:** Task 6
 **Files:** `client/src/tv/lib/daytrack.js`, `client/src/tv/DayTrackSvg.jsx`, `client/src/tv/TvApp.jsx`, test
