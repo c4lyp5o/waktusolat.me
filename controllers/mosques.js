@@ -29,7 +29,8 @@ export const creationLimits = {
 
 // Lower-case Crockford base32: no i, l, o or u. 10 chars = 50 random bits.
 const ID_ALPHABET = "0123456789abcdefghjkmnpqrstvwxyz";
-export const newId = () => [...randomBytes(10)].map((b) => ID_ALPHABET[b & 31]).join("");
+export const newId = (length = 10) =>
+	[...randomBytes(length)].map((b) => ID_ALPHABET[b & 31]).join("");
 const newToken = () => randomBytes(32).toString("base64url");
 const hashToken = (token) => createHash("sha256").update(token).digest("hex");
 
@@ -89,6 +90,19 @@ export function validateSettings(input, { partial = false } = {}) {
 	return { value };
 }
 
+// Strictly increasing, so the ETag changes even for two edits in one ms.
+export const nextVersion = (previous) => Math.max(Date.now(), previous + 1);
+
+// A programme changed: move the mosque's version, so a polling TV sees it.
+export function touch(id) {
+	const row = db.prepare("SELECT updated_at FROM mosques WHERE id = ?").get(id);
+	if (row)
+		db.prepare("UPDATE mosques SET updated_at = ? WHERE id = ?").run(
+			nextVersion(row.updated_at),
+			id,
+		);
+}
+
 const getRow = (id) => db.prepare("SELECT * FROM mosques WHERE id = ?").get(id);
 
 const toPublic = (row) => ({
@@ -111,7 +125,7 @@ function tokenMatches(row, request) {
 
 // The body as JSON, or undefined when it is not (bodies are parsed here, not
 // by Elysia, so a malformed one gets this module's 400 shape).
-async function readJson(request) {
+export async function readJson(request) {
 	try {
 		return JSON.parse(await request.text());
 	} catch {
@@ -119,13 +133,13 @@ async function readJson(request) {
 	}
 }
 
-const fail = (set, status, message, field) => {
+export const fail = (set, status, message, field) => {
 	set.status = status;
 	return field === undefined ? { message } : { message, field };
 };
 
 // Loads the mosque and checks the edit token; returns the row, or an error body.
-function authorised(params, request, set) {
+export function authorised(params, request, set) {
 	const row = getRow(params.id);
 	if (!row) return { error: fail(set, 404, "Not found") };
 	if (!tokenMatches(row, request)) return { error: fail(set, 401, "Unauthorized") };
@@ -192,8 +206,7 @@ export async function updateMosque({ params, request, set }) {
 	if (error) return fail(set, 400, error.message, error.field);
 
 	const next = { ...toPublic(row), ...value };
-	// Strictly increasing, so the ETag changes even for two edits in one ms.
-	const updatedAt = Math.max(Date.now(), row.updated_at + 1);
+	const updatedAt = nextVersion(row.updated_at);
 	db.prepare(
 		"UPDATE mosques SET name = ?, zone = ?, iqamah = ?, jumaat = ?, solat = ?, updated_at = ? WHERE id = ?",
 	).run(
@@ -224,7 +237,12 @@ export function deleteMosque({ params, request, set }) {
 	if (!row) return fail(set, 404, "Not found");
 	const admin = isAdmin(request);
 	if (!admin && !tokenMatches(row, request)) return fail(set, 401, "Unauthorized");
-	db.prepare("DELETE FROM mosques WHERE id = ?").run(row.id);
+	// Its programmes and their photos go with it (programmes.js).
+	db.transaction(() => {
+		db.prepare("DELETE FROM programme_photos WHERE mosque_id = ?").run(row.id);
+		db.prepare("DELETE FROM programmes WHERE mosque_id = ?").run(row.id);
+		db.prepare("DELETE FROM mosques WHERE id = ?").run(row.id);
+	})();
 	logger.info(`[mosques] deleted ${row.id} by ${admin ? "admin" : "owner token"}`);
 	set.status = 204;
 	return "";

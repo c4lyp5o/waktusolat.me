@@ -1,6 +1,6 @@
 # Spec: `programmes`
 
-Module 3 of the [capability map](CAPABILITY-MAP.md). Status: **draft, awaiting owner approval**.
+Module 3 of the [capability map](CAPABILITY-MAP.md). Status: **approved 2026-10-23**, with the speaker photo added at the owner's request.
 
 ## Objective
 
@@ -20,8 +20,25 @@ Each registered mosque keeps a list of its programmes (kuliah, tazkirah, gotong-
 5. `GET /api/v1/mosques/:id/programmes/upcoming` (public) returns the occurrences in the **next 7 days, from today in Malaysia time**, in date order, for the TV. Skipped dates, past one-offs and out-of-range dates are left out.
 6. Any programme change makes the mosque's `ETag` change, so a polling TV notices with one cheap request. Deleting a mosque deletes its programmes.
 7. A mosque holds at most **50** programmes. The 51st is a `400`, not a silent drop.
+8. **Speaker photo:** with the token, a programme can have one photo (the ustaz's picture) uploaded, replaced or removed. The programme JSON carries its URL. The TV shows it beside the programme.
 
-**Not in this module:** pages (`mosque-editor`, `tv-mosque-mode`), posters or images, monthly patterns ("first Friday of the month"), reminders or notifications, a public directory, English text.
+### Speaker photo
+- **One optional photo per programme.** The same ustaz on two programmes is uploaded twice. That is simpler than a separate speakers list; a list can come later if wanted.
+- **The browser does the heavy work** (in `mosque-editor`): it crops to a square and re-encodes to a JPEG of about 600×600, well under the limit. No image library on the server, so no new dependency.
+- **The server still checks every upload, because a client can lie:**
+  - JPEG only (by its bytes, not the declared type)
+  - at most 200 KB
+  - 64–1200 px a side
+  - metadata segments stripped (EXIF, including GPS location and camera details; XMP; comments), and anything after the image's end marker cut off
+- **Stored in sqlite** (`programme_photos`, one row per programme), in the same file and volume and backup as everything else.
+- **Served** at `GET /api/v1/mosques/:id/programmes/:pid/photo?v=<version>` as `image/jpeg`, with these headers:
+  - `nosniff`
+  - `content-security-policy: default-src 'none'`
+  - cached for a year when `v` is the current version, since a new upload changes the URL
+- **Abuse limits:** 30 uploads per IP per hour, and a 1 GB total cap for all photos (`507` beyond it; a constant, easy to raise). Deleting the programme or the mosque deletes the photo. The owner can remove any mosque with `ADMIN_API_KEY`.
+- **Consent:** the mosque uploads a photo of its own speaker. The editor page (later) will say so in one line.
+
+**Not in this module:** pages (`mosque-editor`, `tv-mosque-mode`), posters or other images (only the speaker photo), monthly patterns ("first Friday of the month"), reminders or notifications, a public directory, English text.
 
 ## Data
 
@@ -60,6 +77,9 @@ All under `/api/v1/mosques/:id`. Writes need `Authorization: Bearer <edit token>
 | `PATCH /programmes/:pid` | token | any programme fields | `200 programme` |
 | `DELETE /programmes/:pid` | token | — | `204` |
 | `GET /programmes/upcoming` | none | — | `200 { from, until, items: [{ date, at, programme }] }` |
+| `PUT /programmes/:pid/photo` | token | the JPEG bytes (`content-type: image/jpeg`) | `200 programme` |
+| `DELETE /programmes/:pid/photo` | token | — | `200 programme` |
+| `GET /programmes/:pid/photo` | none | — | `200 image/jpeg` |
 
 **Programme JSON**
 ```json
@@ -74,6 +94,7 @@ All under `/api/v1/mosques/:id`. Writes need `Authorization: Bearer <edit token>
   "from": null,
   "until": null,
   "skip": ["2026-11-02"],
+  "photo": "/api/v1/mosques/3h3efme7me/programmes/k3m9x2ab/photo?v=1792708634969",
   "updatedAt": 1792708634969
 }
 ```
@@ -121,21 +142,23 @@ Delete-with-mosque runs in one transaction (`DELETE programmes` then `DELETE mos
   - Malaysia midnight (23:30 UTC is already tomorrow in Malaysia)
 - ETag: changes after an edit, and changes when the date turns (fake system time)
 - deleting the mosque removes its programmes
+- photo: upload, replace, remove, without the token (`401`), not a JPEG, too big or too small (`400`); EXIF and trailing bytes are gone from what's served; the per-IP and total caps
 
 Biome clean; no new dependency.
 
 ## Boundaries
 - **Always:** token check before any write, validate at the boundary, Malaysia dates via the shared rules, test the date maths at its edges.
-- **Ask first:** monthly patterns, images or posters, resolving prayer times on the server.
+- **Ask first:** monthly patterns, posters or more image kinds, an image library on the server, resolving prayer times on the server.
 - **Never:** accept HTML, let one mosque's token reach another mosque's programmes, list programmes across mosques.
 
 ## Success criteria
-1. All seven user stories pass as route tests.
+1. All eight user stories pass as route tests.
 2. Occurrence tests pass in both timezones, including Malaysia midnight.
 3. Deleting a mosque leaves no orphan programmes.
 4. `bun test` and Biome are green; no new dependency.
 
-## Open questions
-1. **Window:** is 7 days ahead right for the TV, or do you want today and tomorrow only (or 14 days)?
-2. **50 programmes per mosque, 20 skip dates per programme:** OK?
-3. **"After a prayer" plus clock time:** is that enough? Or do mosques also say "sebelum Maghrib", or "selepas Isyak" with an end time? I've left end times out; the note field can say "hingga 10 malam".
+## Resolved questions (2026-10-23)
+1. **Window:** 7 days.
+2. **Limits:** 50 programmes per mosque and 20 skip dates per programme, approved.
+3. **Times:** a clock time or "selepas {prayer}" is enough. No "sebelum", no end times.
+4. **Added by the owner:** upload the ustaz's picture (see Speaker photo).

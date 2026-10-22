@@ -144,6 +144,17 @@ DELETE /mosques/(id) : remove a mosque, with its token or `x-api-key: (ADMIN_API
 
 Invalid input → `400 { message, field }`. Wrong or missing token → `401`. Unknown id → `404`. Only the token's sha256 is stored, and nothing about who registered.
 
+**Programmes** (kuliah, classes; see `SPEC-programmes.md`). Writes need the mosque's token:
+
+GET /mosques/(id)/programmes : all of the mosque's programmes\
+GET /mosques/(id)/programmes/upcoming : occurrences in the next 7 days (Malaysia dates), for the TV. `ETag` changes with any edit and when the day turns\
+POST /mosques/(id)/programmes : add one: `{ "title", "speaker"?, "note"?, "repeat": "once", "date": "YYYY-MM-DD", "at" }` or `{ …, "repeat": "weekly", "weekday": 0-6, "from"?, "until"?, "skip"?: [dates], "at" }`, where `at` is `{ "time": "21:00" }` or `{ "after": "maghrib" }`. At most 50 per mosque\
+PATCH /mosques/(id)/programmes/(pid) : change any of those fields\
+DELETE /mosques/(id)/programmes/(pid) : remove it\
+PUT /mosques/(id)/programmes/(pid)/photo : the speaker's photo, as JPEG bytes (`content-type: image/jpeg`), at most 200 KB and 64-1200 px a side. EXIF (including GPS location) and other metadata are stripped. 30 uploads per IP per hour\
+DELETE /mosques/(id)/programmes/(pid)/photo : remove the photo\
+GET /mosques/(id)/programmes/(pid)/photo : the photo (its URL is in the programme's `photo` field)
+
 ## 🛠️ Other Endpoints
 
 GET /visitors/stats : anonymized visit counts (refreshed at most once a minute)\

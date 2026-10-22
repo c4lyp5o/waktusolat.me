@@ -37,6 +37,32 @@ const initializeDatabase = async () => {
 				created_at INTEGER NOT NULL,
 				updated_at INTEGER NOT NULL
 				);
+				-- A mosque's programmes (SPEC-programmes.md); deleted with it.
+				CREATE TABLE IF NOT EXISTS programmes (
+				id TEXT PRIMARY KEY,
+				mosque_id TEXT NOT NULL,
+				title TEXT NOT NULL,
+				speaker TEXT,
+				note TEXT,
+				repeat TEXT NOT NULL,
+				date TEXT,
+				weekday INTEGER,
+				at TEXT NOT NULL,
+				from_date TEXT,
+				until_date TEXT,
+				skip_dates TEXT NOT NULL,
+				created_at INTEGER NOT NULL,
+				updated_at INTEGER NOT NULL
+				);
+				CREATE INDEX IF NOT EXISTS idx_programmes_mosque ON programmes (mosque_id);
+				-- One speaker photo per programme: a cleaned JPEG.
+				CREATE TABLE IF NOT EXISTS programme_photos (
+				programme_id TEXT PRIMARY KEY,
+				mosque_id TEXT NOT NULL,
+				bytes BLOB NOT NULL,
+				updated_at INTEGER NOT NULL
+				);
+				CREATE INDEX IF NOT EXISTS idx_photos_mosque ON programme_photos (mosque_id);
 			`);
 		} catch (error) {
 			console.error("Error creating tables:", error.message);

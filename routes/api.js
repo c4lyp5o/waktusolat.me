@@ -8,6 +8,16 @@ import {
 	rotateToken,
 	updateMosque,
 } from "../controllers/mosques.js";
+import {
+	createProgramme,
+	deletePhoto,
+	deleteProgramme,
+	getPhoto,
+	listProgrammes,
+	putPhoto,
+	upcomingProgrammes,
+	updateProgramme,
+} from "../controllers/programmes.js";
 import { apiKeyAuth } from "../middlewares/auth.js";
 import {
 	cacheAfterHandle,
@@ -90,6 +100,15 @@ export const apiRoutes = new Elysia({ prefix: "/api/v1" })
 	.patch("/mosques/:id", updateMosque, { parse: "none" })
 	.post("/mosques/:id/token", rotateToken, { parse: "none" })
 	.delete("/mosques/:id", deleteMosque, { parse: "none" })
+	// a mosque's programmes and speaker photos (SPEC-programmes.md)
+	.get("/mosques/:id/programmes", listProgrammes)
+	.get("/mosques/:id/programmes/upcoming", upcomingProgrammes)
+	.post("/mosques/:id/programmes", createProgramme, { parse: "none" })
+	.patch("/mosques/:id/programmes/:pid", updateProgramme, { parse: "none" })
+	.delete("/mosques/:id/programmes/:pid", deleteProgramme, { parse: "none" })
+	.get("/mosques/:id/programmes/:pid/photo", getPhoto)
+	.put("/mosques/:id/programmes/:pid/photo", putPhoto, { parse: "none" })
+	.delete("/mosques/:id/programmes/:pid/photo", deletePhoto, { parse: "none" })
 	// real healthcheck for the Docker HEALTHCHECK (JSON, not the SPA shell)
 	.get("/healthcheck", () => ({ ok: true }));
 
