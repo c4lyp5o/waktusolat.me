@@ -1,35 +1,37 @@
-# waktusolat.me — dev/deploy compose
+# waktusolat.me — local / single-host compose.
 #
-# NOTE ON BIND MOUNTS:
-# The sqlite visitor DB lives at ./db/visitors.sqlite (gitignored).
-# Bind-mount ./db below so visitor counts persist across container
-# rebuilds. Do NOT bind ./data — that dir holds git-tracked static
-# content (quran/hadith JSON) and binding it would shadow and break
-# those routes. Only ./data/times (generated from JAKIM at runtime) is
-# bound, so restarts reuse fetched prayer times instead of refetching.
+# Production runs behind Traefik from its own compose file on the server
+# (see README → "Production behind Traefik"); keep the two in sync.
+#
+# PERSISTENT STATE (both gitignored, both survive rebuilds):
+#   ./storage     -> /app/storage      sqlite visitor DB (DB_PATH)
+#   ./data/times  -> /app/data/times   prayer times fetched from JAKIM
+# Do NOT bind ./db or ./data — they hold code (db/db.js, data/getter.js)
+# and tracked quran/hadith JSON that a bind mount would shadow.
+#
+# Secrets come from .env next to this file (see .env.example).
 services:
   app:
     build: .
-    # image: calypso/waktusolat.me:latest   # uncomment to pin an image tag
+    # image: calypso666/waktusolat.me:latest   # or run the published image
     container_name: waktusolat
     restart: unless-stopped
     ports:
-      - "5000:5000"
-      # - "443:5000"   # uncomment + set tls for direct https
+      # Local access only. Behind a reverse proxy, drop this and let the proxy
+      # reach the container over the docker network: a port published to the
+      # internet bypasses the proxy (client IPs then come from the socket).
+      - "127.0.0.1:5000:5000"
     environment:
       - NODE_ENV=production
       - PORT=5000
       - TZ=Asia/Kuala_Lumpur
-      - DB_PATH=/app/db/visitors.sqlite
-      # Admin routes (/visitors, POST /cache/invalidate) need `x-api-key`.
-      # Unset/empty = admin routes always 401.
+      - DB_PATH=/app/storage/visitors.sqlite
+      # Admin routes (GET /visitors, POST /cache/invalidate) need
+      # `x-api-key: $ADMIN_API_KEY`. Unset/empty = admin routes always 401.
       - ADMIN_API_KEY=${ADMIN_API_KEY:-}
     volumes:
-      # Persistent, gitignored sqlite DB — survives rebuilds
-      - ./db:/app/db
-      # Generated prayer-time JSONs — survive restarts / JAKIM outages
+      - ./storage:/app/storage
       - ./data/times:/app/data/times
-      # - ./db/visitors.sqlite:/app/db/visitors.sqlite  # single-file variant
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/healthcheck"]
       interval: 30s

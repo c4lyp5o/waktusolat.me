@@ -1,2 +1,10 @@
-node_modules
+**/node_modules
 npm-debug.log
+.git
+# Runtime state — mounted as volumes, never baked into the image
+# (visitors.sqlite holds visitor IPs).
+storage/
+db/*.sqlite*
+data/times/
+public/
+tests/

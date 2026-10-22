@@ -15,28 +15,80 @@ This is waktusolat.me frontend and backend. Only serves prayer time for Malaysia
 
 ### Local Development
 ```bash
-# Install dependencies
-bun install
+# Install server + client dependencies
+bun run install-all
 
-# Start the server
+# Fetch this year's prayer times from JAKIM into data/times/ (optional —
+# the server also fills missing zones in the background ~5s after start)
+bun run get-times
+
+# Start client (Vite) + server (watch mode)
 bun dev
+
+# Run the test suite
+bun run test
 ```
 
-### Docker Deployment
+### Configuration
+
+Set in `.env` (Bun loads it automatically) or the container environment. See `.env.example`.
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `PORT` | `5000` | HTTP port |
+| `DB_PATH` | `./db/visitors.sqlite` | sqlite visitor DB |
+| `ADMIN_API_KEY` | _(empty)_ | Secret for admin routes, sent as `x-api-key`. Empty = admin routes always `401`. Generate with `openssl rand -hex 32`. |
+| `TZ` | — | Must be `Asia/Kuala_Lumpur`: "today" is resolved in local time (the Docker image sets it). |
+| `NODE_ENV` | `production` | `production` disables the GraphQL playground |
+
+### Docker
 
 ```bash
-# Build the image
-docker build -t waktusolat .
-
-# Run the container
-docker run -p 3000:3000 -d waktusolat
+cp .env.example .env   # set ADMIN_API_KEY
+docker compose up -d --build
 ```
 
-Then point your browser to localhost:3000
+Then open http://localhost:5000. The compose file publishes the port on `127.0.0.1` only and persists two directories:
+
+| Host | Container | Contents |
+| --- | --- | --- |
+| `./storage` | `/app/storage` | sqlite visitor DB (`DB_PATH=/app/storage/visitors.sqlite`) |
+| `./data/times` | `/app/data/times` | prayer times fetched from JAKIM |
+
+Do **not** bind-mount `./db` or `./data` as a whole: they contain code (`db/db.js`, `data/getter.js`) and tracked Quran/hadith JSON.
+
+> **Upgrading from ≤ 2.1.0 compose:** the visitor DB moved from `./db/visitors.sqlite` to `./storage/visitors.sqlite`. Move it before starting the new container: `mkdir -p storage && mv db/visitors.sqlite storage/`.
+
+### Production behind Traefik
+
+Production runs the published image (`calypso666/waktusolat.me`) behind Traefik, from a compose file on the server. That service needs the same environment and volumes as `docker-compose.yml`. The router and network labels below are placeholders — keep your existing ones:
+
+```yaml
+  waktusolat.me:
+    image: calypso666/waktusolat.me:latest
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Kuala_Lumpur
+      - DB_PATH=/app/storage/visitors.sqlite
+      - ADMIN_API_KEY=${WAKTUSOLAT_ADMIN_API_KEY}   # from the server's .env
+    volumes:
+      - ./waktusolat/storage:/app/storage
+      - ./waktusolat/data/times:/app/data/times
+    # No `ports:` — Traefik reaches the container over the docker network.
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.waktusolat.rule=Host(`waktusolat.me`)
+      - traefik.http.services.waktusolat.loadbalancer.server.port=5000
+```
+
+Notes:
+- **Client IPs.** The app takes the client IP from the **last** `X-Forwarded-For` hop (the one Traefik appends), and only when the connection comes from a private/loopback address (Traefik on the docker network). A connection from a public address uses its own socket address and can't spoof the header. So don't publish the container port to the internet.
+- **Secrets.** Keep `ADMIN_API_KEY` in the server's environment, not in the image. CI writes `.env` into the build context (staging workflow), and anything in that file ends up in the published image.
+- **Prayer data.** Zone files are fetched from JAKIM at runtime, never at build time. The server checks every 6 hours and refetches any zone whose data no longer covers today. JAKIM publishes one year at a time, so for a day or two around 1 January the last known day is served until the new year is published.
 
 # 🔗 API Endpoints
 
-Base URL: /api/v1
+Base URL: `/api/v1`. GraphQL is at `/graphql` (playground enabled outside production).
 
 ## 📖 Quran Endpoints
 
@@ -45,14 +97,49 @@ GET /quran/en/(surah number) : displays surah in english language\
 GET /quran/my/(surah number) : displays surah in malay language\
 GET /quran/en/(surah number)/(ayat number) : displays ayat in surah in english language\
 GET /quran/my/(surah number)/(ayat number) : displays ayat in surah in malay language\
-GET /quran/random : displays random ayat in english and malay language
+GET /quran/random : displays random ayat in english and malay language (not cached)
+
+## 📚 Hadith Endpoints
+
+GET /hadis : lists available hadith books\
+GET /hadis/(book) : displays a random hadith from the book (not cached)
 
 ## ⏰ Prayer Times Endpoints
 
-GET /waktusolat/today/(zone) : displays prayer time for the week for the zone\
-GET /waktusolat/week/(zone) : displays prayer time for the week for the zone\
+GET /waktusolat/today/(zone) : displays prayer time for today (and tomorrow) for the zone\
+GET /waktusolat/week/(zone) : displays prayer time for the next 7 days for the zone\
 GET /waktusolat/month/(zone) : displays prayer time for the month for the zone\
 GET /waktusolat/year/(zone) : displays prayer time for the year for the zone
+
+Unknown zone or period → `400`. A zone with no data yet (e.g. right after a fresh deploy, before the background fetch finishes) → `404`.
+
+## 🛠️ Other Endpoints
+
+GET /visitors/stats : anonymized visit counts (refreshed at most once a minute)\
+GET /cache : response-cache statistics\
+GET /healthcheck : liveness probe (`{"ok":true}`)
+
+## 🔐 Admin Endpoints
+
+Require the header `x-api-key: <ADMIN_API_KEY>`; otherwise `401`.
+
+GET /visitors?limit=500&offset=0 : raw visitor log, newest first (`limit` max 5000)\
+POST /cache/invalidate : clear the response cache
+
+```bash
+curl -H "x-api-key: $ADMIN_API_KEY" "https://waktusolat.me/api/v1/visitors?limit=50"
+curl -X POST -H "x-api-key: $ADMIN_API_KEY" https://waktusolat.me/api/v1/cache/invalidate
+```
+
+## 🚦 Limits
+
+- **Rate limit:** 100 requests per minute per client IP → `429`.
+- **Request body:** 1 MiB max → `413`.
+- **Chat (socket.io):**
+  - messages up to 1000 characters;
+  - per connection, a burst of 5 messages, then 1 per second;
+  - typing notices at most once per second;
+  - names up to 30 characters.
 
 # 📍 Zone Codes
 
@@ -114,7 +201,7 @@ GET /waktusolat/year/(zone) : displays prayer time for the year for the zone
 
 11. Kelantan\
     KTN01 = JAJAHAN KOTA BHARU, BACHOK, PASIR PUTEH, TUMPAT , PASIR MAS, TANAH MERAH, MACHANG KUALA KRAI DAN GUA MUSANG (DAERAH CHIKU)\
-    KTN03 <- (THIS IS NOT A TYPO) = JAJAHAN JELI, GUA MUSANG (DAERAH GALAS DAN BERTAM) DAN JAJAHAN KECIL LOJING
+    KTN03 = JAJAHAN JELI, GUA MUSANG (DAERAH GALAS DAN BERTAM) DAN JAJAHAN KECIL LOJING — **currently not served**: JAKIM e-Solat returns no record for KTN03
 
 12. Sabah\
     SBH01 = BAHAGIAN SANDAKAN (TIMUR) BANDAR SANDAKAN, BUKIT GARAM, SEMAWANG, TEMANGGONG DAN TAMBISAN\

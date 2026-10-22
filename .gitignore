@@ -7,3 +7,5 @@ db/visitors.sqlite
 # Prayer-time data is machine-generated from JAKIM at runtime
 # (utils/timesRefresh.js); seed files for quran/hadith stay tracked.
 data/times/
+# Persistent runtime state for docker-compose (sqlite DB)
+storage/
