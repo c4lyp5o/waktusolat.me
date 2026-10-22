@@ -46,10 +46,14 @@ function SiteChrome() {
 			{import.meta.env.MODE !== "production" && (
 				<div
 					style={{
+						// Bottom-left, above the phone bottom bar, and click-through:
+						// it used to sit on top of the theme toggle.
 						position: "fixed",
-						top: "1rem",
-						right: "1rem",
+						bottom: "4.5rem",
+						left: "0.75rem",
 						zIndex: 1000,
+						pointerEvents: "none",
+						opacity: 0.8,
 					}}
 				>
 					<span

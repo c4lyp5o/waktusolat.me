@@ -7,7 +7,12 @@ import { describe, expect, test } from "bun:test";
 import { DEFAULTS } from "../client/src/lib/waktu/config.js";
 import { mytEpoch } from "../client/src/lib/waktu/mytime.js";
 import { dayFor, nextDay, parseRow, parseYear } from "../client/src/lib/waktu/rows.js";
-import { prayerWindows, rowStates, screenState } from "../client/src/lib/waktu/schedule.js";
+import {
+	listRows,
+	prayerWindows,
+	rowStates,
+	screenState,
+} from "../client/src/lib/waktu/schedule.js";
 import { timeCruncher } from "../controllers/helpers.js";
 import { makeRows, makeYearPayload } from "./fixtures.js";
 
@@ -189,4 +194,23 @@ test("prayerWindows: five windows in order", () => {
 		"maghrib",
 		"isyak",
 	]);
+});
+
+describe("listRows (what the prayer list shows)", () => {
+	test("by day: today's times, the countdown's prayer is next", () => {
+		const s = state(14, 0);
+		const { rows, times } = listRows(at(...THU, 14, 0), today, s);
+		expect(rows.asar).toBe("next");
+		expect(times.subuh).toBe(today.times.subuh);
+	});
+
+	test("after Isyak: Subuh is next, with tomorrow's Subuh time (as in the lead)", () => {
+		const s = state(22, 0);
+		const { rows, times } = listRows(at(...THU, 22, 0), today, s);
+		expect(rows.subuh).toBe("next");
+		expect(times.subuh).toBe(s.azan);
+		expect(times.subuh).toBe(tomorrow.times.subuh);
+		expect(rows.isyak).toBe("passed");
+		expect(times.isyak).toBe(today.times.isyak);
+	});
 });

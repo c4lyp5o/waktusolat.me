@@ -10,7 +10,7 @@ import { useEffect, useMemo } from "react";
 import { useParams } from "react-router";
 import { parseConfig } from "../lib/waktu/config.js";
 import { dayFor, nextDay } from "../lib/waktu/rows.js";
-import { rowStates, screenState } from "../lib/waktu/schedule.js";
+import { listRows, screenState } from "../lib/waktu/schedule.js";
 import Banner from "./Banner.jsx";
 import DayTrack from "./DayTrack.jsx";
 import Header from "./Header.jsx";
@@ -60,7 +60,7 @@ export default function TvApp() {
 					<Header now={now} zone={zone} nama={config.nama} meta={meta} hijri={today.hijri} />
 					<main className="tv-main">
 						<Lead now={now} state={shown} />
-						<PrayerList today={today} rows={rowStates(now, today, state)} estimate={estimate} />
+						<PrayerList {...listRows(now, today, state)} estimate={estimate} />
 					</main>
 					<DayTrack
 						now={now}

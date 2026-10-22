@@ -14,7 +14,7 @@ import { areaName, formatCountdown, formatDate, formatTime } from "../lib/waktu/
 import { mytIsoDate } from "../lib/waktu/mytime.js";
 import { ADVISORY, ORDER, prayerJawi, prayerLabel } from "../lib/waktu/names.js";
 import { dayFor, nextDay, parseYear } from "../lib/waktu/rows.js";
-import { rowStates, screenState } from "../lib/waktu/schedule.js";
+import { listRows, screenState } from "../lib/waktu/schedule.js";
 import { skyPhase } from "../lib/waktu/sky.js";
 import { zoneInfo } from "../lib/zones.js";
 
@@ -83,7 +83,7 @@ function Lead({ now, state }) {
 	);
 }
 
-function TodayList({ today, rows }) {
+function TodayList({ times, rows }) {
 	return (
 		<ol className="flex flex-col gap-0.5 md:gap-1" aria-label="Waktu solat hari ini">
 			{ORDER.map((key) => {
@@ -104,20 +104,20 @@ function TodayList({ today, rows }) {
 						}`}
 					>
 						<span className="flex items-baseline gap-3">
-							<span>{prayerLabel(key, today.times[key])}</span>
+							<span>{prayerLabel(key, times[key])}</span>
 							<span
 								lang="ar"
 								dir="rtl"
 								className="font-uthmanic text-[1.15em] font-normal opacity-80"
 							>
-								{prayerJawi(key, today.times[key])}
+								{prayerJawi(key, times[key])}
 							</span>
 						</span>
 						<span className={`flex items-center gap-3 tabular-nums ${lit ? "text-accent" : ""}`}>
 							{/* The next prayer breathes: a small amber dot before its time,
 							    clear of the text; still under reduced motion. */}
 							{lit && <span className="pulse-dot" aria-hidden="true" />}
-							{formatTime(today.times[key])}
+							{formatTime(times[key])}
 						</span>
 					</li>
 				);
@@ -383,7 +383,7 @@ export default function ZoneTimes({ zone, changeZone }) {
 	const { day: today, estimate } = found;
 	const state = screenState(now, today, estimate ? null : nextDay(days, today), SITE_CONFIG);
 	const shown = estimate ? { ...state, estimate: true } : state;
-	const rows = rowStates(now, today, state);
+	const { rows, times } = listRows(now, today, state);
 
 	return (
 		<main className="pb-16">
@@ -393,7 +393,7 @@ export default function ZoneTimes({ zone, changeZone }) {
 					{header}
 					<div className="mt-5 grid gap-4 [@media(max-height:620px)]:mt-3 [@media(max-height:620px)]:gap-2 md:mt-10 md:gap-10 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-center">
 						<Lead now={now} state={shown} />
-						<TodayList today={today} rows={rows} />
+						<TodayList times={times} rows={rows} />
 					</div>
 					<div className="mt-10">
 						<DayTrack

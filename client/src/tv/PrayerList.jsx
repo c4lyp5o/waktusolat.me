@@ -2,11 +2,11 @@
 import { formatTime } from "../lib/waktu/format.js";
 import { ADVISORY, ORDER, prayerLabel } from "../lib/waktu/names.js";
 
-export default function PrayerList({ today, rows, estimate }) {
+export default function PrayerList({ times, rows, estimate }) {
 	return (
 		<ol className="tv-list" aria-label="Waktu solat hari ini">
 			{ORDER.map((key) => {
-				const t = today.times[key];
+				const t = times[key];
 				return (
 					<li
 						key={key}

@@ -83,3 +83,16 @@ export function rowStates(now, today, state) {
 		}),
 	);
 }
+
+// What the prayer list shows: each row's state and time. After Isyak every
+// row of today has passed, so Subuh is marked next and shows tomorrow's
+// Subuh (the lead's target); otherwise today's times and rowStates().
+export function listRows(now, today, state) {
+	const rows = rowStates(now, today, state);
+	const times = { ...today.times };
+	if (state.kind === "after-isyak") {
+		rows.subuh = "next";
+		times.subuh = state.azan;
+	}
+	return { rows, times };
+}
