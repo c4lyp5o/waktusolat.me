@@ -203,4 +203,6 @@ httpServer.listen(PORT, () => {
 	logger.info(`[ws] Chat is running on http://localhost:${PORT}/socket.io`);
 });
 
-export default app;
+// No `export default app`: Bun auto-serves a default export that has a
+// fetch() method, which started a second, unbridged server on :3000 that
+// bypassed the client-IP overwrite and the body cap.
