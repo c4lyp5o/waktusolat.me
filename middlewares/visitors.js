@@ -51,14 +51,33 @@ const insertVisitor = async (req, res) => {
 	});
 };
 
-const getVisitors = (_req, res) => {
-	const result = waktusolatDb.prepare("SELECT * FROM visitors").all();
+// Admin raw log, newest first. Paginated so the response stays bounded as
+// the table grows: ?limit= (default 500, max 5000) & ?offset=.
+const DEFAULT_PAGE = 500;
+const MAX_PAGE = 5000;
+const toInt = (value, fallback, max) => {
+	const n = Number.parseInt(value, 10);
+	if (!Number.isFinite(n) || n < 0) return fallback;
+	return Math.min(n, max);
+};
+
+const getVisitors = (req, res) => {
+	const limit = toInt(req.query?.limit, DEFAULT_PAGE, MAX_PAGE);
+	const offset = toInt(req.query?.offset, 0, Number.MAX_SAFE_INTEGER);
+	const result = waktusolatDb
+		.prepare("SELECT * FROM visitors ORDER BY id DESC LIMIT ? OFFSET ?")
+		.all(limit, offset);
 	res.status(200).json(result);
 };
 
 // Aggregated, anonymized usage stats for public display.
-// Never returns raw IPs — only counts.
-const getVisitorStats = (_req, res) => {
+// Never returns raw IPs — only counts. The aggregates scan the whole table,
+// and the route is public and uncached upstream, so the result is memoized
+// for STATS_TTL_MS (a minute of staleness is fine for a visitor counter).
+const STATS_TTL_MS = 60 * 1000;
+let statsMemo = { at: 0, data: null };
+
+const computeVisitorStats = () => {
 	const totals = waktusolatDb
 		.prepare(
 			`SELECT
@@ -82,13 +101,15 @@ const getVisitorStats = (_req, res) => {
 		.all()
 		.reverse();
 
-	res.status(200).json({
-		code: 200,
-		data: {
-			...totals,
-			recent,
-		},
-	});
+	return { ...totals, recent };
+};
+
+const getVisitorStats = (_req, res) => {
+	const now = Date.now();
+	if (!statsMemo.data || now - statsMemo.at >= STATS_TTL_MS) {
+		statsMemo = { at: now, data: computeVisitorStats() };
+	}
+	res.status(200).json({ code: 200, data: statsMemo.data });
 };
 
 export { getVisitorStats, getVisitors, insertVisitor };

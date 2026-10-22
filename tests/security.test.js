@@ -1,16 +1,8 @@
 // Client-IP resolution, rate limiting, admin auth and random-route caching.
-import { afterAll, afterEach, describe, expect, setSystemTime, test } from "bun:test";
-import { rmSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { afterEach, describe, expect, setSystemTime, test } from "bun:test";
 import { isPrivateIp, resolveClientIp } from "../utils/clientIp.js";
 import { RateLimiter } from "../utils/rateLimit.js";
-
-// visitors.js opens the sqlite DB at import time — point it at a temp file.
-const dbPath = join(tmpdir(), `waktusolat-test-${process.pid}.sqlite`);
-process.env.DB_PATH = dbPath;
-const { apiRoutes } = await import("../routes/api.js");
-afterAll(() => rmSync(dbPath, { force: true }));
+import { apiRoutes } from "./app.js";
 
 describe("resolveClientIp", () => {
 	test("behind Traefik (private peer) uses the LAST X-Forwarded-For hop", () => {
