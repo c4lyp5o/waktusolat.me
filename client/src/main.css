@@ -70,6 +70,52 @@
 	}
 }
 
+/* ── Site palette (SPEC-site-revamp.md): the TV's language in light and
+   dark. Lamp amber marks now/next only; --accent is text-safe on its
+   ground, --accent-fill is the amber used for shapes (the sun, a dot). ── */
+:root,
+:root[data-theme="light"] {
+	--ground: #f4f4f3;
+	--surface: #ffffff;
+	--raised: #e9e9e7;
+	--line: #dededc;
+	--ink: #141414;
+	--muted: #4d4d4d;
+	--faint: #5f5f5f;
+	--spent: #6e6e6e;
+	--accent: #9a6200;
+	--accent-fill: #f2b33d;
+	--on-accent: #141414;
+	color-scheme: light;
+}
+:root[data-theme="dark"] {
+	--ground: #000000;
+	--surface: #111111;
+	--raised: #1d1d1d;
+	--line: #222222;
+	--ink: #ffffff;
+	--muted: #b4b4b4;
+	--faint: #949494;
+	--spent: #6b6b6b;
+	--accent: #f2b33d;
+	--accent-fill: #f2b33d;
+	--on-accent: #000000;
+	color-scheme: dark;
+}
+@theme inline {
+	--color-ground: var(--ground);
+	--color-surface: var(--surface);
+	--color-raised: var(--raised);
+	--color-line: var(--line);
+	--color-ink: var(--ink);
+	--color-muted: var(--muted);
+	--color-faint: var(--faint);
+	--color-spent: var(--spent);
+	--color-accent: var(--accent);
+	--color-accent-fill: var(--accent-fill);
+	--color-on-accent: var(--on-accent);
+}
+
 /* Uthmanic typeface for Quranic Arabic */
 @font-face {
 	font-family: "Uthmanic";
@@ -80,29 +126,47 @@
 
 /* ── Base ── */
 body {
-	background-color: var(--color-night-950);
-	color: #e2e8f0;
+	background-color: var(--ground);
+	color: var(--ink);
 	font-family: var(--font-sans);
 	-webkit-font-smoothing: antialiased;
+}
+
+/* Day track stars (ZoneTimes.jsx): night sky in dark mode only. */
+.site-star {
+	width: 3px;
+	height: 3px;
+	background: var(--faint);
+	opacity: 0.5;
+}
+:root[data-theme="light"] .site-star {
+	display: none;
+}
+
+/* Room for the phone bottom bar (Navbar.jsx). */
+@media (max-width: 767px) {
+	body {
+		padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+	}
 }
 
 input,
 select,
 textarea {
-	background-color: var(--color-night-800);
-	border: 1px solid var(--color-night-700);
-	color: #fff;
+	background-color: var(--surface);
+	border: 1px solid var(--line);
+	color: var(--ink);
 	border-radius: 0.5rem;
 	padding: 0.5rem 0.75rem;
 }
 input::placeholder,
 textarea::placeholder {
-	color: #64748b;
+	color: var(--faint);
 }
 
 /* Accessible focus ring for every interactive element */
 :focus-visible {
-	outline: 2px solid var(--color-acre-400);
+	outline: 2px solid var(--accent);
 	outline-offset: 2px;
 	border-radius: 0.375rem;
 }

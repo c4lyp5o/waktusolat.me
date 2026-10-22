@@ -6,6 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Waktu Solat Untuk Malaysia Straight Dari JAKIM" />
     <title>Waktu Solat Malaysia</title>
+    <!-- Theme before first paint (no flash): the visitor's choice, else the
+         system setting. Same rule as src/lib/theme.js. -->
+    <script>
+      (() => {
+        let t = null;
+        try {
+          t = localStorage.getItem("waktu:theme");
+        } catch {}
+        if (t !== "light" && t !== "dark") {
+          t = window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
