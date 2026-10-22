@@ -5,6 +5,7 @@
 // the zone's cached year (useYear) and the URL config. Inter is bundled
 // site-wide in main.jsx.
 import "./tv.css";
+import { domAnimation, LazyMotion, m } from "motion/react";
 import { useEffect, useMemo } from "react";
 import { useParams } from "react-router";
 import DayTrack from "./DayTrack.jsx";
@@ -35,6 +36,7 @@ export default function TvApp() {
 
 	const found = dayFor(days, now);
 	let body;
+	let view = "message";
 	if (status === "unknown-zone") {
 		body = (
 			<Message
@@ -48,6 +50,7 @@ export default function TvApp() {
 		const { day: today, estimate } = found;
 		const state = screenState(now, today, estimate ? null : nextDay(days, today), config);
 		const shown = estimate ? { ...state, estimate: true } : state;
+		view = state.kind === "solat" ? "solat" : "main";
 		body =
 			state.kind === "solat" ? (
 				<SolatNotice label={state.label} />
@@ -67,7 +70,28 @@ export default function TvApp() {
 			);
 	}
 
-	return <div className="tv">{portrait ? <PortraitNotice zone={zone} /> : body}</div>;
+	// LazyMotion + m: only the animation features used here (fades, moves),
+	// not the full motion bundle.
+	return (
+		<LazyMotion features={domAnimation} strict>
+			<div className="tv">
+				{portrait ? (
+					<PortraitNotice zone={zone} />
+				) : (
+					// Crossfade between views (main <-> solat <-> messages).
+					<m.div
+						key={view}
+						className="tv-view"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						transition={{ duration: 0.8 }}
+					>
+						{body}
+					</m.div>
+				)}
+			</div>
+		</LazyMotion>
+	);
 }
 
 // Landscape only (spec). A phone opening the link, e.g. while setting up the

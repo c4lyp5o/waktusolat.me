@@ -1,4 +1,5 @@
 // Lead.jsx — the screen's answer: how long until the next prayer or iqamah.
+import { m, useReducedMotion } from "motion/react";
 import { formatCountdown, formatTime } from "./lib/format.js";
 
 const HEADLINE = {
@@ -9,8 +10,18 @@ const HEADLINE = {
 
 export default function Lead({ now, state }) {
 	const approx = state.estimate ? "~" : "";
+	const reduce = useReducedMotion();
+	// A new state or prayer remounts the lead, so the change is seen from
+	// across the hall: a fade and a short rise (fade only with reduced motion).
 	return (
-		<section className="tv-lead" aria-live="off">
+		<m.section
+			key={`${state.kind}:${state.prayer}`}
+			className="tv-lead"
+			aria-live="off"
+			initial={{ opacity: 0, y: reduce ? 0 : "2vh" }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ duration: 0.7, ease: "easeOut" }}
+		>
 			<p className="tv-lead-name">
 				<span className="tv-lead-prayer">{HEADLINE[state.kind](state.label)}</span>{" "}
 				<span className="tv-lead-dalam">dalam</span>
@@ -27,6 +38,6 @@ export default function Lead({ now, state }) {
 					Waktu Subuh tamat dalam {formatCountdown(state.secondary.target - now)}
 				</p>
 			)}
-		</section>
+		</m.section>
 	);
 }

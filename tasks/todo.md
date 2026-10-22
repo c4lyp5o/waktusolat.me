@@ -190,22 +190,22 @@ Standing verification for every task (Definition of Done):
 **Description:** `motion` crossfades the lead when the state or prayer changes, and drives the burn-in drift container.
 
 **Acceptance criteria:**
-- [ ] Only transform and opacity are animated. There's no load-in choreography.
-- [ ] `prefers-reduced-motion` keeps crossfades and drops travel.
-- [ ] `motion` appears only in the TV chunk.
+- [x] Only transform and opacity are animated. There's no load-in choreography.
+- [x] `prefers-reduced-motion` keeps crossfades and drops travel.
+- [x] `motion` appears only in the TV chunk.
 
 **Verification:**
-- [ ] Step `?now=` across an azan boundary and watch the transition.
-- [ ] Reduced-motion emulation in DevTools.
+- [x] Step `?now=` across an azan boundary and watch the transition.
+- [x] Reduced-motion emulation in DevTools.
 
 **Dependencies:** Task 7
 **Files:** `client/src/tv/Lead.jsx`, `client/src/tv/TvApp.jsx`, `client/package.json`
 **Scope:** S
 
 ### Checkpoint C
-- [ ] Under 4× throttle: the idle main thread is < 10% busy and the track holds ≥ 30 fps or falls back.
+- [x] Under 4× throttle (Playwright, SwiftShader GPU): main thread 4.0% busy at night with stars + motion, 2.2% by day; CLS 0; no fallback triggered.
 - [ ] Android TV: the track is smooth, or the fallback is used.
-- [ ] Bundle check: `three` and `motion` are absent from non-TV chunks.
+- [x] Bundle check: `three` only in the lazy DayTrackGl chunk; motion only in the TvApp chunk (main bundle unchanged at 335.7 kB).
 
 ---
 

@@ -31,9 +31,6 @@ html.tv-mode body {
 
 	position: fixed;
 	inset: 0;
-	display: grid;
-	grid-template-rows: auto minmax(0, 1fr) auto;
-	gap: 3vh;
 	padding: var(--pad-y) var(--pad-x);
 	background: var(--ground);
 	color: var(--text);
@@ -42,6 +39,13 @@ html.tv-mode body {
 	cursor: none;
 	overflow: hidden;
 	user-select: none;
+}
+
+.tv-view {
+	display: grid;
+	grid-template-rows: auto minmax(0, 1fr) auto;
+	gap: 3vh;
+	height: 100%;
 }
 
 /* Tabular figures on numbers only: Inter's tnum also widens punctuation. */
@@ -161,6 +165,9 @@ html.tv-mode body {
 	color: var(--muted);
 	font-size: var(--fs-row);
 	font-weight: 500;
+	transition:
+		background-color 0.6s ease-out,
+		color 0.6s ease-out;
 }
 .tv-row[data-advisory] {
 	color: var(--faint);
@@ -251,6 +258,7 @@ html.tv-mode body {
 /* Full-screen states: one centred moment. */
 .tv-full {
 	grid-row: 1 / -1;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
