@@ -17,11 +17,11 @@ Standing verification for every task (Definition of Done):
 **Description:** A server time endpoint the TV uses to correct its clock.
 
 **Acceptance criteria:**
-- [ ] Returns `{ now: <epoch ms>, tz: "Asia/Kuala_Lumpur" }` with status 200.
-- [ ] It's never served from the response cache (sits outside `cachedRoutes`), and `Cache-Control: no-store` is set.
+- [x] Returns `{ now: <epoch ms>, tz: "Asia/Kuala_Lumpur" }` with status 200.
+- [x] It's never served from the response cache (sits outside `cachedRoutes`), and `Cache-Control: no-store` is set.
 
 **Verification:**
-- [ ] `tests/time.test.js`: `now` is within 1 s of `Date.now()`; two calls 50 ms apart differ.
+- [x] `tests/time.test.js`: `now` is within 1 s of `Date.now()`; two calls 50 ms apart differ.
 
 **Dependencies:** None
 **Files:** `routes/api.js`, `tests/time.test.js`
@@ -32,13 +32,13 @@ Standing verification for every task (Definition of Done):
 **Description:** `names.js` holds the Malay prayer names, the advisory set (Imsak, Syuruk) and the Jumaat rule. `config.js` parses and validates `iqamah`, `jumaat`, `solat`, `nama` and the dev-only `now`.
 
 **Acceptance criteria:**
-- [ ] Defaults: iqamah `10,10,10,10,10`, jumaat `30`, solat `10`.
-- [ ] Invalid values fall back to the default per field: wrong count, non-numbers, out of 0–60, `nama` over 60 characters.
-- [ ] `now` is honoured only when `mode !== "production"`.
-- [ ] On a Friday in Malaysia time, `zohor` is reported as Jumaat with the Jumaat offset.
+- [x] Defaults: iqamah `10,10,10,10,10`, jumaat `30`, solat `10`.
+- [x] Invalid values fall back to the default per field: wrong count, non-numbers, out of 0–60, `nama` over 60 characters.
+- [x] `now` is honoured only when `mode !== "production"`.
+- [x] On a Friday in Malaysia time, `zohor` is reported as Jumaat with the Jumaat offset.
 
 **Verification:**
-- [ ] `tests/tv-config.test.js`, `tests/tv-names.test.js`: a table of good and bad inputs.
+- [x] `tests/tv-config.test.js`, `tests/tv-names.test.js`: a table of good and bad inputs.
 
 **Dependencies:** None
 **Files:** `client/src/tv/lib/names.js`, `client/src/tv/lib/config.js`, two tests
@@ -49,14 +49,14 @@ Standing verification for every task (Definition of Done):
 **Description:** `rows.js` turns year-endpoint rows into epoch times in Malaysia time. `schedule.js` provides `screenState(now, today, tomorrow, config)` with the four states and the "Waktu Subuh tamat dalam …" secondary line.
 
 **Acceptance criteria:**
-- [ ] Every boundary resolves correctly: azan − 1 s / azan / iqamah − 1 s / iqamah / solat end, for each of the 5 prayers and for Jumaat.
-- [ ] After Isyak, the countdown targets tomorrow's Subuh. On 31 Dec with no next-year row, it uses today's Subuh marked as an estimate.
-- [ ] Imsak and Syuruk are never the lead and never get an iqamah or solat state.
-- [ ] Results are identical with the process timezone set to UTC and to America/New_York.
+- [x] Every boundary resolves correctly: azan − 1 s / azan / iqamah − 1 s / iqamah / solat end, for each of the 5 prayers and for Jumaat.
+- [x] After Isyak, the countdown targets tomorrow's Subuh. On 31 Dec with no next-year row, it uses today's Subuh marked as an estimate.
+- [x] Imsak and Syuruk are never the lead and never get an iqamah or solat state.
+- [x] Results are identical with the process timezone set to UTC and to America/New_York.
 
 **Verification:**
-- [ ] `tests/tv-schedule.test.js`, also run as `TZ=America/New_York bun test tests/tv-schedule.test.js`.
-- [ ] Mutation check: flip `<` to `<=` on the iqamah boundary → a test fails. Restore.
+- [x] `tests/tv-schedule.test.js`, also run as `TZ=America/New_York bun test tests/tv-schedule.test.js`.
+- [x] Mutation check: flip `<` to `<=` on the iqamah boundary → a test fails. Restore.
 
 **Dependencies:** Task 2
 **Files:** `client/src/tv/lib/rows.js`, `client/src/tv/lib/schedule.js`, `tests/tv-schedule.test.js`, `tests/fixtures.js` (reuse `makeRows`)
@@ -67,20 +67,20 @@ Standing verification for every task (Definition of Done):
 **Description:** `clock.js` keeps `offset = serverNow − (sent + received) / 2` and exposes `now()`. `cache.js` stores the year per zone in `localStorage` with its fetch time, and reads it first.
 
 **Acceptance criteria:**
-- [ ] The offset is computed from round-trip midpoints. A failed sync keeps the last offset (also cached).
-- [ ] The cache read survives missing, corrupt or quota-exceeded storage by falling back to network-only, without throwing.
-- [ ] `needsRefresh` is true after 6 h, after midnight Malaysia time, or when the cached rows don't contain today.
+- [x] The offset is computed from round-trip midpoints. A failed sync keeps the last offset (also cached).
+- [x] The cache read survives missing, corrupt or quota-exceeded storage by falling back to network-only, without throwing.
+- [x] `needsRefresh` is true after 6 h, after midnight Malaysia time, or when the cached rows don't contain today.
 
 **Verification:**
-- [ ] `tests/tv-clock.test.js` with a fake fetch. `tests/tv-cache.test.js` with a fake storage that throws.
+- [x] `tests/tv-clock.test.js` with a fake fetch. `tests/tv-cache.test.js` with a fake storage that throws.
 
 **Dependencies:** Task 3 (rows shape)
 **Files:** `client/src/tv/lib/clock.js`, `client/src/tv/lib/cache.js`, two tests
 **Scope:** S
 
 ### Checkpoint A: Foundation
-- [ ] All `lib/` tests green in UTC and New York timezones.
-- [ ] Mutation checks recorded in the commit message.
+- [x] All `lib/` tests green in UTC and New York timezones.
+- [x] Mutation checks recorded in the commit message.
 
 ---
 
@@ -91,14 +91,14 @@ Standing verification for every task (Definition of Done):
 **Description:** The route shell. It loads with no Navbar, sets the true-black-flat + amber tokens and the `vh` type scale, loads Inter from the bundle, renders from cache, then refreshes and syncs the clock.
 
 **Acceptance criteria:**
-- [ ] `/tv/wly01` renders on `#000` with no Navbar, no scrollbar and no cursor. Other routes are unchanged.
-- [ ] Inter loads from the bundle (no Google Fonts request), with tabular figures confirmed.
-- [ ] The TV code is in its own chunk. `/tv/` is added to `VISIT_PREFIXES`.
+- [x] `/tv/wly01` renders on `#000` with no Navbar, no scrollbar and no cursor. Other routes are unchanged.
+- [x] Inter loads from the bundle (no Google Fonts request), with tabular figures confirmed.
+- [x] The TV code is in its own chunk. `/tv/` is added to `VISIT_PREFIXES`.
 
 **Verification:**
-- [ ] Build: `ls public/assets` shows a separate tv chunk.
-- [ ] Network panel on `/tv/wly01`: no third-party requests.
-- [ ] Before/after screenshots of `/`, `/times/wly01` and `/quran` at 390/768/1440 are identical.
+- [x] Build: `ls public/assets` shows a separate tv chunk.
+- [ ] Network panel on `/tv/wly01`: no third-party requests. **Open:** the TV chunk is clean (Inter from `/assets`), but `index.html` loads Google Fonts on every route, `/tv` included. Moving the whole site to the bundled Inter needs owner OK (it touches existing pages).
+- [x] Before/after screenshots of `/`, `/times/wly01` and `/quran` at 390/768/1440 are identical.
 
 **Dependencies:** Tasks 1–4
 **Files:** `client/src/App.jsx`, `client/src/tv/TvApp.jsx`, `client/src/tv/tv.css`, `client/src/tv/fonts/*`, `client/package.json` (Inter font, if a package)
@@ -109,14 +109,14 @@ Standing verification for every task (Definition of Done):
 **Description:** The three blocks that answer the screen's question, rendered from `screenState()` on a 1 s tick.
 
 **Acceptance criteria:**
-- [ ] Header: mosque name (`nama`) or zone area name, Gregorian + Hijri date ("1 Jamadilawal 1448"), and the clock.
-- [ ] List: 7 rows. The next prayer's time is in amber on a `--surface` band. Passed prayers are `--faint`, upcoming are `--muted`. Imsak and Syuruk are `--faint` and set apart from the prayers by a gap.
-- [ ] Lead: the countdown is the largest element on screen; the azan/iqamah line sits under it.
+- [x] Header: mosque name (`nama`) or zone area name, Gregorian + Hijri date ("1 Jamadilawal 1448"), and the clock.
+- [x] List: 7 rows. The next prayer's time is in amber on a `--surface` band. Passed prayers are `--faint`, upcoming are `--muted`. Imsak and Syuruk are `--faint` and set apart from the prayers by a gap.
+- [x] Lead: the countdown is the largest element on screen; the azan/iqamah line sits under it.
 
 **Verification:**
-- [ ] Dev `?now=` previews of countdown, iqamah and after-isyak at 1920×1080 and 3840×2160.
-- [ ] Smallest hall-readable text ≥ 3.2vh, measured in DevTools.
-- [ ] The tick causes no layout shift (Performance panel).
+- [x] Dev `?now=` previews of countdown, iqamah and after-isyak at 1920×1080 and 3840×2160.
+- [x] Smallest hall-readable text ≥ 3.2vh, measured in DevTools.
+- [ ] The tick causes no layout shift (Performance panel). *Not yet measured; Checkpoint C performance pass.*
 
 **Dependencies:** Task 5
 **Files:** `client/src/tv/Header.jsx`, `client/src/tv/PrayerList.jsx`, `client/src/tv/Lead.jsx`, `client/src/tv/TvApp.jsx`, `client/src/tv/tv.css`
@@ -127,14 +127,14 @@ Standing verification for every task (Definition of Done):
 **Description:** The full-screen dim solat notice, plus "Zon tidak dijumpai" for an unknown zone and a waiting state for a zone with no data yet. The screen is never blank and never shows an error.
 
 **Acceptance criteria:**
-- [ ] The solat state shows "Solat {prayer} sedang didirikan · Sila senyapkan telefon bimbit" at low brightness for `solat` minutes, then returns to normal.
-- [ ] An unknown zone shows the code and the message. A 404 for a valid zone shows "Menunggu data waktu solat" and retries every 5 min.
-- [ ] A network failure with a cache present shows nothing at all (cached data keeps rendering).
+- [x] The solat state shows "Solat {prayer} sedang didirikan · Sila senyapkan telefon bimbit" at low brightness for `solat` minutes, then returns to normal.
+- [x] An unknown zone shows the code and the message. A 404 for a valid zone shows "Menunggu data waktu solat" and retries every 5 min.
+- [x] A network failure with a cache present shows nothing at all (cached data keeps rendering).
 
 **Verification:**
-- [ ] `?now=` preview of the solat state.
-- [ ] `/tv/xyz99`.
-- [ ] DevTools offline after one load.
+- [x] `?now=` preview of the solat state.
+- [x] `/tv/xyz99`.
+- [ ] DevTools offline after one load. *Not yet run; part of the Task 13 offline pass.*
 
 **Dependencies:** Task 6
 **Files:** `client/src/tv/SolatNotice.jsx`, `client/src/tv/TvApp.jsx`, `client/src/tv/tv.css`

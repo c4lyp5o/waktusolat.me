@@ -96,8 +96,12 @@ describe("year cache", () => {
 	test("round-trips per zone", () => {
 		const storage = fakeStorage();
 		expect(writeYear(storage, "wly01", days, noon22)).toBe(true);
-		expect(readYear(storage, "wly01")).toEqual({ days, fetchedAt: noon22 });
+		expect(readYear(storage, "wly01")).toEqual({ days, fetchedAt: noon22, meta: null });
 		expect(readYear(storage, "jhr01")).toBeNull();
+		// Zone meta (area name, negeri) is kept for offline boots.
+		const meta = { area: "KUALA LUMPUR DAN PUTRAJAYA", negeri: "Wilayah Persekutuan Kuala Lumpur" };
+		writeYear(storage, "wly01", days, noon22, meta);
+		expect(readYear(storage, "wly01").meta).toEqual(meta);
 	});
 
 	test("missing, corrupt or throwing storage reads as no cache", () => {

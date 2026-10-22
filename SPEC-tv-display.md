@@ -49,7 +49,7 @@ One pure function, `screenState(now, today, tomorrow, config)`, decides the stat
 | `solat` | iqamah ≤ now < iqamah + `solat` minutes | Full-screen solat-in-progress notice, very dim, no motion |
 | `after-isyak` | After Isyak's solat window | Countdown to **tomorrow's** Subuh (uses the next day's row; across 31 Dec, the next year's data if cached, otherwise today's Subuh as an estimate, labelled with "~") |
 
-**Imsak and Syuruk are advisory, not prayers.** They stay in the list at the same size, set in `--faint` and separated from the five prayer rows by a gap, with no extra label. They are never the lead, have no iqamah and no solat state. Syuruk ends the Subuh window ("Waktu Subuh tamat dalam …" during Subuh's last 15 minutes, as a secondary line, never the lead).
+**Imsak and Syuruk are advisory, not prayers.** They stay in the list in time order (Imsak before Subuh, Syuruk after it) at the same size, set in `--faint` with no band and no extra label. Colour alone sets them apart, since a gap can't work when they sit between prayer rows. They are never the lead, have no iqamah and no solat state. Syuruk ends the Subuh window ("Waktu Subuh tamat dalam …" during Subuh's last 15 minutes, as a secondary line, never the lead).
 
 ### Data and resilience
 

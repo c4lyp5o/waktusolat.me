@@ -12,15 +12,16 @@ export function readYear(storage, zone) {
 	try {
 		const entry = JSON.parse(storage.getItem(keyFor(zone)));
 		if (!Array.isArray(entry?.days) || !Number.isFinite(entry.fetchedAt)) return null;
-		return { days: entry.days, fetchedAt: entry.fetchedAt };
+		return { days: entry.days, fetchedAt: entry.fetchedAt, meta: entry.meta ?? null };
 	} catch {
 		return null;
 	}
 }
 
-export function writeYear(storage, zone, days, fetchedAt) {
+// meta: { area, negeri } from the year response, for the header offline.
+export function writeYear(storage, zone, days, fetchedAt, meta = null) {
 	try {
-		storage.setItem(keyFor(zone), JSON.stringify({ days, fetchedAt }));
+		storage.setItem(keyFor(zone), JSON.stringify({ days, fetchedAt, meta }));
 		return true;
 	} catch {
 		return false;

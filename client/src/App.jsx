@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router";
 import Navbar from "./components/Navbar";
 import About from "./pages/About";
@@ -11,10 +11,14 @@ import QuranWithSurah from "./pages/QuranWithSurah";
 import Radio from "./pages/Radio";
 import ZonePrayerTimes from "./pages/ZonePrayerTimes";
 
+// The mosque TV display: its own chunk (three.js, motion and fonts load only
+// there), rendered without the site chrome.
+const TvApp = lazy(() => import("./tv/TvApp.jsx"));
+
 // Top-level routes that count as a "visit". Deep links (e.g. a bookmarked
 // /times/wly01) arrive here as a hard load — the beacon fires on whatever
 // path the user actually landed on, not just the landing page.
-const VISIT_PREFIXES = ["/times/", "/quran", "/hadith", "/radio", "/chat", "/about"];
+const VISIT_PREFIXES = ["/times/", "/quran", "/hadith", "/radio", "/chat", "/about", "/tv/"];
 
 function isTrackedVisit(pathname) {
 	if (pathname === "/") return true;
@@ -33,9 +37,12 @@ function VisitTracker() {
 	return null;
 }
 
-function App() {
+// Navbar and the dev-mode badge, on every route except the TV display.
+function SiteChrome() {
+	const { pathname } = useLocation();
+	if (pathname.startsWith("/tv/")) return null;
 	return (
-		<BrowserRouter>
+		<>
 			{import.meta.env.MODE !== "production" && (
 				<div
 					style={{
@@ -59,6 +66,14 @@ function App() {
 				</div>
 			)}
 			<Navbar />
+		</>
+	);
+}
+
+function App() {
+	return (
+		<BrowserRouter>
+			<SiteChrome />
 			<VisitTracker />
 			<Routes>
 				<Route index element={<Landing />} />
@@ -70,6 +85,14 @@ function App() {
 				<Route path="/radio" element={<Radio />} />
 				<Route path="/chat" element={<Chat />} />
 				<Route path="/about" element={<About />} />
+				<Route
+					path="/tv/:zone"
+					element={
+						<Suspense fallback={null}>
+							<TvApp />
+						</Suspense>
+					}
+				/>
 
 				<Route path="*" element={<NotFound />} />
 			</Routes>
