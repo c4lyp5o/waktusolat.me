@@ -2,10 +2,8 @@
 //
 // Lazy-loaded from App.jsx, outside the site's Navbar. Everything shown is
 // derived each second from three inputs: server-corrected time (useNow),
-// the zone's cached year (useYear) and the URL config.
-import "@fontsource/inter/400.css";
-import "@fontsource/inter/500.css";
-import "@fontsource/inter/600.css";
+// the zone's cached year (useYear) and the URL config. Inter is bundled
+// site-wide in main.jsx.
 import "./tv.css";
 import { useEffect, useMemo } from "react";
 import { useParams } from "react-router";

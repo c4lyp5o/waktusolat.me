@@ -97,7 +97,7 @@ Standing verification for every task (Definition of Done):
 
 **Verification:**
 - [x] Build: `ls public/assets` shows a separate tv chunk.
-- [ ] Network panel on `/tv/wly01`: no third-party requests. **Open:** the TV chunk is clean (Inter from `/assets`), but `index.html` loads Google Fonts on every route, `/tv` included. Moving the whole site to the bundled Inter needs owner OK (it touches existing pages).
+- [x] No third-party requests on `/tv/wly01`: Inter is bundled site-wide (owner approved 2026-10-22); `index.html` no longer loads Google Fonts.
 - [x] Before/after screenshots of `/`, `/times/wly01` and `/quran` at 390/768/1440 are identical.
 
 **Dependencies:** Tasks 1–4
