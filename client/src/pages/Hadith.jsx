@@ -1,170 +1,127 @@
-import { useEffect, useState } from "react";
-import Spin from "../components/Spin";
-import { getTheKeetab, giveTheKeetab } from "../lib/helper";
+// /hadith — a hadith from one of the six books, read large. Opens on
+// Sahih Bukhari straight away; "Hadis lain" draws another from the chosen
+// book. The previous hadith stays (dimmed) while the next one loads.
+import { useCallback, useEffect, useState } from "react";
+
+const BOOKS = [
+	{ id: "bukhari", name: "Sahih Bukhari", arabic: "صحيح البخاري" },
+	{ id: "muslim", name: "Sahih Muslim", arabic: "صحيح مسلم" },
+	{ id: "abudaud", name: "Sunan Abu Daud", arabic: "سنن أبي داود" },
+	{ id: "nasai", name: "Sunan an-Nasa'i", arabic: "سنن النسائي" },
+	{ id: "tirmizi", name: "Jami' at-Tirmizi", arabic: "جامع الترمذي" },
+	{ id: "ibnumajah", name: "Sunan Ibnu Majah", arabic: "سنن ابن ماجه" },
+];
 
 export default function Hadith() {
-	const [keetab, setKeetab] = useState([]);
-	const [selectedBook, setSelectedBook] = useState(null);
-	const [hadithContent, setHadithContent] = useState(null);
-	const [loading, setLoading] = useState(false);
+	const [book, setBook] = useState(BOOKS[0]);
+	const [hadith, setHadith] = useState(null); // { hadis, kitab, id }
+	const [status, setStatus] = useState("loading"); // loading | ready | error
+	const [copied, setCopied] = useState(false);
 
-	// Fetch list of books on mount
-	useEffect(() => {
-		const downloadKeetabList = async () => {
-			try {
-				const { msg } = await getTheKeetab();
-				// Ensure msg is an array before setting
-				if (Array.isArray(msg)) {
-					setKeetab(msg);
-				}
-			} catch (_error) {
-				console.error("Failed to load books");
-			}
-		};
-		downloadKeetabList();
+	const draw = useCallback(async (b) => {
+		setStatus("loading");
+		setCopied(false);
+		try {
+			const res = await fetch(`/api/v1/hadis/${b.id}`);
+			if (!res.ok) throw new Error(`HTTP ${res.status}`);
+			setHadith(await res.json());
+			setStatus("ready");
+		} catch {
+			setStatus("error");
+		}
 	}, []);
 
-	// Handle fetching a hadith
-	const fetchHadith = async (bookId) => {
-		setLoading(true);
-		setHadithContent(null);
-		setSelectedBook(bookId);
+	useEffect(() => {
+		draw(book);
+	}, [book, draw]);
 
+	const copy = async () => {
 		try {
-			// Assuming giveTheKeetab returns an object like { hadis: "..." }
-			const data = await giveTheKeetab(bookId);
-			setHadithContent(data.hadis || "Tiada hadis dijumpai.");
-		} catch (_error) {
-			setHadithContent("Harap Maaf, Sila Cuba Lagi. Terdapat masalah sambungan.");
-		} finally {
-			setLoading(false);
+			await navigator.clipboard.writeText(`${hadith.hadis}\n\n(${hadith.kitab ?? book.name})`);
+			setCopied(true);
+		} catch {
+			setCopied(false);
 		}
 	};
 
 	return (
-		<>
-			<title>Hadith Pilihan</title>
-			<meta name="description" content="Koleksi hadis dari kutubussittah dalam bahasa Melayu" />
-			<link rel="icon" href="/favicon.ico" />
+		<main className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-12">
+			<title>Hadis | Waktu Solat</title>
+			<h1 className="text-2xl font-semibold tracking-tight md:text-[32px]">Hadis</h1>
+			<p className="mt-2 text-lg text-muted">Hadis rawak daripada enam kitab hadis utama.</p>
 
-			<main className="min-h-screen bg-slate-950 flex flex-col items-center p-4 font-sans pb-20">
-				<div className="w-full max-w-4xl space-y-8">
-					{/* Header Section */}
-					<div className="text-center space-y-2 pt-2">
-						<h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-100">
-							Koleksi <span className="text-acre-600">Hadis</span>
-						</h1>
-						{/* <p className="text-slate-400 text-lg">
-							Pilih kitab di bawah untuk membaca hadis secara rawak.
-						</p> */}
-					</div>
-
-					{/* Book Selection Grid */}
-					<div className="bg-slate-900 rounded-3xl shadow-sm border border-slate-800 p-6">
-						<h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">
-							Pilih Kitab
-						</h2>
-
-						{keetab.length === 0 ? (
-							<div className="animate-pulse flex space-x-4">
-								<div className="h-10 bg-slate-200 rounded w-full"></div>
-							</div>
-						) : (
-							<div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-								{keetab.map((book) => (
+			<div className="mt-8 grid gap-8 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-12">
+				<fieldset className="m-0 min-w-0 border-0 p-0">
+					<legend className="sr-only">Pilih kitab</legend>
+					<ul className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:flex-col lg:px-0">
+						{BOOKS.map((b) => {
+							const active = b.id === book.id;
+							return (
+								<li key={b.id} className="shrink-0">
 									<button
 										type="button"
-										key={book}
-										onClick={() => fetchHadith(book)}
-										className={`
-                      px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 border
-                      ${
-												selectedBook === book
-													? "bg-acre-600 text-white border-acre-600 shadow-md transform scale-105"
-													: "bg-slate-900 text-slate-200 border-slate-800 hover:border-acre-300 hover:text-acre-700 hover:bg-acre-50"
-											}
-                    `}
+										aria-pressed={active}
+										onClick={() => (active ? draw(b) : setBook(b))}
+										className={`flex w-full items-center justify-between gap-4 rounded-xl px-4 py-2.5 text-left lg:py-3 ${
+											active
+												? "bg-surface font-semibold text-ink"
+												: "bg-raised text-muted hover:text-ink lg:bg-transparent"
+										}`}
 									>
-										{book === "abudaud"
-											? "Abu Daud"
-											: book === "ibnumajah"
-												? "Ibnu Majah"
-												: book.charAt(0).toUpperCase() + book.slice(1)}
-									</button>
-								))}
-							</div>
-						)}
-					</div>
-
-					{/* Content Display Area */}
-					<div className="min-h-75">
-						{loading ? (
-							<div className="flex flex-col items-center justify-center h-64 text-acre-600">
-								<Spin />
-								{/* <p className="mt-4 font-medium animate-pulse">
-									Sedang mencari hadis...
-								</p> */}
-							</div>
-						) : hadithContent ? (
-							<div className="bg-slate-900 rounded-3xl shadow-xl border border-slate-800 overflow-hidden relative">
-								{/* Decorative Quote Icon */}
-								<div className="absolute top-4 left-4 text-acre-100">
-									<svg width="60" height="60" viewBox="0 0 24 24" fill="currentColor">
-										<title>Quote</title>
-										<path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017V5H22.017V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM5.0166 21L5.0166 18C5.0166 16.8954 5.91203 16 7.0166 16H10.0166C10.5689 16 11.0166 15.5523 11.0166 15V9C11.0166 8.44772 10.5689 8 10.0166 8H6.0166C5.46432 8 5.0166 8.44772 5.0166 9V11C5.0166 11.5523 4.56889 12 4.0166 12H3.0166V5H13.0166V15C13.0166 18.3137 10.3303 21 7.0166 21H5.0166Z" />
-									</svg>
-								</div>
-
-								<div className="p-8 md:p-12 relative mt-8 z-10">
-									<div className="prose prose-lg prose-emerald max-w-none">
-										{/* Logic: Sometimes the API might return text with newlines. 
-                       We render it cleanly.
-                     */}
-										<p className="text-slate-200 leading-loose text-lg md:text-xl font-medium">
-											{hadithContent}
-										</p>
-									</div>
-
-									{/* Footer Actions */}
-									<div className="mt-8 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
-										<div className="text-sm text-slate-400 font-medium bg-slate-950 px-4 py-2 rounded-lg">
-											Sumber:{" "}
-											<span className="text-acre-700 font-bold uppercase">{selectedBook}</span>
-										</div>
-
-										<button
-											type="button"
-											onClick={() => fetchHadith(selectedBook)}
-											className="flex items-center gap-2 bg-acre-600 hover:bg-acre-700 text-white px-6 py-2.5 rounded-full font-semibold transition-colors shadow-lg shadow-acre-200"
+										<span className="whitespace-nowrap text-[15px] lg:text-[17px]">{b.name}</span>
+										<span
+											lang="ar"
+											dir="rtl"
+											className="hidden font-uthmanic text-[20px] text-faint lg:inline"
 										>
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												className="h-5 w-5"
-												viewBox="0 0 20 20"
-												fill="currentColor"
-											>
-												<title>Refresh</title>
-												<path
-													fillRule="evenodd"
-													d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v3.276a1 1 0 01-2 0V13.107a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
-													clipRule="evenodd"
-												/>
-											</svg>
-											Baca Hadis Lain
-										</button>
-									</div>
-								</div>
-							</div>
-						) : (
-							// Initial State / "Salam"
-							<div className="flex flex-col items-center justify-center h-64 text-slate-400 bg-slate-900 rounded-3xl border border-dashed border-slate-300">
-								<p className="text-xl font-serif text-slate-400">Assalamualaikum</p>
-								<p className="text-sm mt-2">Sila pilih kitab.</p>
-							</div>
+											{b.arabic}
+										</span>
+									</button>
+								</li>
+							);
+						})}
+					</ul>
+				</fieldset>
+
+				<section aria-live="polite" aria-busy={status === "loading"} className="min-w-0">
+					{status === "error" ? (
+						<p className="text-lg text-muted">Hadis tidak dapat dimuatkan. Cuba sebentar lagi.</p>
+					) : !hadith ? (
+						<p className="text-lg text-muted">Memuatkan hadis…</p>
+					) : (
+						<article className={`transition-opacity ${status === "loading" ? "opacity-40" : ""}`}>
+							<p className="max-w-3xl text-[19px] leading-[1.75] text-ink md:text-[21px]">
+								{hadith.hadis}
+							</p>
+							<footer className="mt-6 flex flex-wrap items-baseline gap-x-4 gap-y-1 border-t border-line pt-4">
+								<span className="text-[17px] text-muted">{hadith.kitab ?? book.name}</span>
+								<span lang="ar" dir="rtl" className="font-uthmanic text-[20px] text-faint">
+									{book.arabic}
+								</span>
+							</footer>
+						</article>
+					)}
+					<div className="mt-8 flex flex-wrap gap-3">
+						<button
+							type="button"
+							onClick={() => draw(book)}
+							disabled={status === "loading"}
+							className="rounded-full bg-ink px-6 py-3 text-[17px] font-semibold text-ground disabled:opacity-60"
+						>
+							Hadis lain
+						</button>
+						{hadith && status !== "error" && (
+							<button
+								type="button"
+								onClick={copy}
+								className="rounded-full bg-raised px-6 py-3 text-[17px] font-semibold text-ink hover:bg-line"
+							>
+								{copied ? "Disalin" : "Salin"}
+							</button>
 						)}
 					</div>
-				</div>
-			</main>
-		</>
+				</section>
+			</div>
+		</main>
 	);
 }
