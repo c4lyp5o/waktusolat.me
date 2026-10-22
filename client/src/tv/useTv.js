@@ -1,12 +1,10 @@
 // useTv.js — the TV display's live inputs: corrected time and the zone's year.
 import { useEffect, useMemo, useRef, useState } from "react";
-import { needsRefresh, readYear, writeYear } from "./lib/cache.js";
 import { createClock } from "./lib/clock.js";
-import { parseYear } from "./lib/rows.js";
+import { createYearLoader } from "./lib/yearLoader.js";
 
 const CLOCK_SYNC_MS = 30 * 60 * 1000;
 const DATA_CHECK_MS = 60 * 1000;
-const RETRY_AFTER_FAILURE_MS = 5 * 60 * 1000;
 
 // localStorage, or null where the TV browser blocks it.
 function safeStorage() {
@@ -52,48 +50,26 @@ export function useNow(fixedNow) {
 }
 
 // The zone's year: rendered from the cache first, refreshed per cache.js's
-// rule, retried no more than every 5 minutes after a failure.
+// rule (see lib/yearLoader.js). One loader per zone for the component's
+// life, so an effect that re-runs (StrictMode, re-renders) reuses it.
 // status: "ready" | "loading" | "no-data" | "unknown-zone"
 export function useYear(zone, now) {
 	const storage = useMemo(safeStorage, []);
-	const [entry, setEntry] = useState(() => readYear(storage, zone));
-	const [status, setStatus] = useState(entry ? "ready" : "loading");
-	const lastAttempt = useRef(0);
+	const [year, setYear] = useState(null);
+	const loader = useMemo(
+		() => createYearLoader({ zone, fetchImpl: fetch, storage, onUpdate: setYear }),
+		[zone, storage],
+	);
 	const nowRef = useRef(now);
 	nowRef.current = now;
 
 	useEffect(() => {
-		let cancelled = false;
-		const refresh = async () => {
-			const t = nowRef.current;
-			if (!needsRefresh(entry, t) || t - lastAttempt.current < RETRY_AFTER_FAILURE_MS) return;
-			lastAttempt.current = t;
-			try {
-				const res = await fetch(`/api/v1/waktusolat/year/${zone}`);
-				if (cancelled) return;
-				if (res.status === 400) return setStatus("unknown-zone");
-				if (!res.ok) return entry || setStatus("no-data");
-				const body = await res.json();
-				const days = parseYear(body);
-				if (cancelled || days.length === 0) return entry || setStatus("no-data");
-				const next = { days, fetchedAt: t, meta: { area: body.zone, negeri: body.negeri } };
-				writeYear(storage, zone, next.days, next.fetchedAt, next.meta);
-				lastAttempt.current = 0;
-				setEntry(next);
-				setStatus("ready");
-			} catch {
-				// Offline: keep rendering the cache; retry after the back-off.
-			}
-		};
-		refresh();
-		const id = setInterval(refresh, DATA_CHECK_MS);
-		return () => {
-			cancelled = true;
-			clearInterval(id);
-		};
-	}, [entry, storage, zone]);
+		loader.refresh(nowRef.current);
+		const id = setInterval(() => loader.refresh(nowRef.current), DATA_CHECK_MS);
+		return () => clearInterval(id);
+	}, [loader]);
 
-	return { days: entry?.days ?? [], meta: entry?.meta ?? null, status };
+	return year ?? loader.initial();
 }
 
 // True on a portrait screen (a phone): the TV layout is landscape only.
