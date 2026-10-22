@@ -22,7 +22,7 @@ Every task: `bun run test` green · Biome clean · `bun run build-client` · tas
 - [ ] Owner review on phone and desktop, in both themes.
 
 ## Slice 2: reading
-- [ ] **R7. `/quran` and `/quran/:surah`.**
+- [x] **R7. `/quran` and `/quran/:surah`.** Index with forgiving search (number, spelling, meaning) and a sticky ayat card; reader shows the whole surah with mushaf ayah markers, correct Bismillah (none for At-Tawbah) and previous/next. Inspector WARN/FAILs defended: Arabic ayat text measured as headlines, and long pages passing under the fixed phone bar.
 - [ ] **R8. `/hadith`.**
 
 ## Slice 3: the rest

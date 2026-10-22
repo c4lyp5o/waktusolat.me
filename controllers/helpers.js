@@ -439,12 +439,18 @@ const ALL_AYAT = Quranmy.flatMap((surah, s) => surah.verses.map((_, v) => [s, v]
 // biome-ignore lint/complexity/noStaticOnlyClass: i dont even
 class QuranHelpers {
 	static getSurahNames = (_req, res) => {
-		const data = Quranen.map(({ id, name, transliteration, translation }) => ({
-			number: id,
-			name,
-			transliteration,
-			translation,
-		}));
+		// meaning (Malay), verses and type are additive: the old fields stay.
+		const data = Quranen.map(
+			({ id, name, transliteration, translation, total_verses, type }, i) => ({
+				number: id,
+				name,
+				transliteration,
+				translation,
+				meaning: Quranmy[i].translation,
+				verses: total_verses,
+				type,
+			}),
+		);
 		res.status(200).json({ data });
 	};
 
