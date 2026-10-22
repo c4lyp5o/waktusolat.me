@@ -71,6 +71,11 @@ export const apiRoutes = new Elysia({ prefix: "/api/v1" })
 	.get("/waktusolat/:period/:zone", wrap(TimeHelpers.getTime))
 	// cache stats (invalidation is admin-only, above)
 	.get("/cache", () => getCacheStats())
+	// server clock for the TV display (/tv) to correct a drifting TV clock
+	.get("/time", ({ set }) => {
+		set.headers["cache-control"] = "no-store";
+		return { now: Date.now(), tz: "Asia/Kuala_Lumpur" };
+	})
 	// real healthcheck for the Docker HEALTHCHECK (JSON, not the SPA shell)
 	.get("/healthcheck", () => ({ ok: true }));
 
