@@ -1,6 +1,6 @@
 # Spec: `tv-display`
 
-Module 1 of the [capability map](CAPABILITY-MAP.md). Status: **approved 2026-10-22**.
+Module 1 of the [capability map](CAPABILITY-MAP.md). Status: **approved 2026-10-22; built and signed off by the owner 2026-10-23**.
 
 ## Objective
 

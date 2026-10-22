@@ -286,5 +286,5 @@ Notes: the server sends `Vary: *`, which the Cache API refuses, so the worker st
 **Scope:** S
 
 ### Checkpoint D: Complete
-- [ ] All spec success criteria met.
-- [ ] Owner review and sign-off, then next module: `mosque-registry`.
+- [ ] All spec success criteria recorded with evidence. Criteria 1–3, 5, 7, 8 were checked in headless Chrome; 4 and 6 (clock skew and throttled CPU) were not re-run on the TV for this phase.
+- [x] Owner review and sign-off (2026-10-23: "its nice. lets move on"). Next module: `mosque-registry`.
