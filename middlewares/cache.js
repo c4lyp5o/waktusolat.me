@@ -103,13 +103,12 @@ export function cacheBeforeHandle({ request, set }) {
 // onAfterHandle hook — store a successful JSON GET response.
 // NOTE: Elysia does not populate set.response at afterHandle time, so the
 // adapter stashes the real body on set.__cacheBody; we store from that.
-export function cacheAfterHandle({ request, set }) {
+export function cacheAfterHandle({ set }) {
 	const key = set?.__cacheKey;
 	const body = set?.__cacheBody;
 	if (!key) return;
 	delete set.__cacheKey;
 	delete set.__cacheBody;
-	const _method = (request?.method || "GET").toUpperCase();
 	if (set.status !== 200) return;
 	if (body === undefined) return;
 	// Only cache JSON responses (skip HTML/text passthrough).

@@ -1,3 +1,11 @@
+// JAKIM month abbreviations (Malay since 2026, English in older seeds) and
+// date helpers, shared with utils/timesRefresh.js.
+import {
+	CHRIST_MONTH_NAME,
+	jakimDateToIso,
+	MONTH_ABBREV_NUM,
+	todayIso,
+} from "../utils/jakimDates.js";
 import {
 	AbudaudBook,
 	BukhariBook,
@@ -79,12 +87,6 @@ const interpretHijriMonth = (month) => {
 			return "Error";
 	}
 };
-
-// JAKIM month abbreviations — live payloads since 2026 use Malay
-// abbreviations (Mac, Mei, Ogos, Okt, Dis); older seeds were English.
-// Accept both so either vintage parses. Maps live in utils/jakimDates.js
-// (shared with utils/timesRefresh.js).
-import { CHRIST_MONTH_NAME, MONTH_ABBREV_NUM } from "../utils/jakimDates.js";
 
 const interpretChristMonth = (month) => {
 	const num = MONTH_ABBREV_NUM[month];
@@ -180,7 +182,9 @@ const getTimeDifference = async (times) => {
 	const asrTime = getDateFromHours(times[0].asr);
 	const maghribTime = getDateFromHours(times[0].maghrib);
 	const ishaTime = getDateFromHours(times[0].isha);
-	const tomorrowsFajrTime = await getDateFromHoursAndAdd1Day(times[1].fajr);
+	// No tomorrow row on the last day of data (31 Dec, or stale data):
+	// today's fajr is within a minute or two of tomorrow's.
+	const tomorrowsFajrTime = await getDateFromHoursAndAdd1Day((times[1] ?? times[0]).fajr);
 	const timeDifference = {};
 
 	if (timeNow >= fajrTime) {
@@ -314,21 +318,6 @@ const convertMstoHours = async (milliseconds) => {
 // JAKIM rows carry dates as "01-Mac-2026". Build a date-keyed map so
 // serving is anchored to actual dates, not array positions — the year
 // rollover (31-Dis -> 01-Jan) is seamless the moment fresh data lands.
-const jakimDateToIso = (date) => {
-	const parts = String(date ?? "").split("-");
-	if (parts.length !== 3) return null;
-	const [day, abbrev, year] = parts;
-	const month = MONTH_ABBREV_NUM[abbrev];
-	if (!month) return null;
-	return `${year}-${String(month).padStart(2, "0")}-${day.padStart(2, "0")}`;
-};
-
-const todayIso = () => {
-	const now = new Date();
-	return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(
-		now.getDate(),
-	).padStart(2, "0")}`;
-};
 
 // Build { isoDate -> index } for a zone's rows. Exported for tests.
 export const buildDateIndex = (rows) => {
@@ -336,6 +325,18 @@ export const buildDateIndex = (rows) => {
 	for (let i = 0; i < rows.length; i++) {
 		const iso = jakimDateToIso(rows[i]?.date);
 		if (iso && !index.has(iso)) index.set(iso, i);
+	}
+	return index;
+};
+
+// library.js returns the same rows array until the file's mtime changes, so
+// the index is built once per data refresh instead of once per request.
+const dateIndexCache = new WeakMap();
+const dateIndexFor = (rows) => {
+	let index = dateIndexCache.get(rows);
+	if (!index) {
+		index = buildDateIndex(rows);
+		dateIndexCache.set(rows, index);
 	}
 	return index;
 };
@@ -364,7 +365,7 @@ const formatRow = (row) => {
 // zone has no data at all.
 export const resolveTodayIndex = (rows) => {
 	if (!Array.isArray(rows) || rows.length === 0) return -1;
-	const index = buildDateIndex(rows);
+	const index = dateIndexFor(rows);
 	const today = todayIso();
 	if (index.has(today)) return index.get(today);
 	// Stale data: serve the last known day instead of crashing or serving
@@ -378,26 +379,17 @@ const timeCruncher = (period, zone) => {
 	const todayIdx = resolveTodayIndex(rows);
 
 	switch (period) {
-		case "today": {
-			const out = [];
-			// Today + tomorrow when present (timeReminder needs [0] and [1]).
-			for (let j = todayIdx; j < Math.min(todayIdx + 2, rows.length); j++) {
-				out.push(formatRow(rows[j]));
-			}
-			return out;
-		}
-		case "week": {
-			const out = [];
-			for (let j = todayIdx; j < Math.min(todayIdx + 7, rows.length); j++) {
-				out.push(formatRow(rows[j]));
-			}
-			return out;
-		}
+		case "today":
+			// Today + tomorrow when present (only today on the last row).
+			return rows.slice(todayIdx, todayIdx + 2).map(formatRow);
+		case "week":
+			return rows.slice(todayIdx, todayIdx + 7).map(formatRow);
 		case "month": {
-			// All rows sharing today's month + year (date-anchored, so it is
-			// correct even when the array spans a rollover or leap year).
-			const today = todayIso();
-			const prefix = today.slice(0, 7); // "YYYY-MM"
+			// All rows sharing the served day's month + year (date-anchored, so
+			// it is correct across a rollover or leap year, and matches "today"
+			// when data is stale).
+			const prefix = jakimDateToIso(rows[todayIdx].date)?.slice(0, 7); // "YYYY-MM"
+			if (!prefix) return [];
 			const out = [];
 			for (const row of rows) {
 				const iso = jakimDateToIso(row?.date);
@@ -516,13 +508,12 @@ class TimeHelpers {
 	static async getTime(req, res) {
 		const { period, zone } = req.params;
 		const validPeriods = ["today", "week", "month", "year"];
-		const zones = Object.keys(Zones);
 
 		if (!validPeriods.includes(period)) {
 			return res.status(400).json({ message: "Invalid period" });
 		}
 
-		if (!zones.includes(zone)) {
+		if (!Object.hasOwn(Zones, zone)) {
 			return res.status(400).json({ message: "Invalid zone" });
 		}
 
@@ -535,7 +526,7 @@ class TimeHelpers {
 				return res.status(404).json({ message: "No data for this zone", zone });
 			}
 			const todayData = getTimeNow();
-			const today = timeCruncher("today", currentZone);
+			const today = period === "today" ? data : timeCruncher("today", currentZone);
 			const timeDifference = await timeReminder(today);
 
 			const combinedData = {
