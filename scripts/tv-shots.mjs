@@ -6,6 +6,10 @@
 // `playwright-core` with a Chromium; point CHROME at its executable if
 // Playwright's own browser is not installed. Times are WLY01's for 22 and
 // 23 Oct 2026 (Zohor 13:01, Isyak 20:10; the 23rd is a Friday).
+//
+// A registered mosque's screen (/m/:id) is added when MOSQUE=<id> names a
+// mosque in the server's database (create one in /m/baru, with a few
+// programmes; WLY01 zone for the times above).
 import { mkdirSync } from "node:fs";
 import { chromium } from "playwright-core";
 
@@ -28,6 +32,13 @@ const STATES = [
 	["mosque-name", `/tv/wly01?nama=Masjid%20Al-Ikhlas&now=${THU}T16:30:00`],
 	["unknown-zone", "/tv/xxx99"],
 ];
+if (process.env.MOSQUE) {
+	const m = `/m/${process.env.MOSQUE}`;
+	STATES.push(
+		["mosque-morning", `${m}?now=${THU}T09:00:00`],
+		["mosque-evening", `${m}?now=${THU}T18:30:00`],
+	);
+}
 const SIZES = [
 	["1080p", 1920, 1080],
 	["4k", 3840, 2160],
@@ -43,7 +54,9 @@ for (const [sizeName, width, height] of SIZES) {
 	for (const [name, path] of STATES) {
 		const page = await ctx.newPage();
 		await page.goto(base + path, { waitUntil: "networkidle" });
-		await page.waitForTimeout(1500); // the crossfade and the day track
+		// The crossfade and the day track; a mosque's first programme card
+		// arrives on the banner's next turn.
+		await page.waitForTimeout(path.startsWith("/m/") ? 22_000 : 1500);
 		await page.screenshot({ path: `${out}/${name}-${sizeName}.png` });
 		await page.close();
 	}

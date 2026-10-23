@@ -9,12 +9,14 @@ import { mytIsoDate } from "../lib/waktu/mytime.js";
 const RELOAD_KEY = "waktu:tv-reloaded";
 const RELOAD_CHECK_MS = 60 * 1000;
 
-// Scoped to /tv/ so no other page is ever controlled by it. Production only:
-// in dev the worker would serve stale modules.
+// Scoped to the TV pages only (the worker also leaves the mosque editor
+// pages under /m/ alone). Production only: in dev it would serve stale
+// modules.
 export function registerTvWorker() {
 	if (!import.meta.env.PROD || !("serviceWorker" in navigator)) return;
 	navigator.serviceWorker
-		.register("/tv-sw.js", { scope: "/tv/" })
+		// Scoped to the TV's own tree: /tv/ for a zone, /m/ for a mosque.
+		.register("/tv-sw.js", { scope: window.location.pathname.startsWith("/m/") ? "/m/" : "/tv/" })
 		.then(() => navigator.serviceWorker.ready)
 		.then((reg) => {
 			// The first page load happened before the worker took over, so hand

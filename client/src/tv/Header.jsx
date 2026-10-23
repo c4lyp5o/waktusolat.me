@@ -1,7 +1,7 @@
 // Header.jsx — who this screen belongs to, today's dates, and the clock.
 import { areaName, formatClock, formatDate } from "../lib/waktu/format.js";
 
-export default function Header({ now, zone, nama, meta, hijri }) {
+export default function Header({ now, zone, nama, meta, hijri, notice }) {
 	const area = areaName(meta?.area);
 	const { hm, s } = formatClock(now);
 	return (
@@ -11,6 +11,7 @@ export default function Header({ now, zone, nama, meta, hijri }) {
 				<span className="tv-title-zone">
 					{zone.toUpperCase()}
 					{nama && area ? ` · ${area}` : ""}
+					{notice ? ` · ${notice}` : ""}
 				</span>
 			</h1>
 			<div className="tv-dates">

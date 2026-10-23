@@ -1,9 +1,23 @@
-// tv-sw.js — offline boot for the mosque TV (/tv/*). Registered with scope
-// /tv/ by the TV screen only. It keeps the page shell and the hashed bundle
-// files; prayer data and the clock offset live in the page's localStorage.
+// tv-sw.js — offline boot for the mosque TV: /tv/:zone and a registered
+// mosque's /m/:id. Registered by the TV screen only, with scope /tv/ or /m/.
+// It keeps the page shell, the hashed bundle files and the programme
+// photos; prayer data, the clock offset and the mosque's settings and
+// programmes live in the page's localStorage.
 const VERSION = "v1";
 const SHELL = `tv-shell-${VERSION}`;
 const ASSETS = `tv-assets-${VERSION}`;
+const PHOTOS = `tv-photos-${VERSION}`;
+const MAX_PHOTOS = 100;
+
+// Only TV screens get the offline shell; the mosque editor pages under /m/
+// (/m/baru, /m/:id/edit) always load from the network.
+const isTvPage = (path) =>
+	path.startsWith("/tv/") || (/^\/m\/[^/]+\/?$/.test(path) && !/^\/m\/baru\/?$/.test(path));
+// A programme photo. Its URL carries ?v=<version>, so a cached copy is
+// never stale: a new upload is a new URL.
+const isPhoto = (url) =>
+	/^\/api\/v1\/mosques\/[^/]+\/programmes\/[^/]+\/photo$/.test(url.pathname) &&
+	url.searchParams.has("v");
 const SHELL_KEY = "/index.html";
 
 // The server answers with `Vary: *` and a Content-Range, which the Cache API
@@ -31,7 +45,9 @@ self.addEventListener("activate", (event) => {
 		caches
 			.keys()
 			.then((keys) =>
-				Promise.all(keys.filter((k) => k !== SHELL && k !== ASSETS).map((k) => caches.delete(k))),
+				Promise.all(
+					keys.filter((k) => ![SHELL, ASSETS, PHOTOS].includes(k)).map((k) => caches.delete(k)),
+				),
 			)
 			.then(() => self.clients.claim()),
 	);
@@ -59,8 +75,10 @@ self.addEventListener("fetch", (event) => {
 	if (request.method !== "GET") return;
 	const url = new URL(request.url);
 	if (url.origin !== self.location.origin) return;
-	if (request.mode === "navigate") event.respondWith(shell(request));
-	else if (url.pathname.startsWith("/assets/")) event.respondWith(asset(request));
+	if (request.mode === "navigate") {
+		if (isTvPage(url.pathname)) event.respondWith(shell(request));
+	} else if (url.pathname.startsWith("/assets/")) event.respondWith(asset(request));
+	else if (isPhoto(url)) event.respondWith(photo(request));
 });
 
 // Network first, so a deploy is picked up; the cached shell when offline or
@@ -92,5 +110,19 @@ async function asset(request) {
 	if (hit) return hit;
 	const res = await fetch(request);
 	if (res.ok) await cache.put(request, plain(res.clone()));
+	return res;
+}
+
+// Cache first; the oldest photos are dropped beyond MAX_PHOTOS.
+async function photo(request) {
+	const cache = await caches.open(PHOTOS);
+	const hit = await cache.match(request);
+	if (hit) return hit;
+	const res = await fetch(request);
+	if (res.ok) {
+		await cache.put(request, plain(res.clone()));
+		const keys = await cache.keys();
+		for (const old of keys.slice(0, Math.max(0, keys.length - MAX_PHOTOS))) await cache.delete(old);
+	}
 	return res;
 }

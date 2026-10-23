@@ -54,11 +54,5 @@ export async function api(path, { method = "GET", token, json, body, type } = {}
 	return { ok: false, status: res.status, data, field, message };
 }
 
-// The TV link. Until /m/:id exists (tv-mosque-mode), the /tv/ screen with
-// the mosque's settings in the URL.
-export function tvPath(m) {
-	// Readable when typed on a TV remote: plain commas, %20 only where needed.
-	const iqamah = ["subuh", "zohor", "asar", "maghrib", "isyak"].map((p) => m.iqamah[p]).join(",");
-	const nama = encodeURIComponent(m.name);
-	return `/tv/${m.zone}?iqamah=${iqamah}&jumaat=${m.jumaat}&solat=${m.solat}&nama=${nama}`;
-}
+// The mosque's TV link (tv-mosque-mode): short enough to type on a remote.
+export const tvPath = (m) => `/m/${m.id}`;

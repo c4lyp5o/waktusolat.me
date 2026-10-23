@@ -1,6 +1,6 @@
 # Spec: `tv-mosque-mode`
 
-Module 5 of the [capability map](CAPABILITY-MAP.md), the last one. Status: **draft, awaiting owner approval**.
+Module 5 of the [capability map](CAPABILITY-MAP.md), the last one. Status: **approved 2026-10-23**.
 
 ## Objective
 
@@ -99,7 +99,7 @@ scripts/tv-shots.mjs               adds /m/ states (needs a seeded mosque; docum
 3. `bun test` and Biome are green; no new dependency; the main bundle is unchanged within 0.5 KB.
 4. Owner check on the Android TV: open `/m/:id`, edit a programme on the phone, and see it on the TV within a minute.
 
-## Open questions
-1. **Ticker:** the map mentions "an optional short ticker" (a line of text crawling along the bottom). Scrolling text is hard to read from across a hall and keeps the screen moving all day. I propose **no ticker**: the rotating cards already carry the programmes. OK?
-2. **Drop-off:** is **2 hours after the start** right? Or a different gap, for example 1 hour, or "until the next prayer"?
-3. **Order:** each upcoming programme, then one ayat or hadith, then repeat. With 6 programmes that is one ayat every 2⅓ minutes. Do you want more ayat and hadith between them, for example alternating one programme and one ayat?
+## Resolved questions (2026-10-23)
+1. **Ticker:** none.
+2. **Drop-off:** 2 hours after the start.
+3. **Order:** every upcoming programme, then one ayat or hadith, repeat.

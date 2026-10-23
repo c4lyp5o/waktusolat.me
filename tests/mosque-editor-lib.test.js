@@ -17,6 +17,7 @@ import {
 	resolveAt,
 	whenText,
 } from "../client/src/lib/programmeText.js";
+import { isTvPath } from "../client/src/lib/routes.js";
 import { parseRow } from "../client/src/lib/waktu/rows.js";
 
 const TOKEN = "2Wirw5Ls5fvL-vQiK6X2j_4PWKBhp-ltr_OjHD1lPn4";
@@ -121,17 +122,15 @@ describe("photo and TV link", () => {
 		expect(cropSquare(600, 600)).toEqual({ sx: 0, sy: 0, side: 600 });
 	});
 
-	test("the TV link carries the mosque's settings", () => {
-		const path = tvPath({
-			name: "Masjid Al-Ikhlas",
-			zone: "wly01",
-			iqamah: { subuh: 15, zohor: 10, asar: 10, maghrib: 5, isyak: 10 },
-			jumaat: 30,
-			solat: 10,
-		});
-		expect(path).toBe("/tv/wly01?iqamah=15,10,10,5,10&jumaat=30&solat=10&nama=Masjid%20Al-Ikhlas");
-		// The TV reads it back the same.
-		const q = new URLSearchParams(path.split("?")[1]);
-		expect([q.get("nama"), q.get("iqamah")]).toEqual(["Masjid Al-Ikhlas", "15,10,10,5,10"]);
+	test("the TV link is the short /m/:id", () => {
+		expect(tvPath({ id: "7pb20m9j44", zone: "wly01" })).toBe("/m/7pb20m9j44");
+	});
+
+	test("TV paths get no site chrome; the mosque pages do", () => {
+		for (const p of ["/tv/wly01", "/m/7pb20m9j44", "/m/7pb20m9j44/"])
+			expect(isTvPath(p)).toBe(true);
+		for (const p of ["/m/baru", "/m/baru/", "/m/7pb20m9j44/edit", "/", "/times/wly01", "/about"]) {
+			expect(isTvPath(p)).toBe(false);
+		}
 	});
 });

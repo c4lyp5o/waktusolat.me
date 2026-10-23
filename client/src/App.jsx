@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router";
 import Navbar from "./components/Navbar";
+import { isTvPath } from "./lib/routes.js";
 import About from "./pages/About";
 import Chat from "./pages/Chat";
 import Hadith from "./pages/Hadith";
@@ -14,6 +15,7 @@ import ZonePrayerTimes from "./pages/ZonePrayerTimes";
 // The mosque TV display: its own chunk (three.js, motion and fonts load only
 // there), rendered without the site chrome.
 const TvApp = lazy(() => import("./tv/TvApp.jsx"));
+const MosqueTv = lazy(() => import("./tv/MosqueTv.jsx"));
 // The mosque pages: few visitors, so out of the main bundle.
 const MosqueNew = lazy(() => import("./pages/MosqueNew.jsx"));
 const MosqueEditor = lazy(() => import("./pages/MosqueEditor.jsx"));
@@ -21,7 +23,7 @@ const MosqueEditor = lazy(() => import("./pages/MosqueEditor.jsx"));
 // Top-level routes that count as a "visit". Deep links (e.g. a bookmarked
 // /times/wly01) arrive here as a hard load — the beacon fires on whatever
 // path the user actually landed on, not just the landing page.
-const VISIT_PREFIXES = ["/times/", "/quran", "/hadith", "/radio", "/chat", "/about", "/tv/"];
+const VISIT_PREFIXES = ["/times/", "/quran", "/hadith", "/radio", "/chat", "/about", "/tv/", "/m/"];
 
 function isTrackedVisit(pathname) {
 	if (pathname === "/") return true;
@@ -43,7 +45,7 @@ function VisitTracker() {
 // Navbar and the dev-mode badge, on every route except the TV display.
 function SiteChrome() {
 	const { pathname } = useLocation();
-	if (pathname.startsWith("/tv/")) return null;
+	if (isTvPath(pathname)) return null;
 	return (
 		<>
 			{import.meta.env.MODE !== "production" && (
@@ -97,6 +99,14 @@ function App() {
 					element={
 						<Suspense fallback={null}>
 							<MosqueNew />
+						</Suspense>
+					}
+				/>
+				<Route
+					path="/m/:id"
+					element={
+						<Suspense fallback={null}>
+							<MosqueTv />
 						</Suspense>
 					}
 				/>

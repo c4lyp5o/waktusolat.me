@@ -1,14 +1,16 @@
-// TvApp.jsx — /tv/:zone, the mosque TV display (SPEC-tv-display.md).
+// TvApp.jsx — /tv/:zone, the mosque TV display (SPEC-tv-display.md), and
+// TvScreen, the same screen for a registered mosque (MosqueTv.jsx, /m/:id).
 //
 // Lazy-loaded from App.jsx, outside the site's Navbar. Everything shown is
-// derived each second from three inputs: server-corrected time (useNow),
-// the zone's cached year (useYear) and the URL config. Inter is bundled
-// site-wide in main.jsx.
+// derived each second from server-corrected time (useNow), the zone's cached
+// year (useYear) and the config: the URL's here, the mosque's on /m/:id.
+// Inter is bundled site-wide in main.jsx.
 import "./tv.css";
 import { domAnimation, LazyMotion, m } from "motion/react";
 import { useEffect, useMemo } from "react";
 import { useParams } from "react-router";
 import { parseConfig } from "../lib/waktu/config.js";
+import { liveProgrammes } from "../lib/waktu/mosqueTv.js";
 import { dayFor, nextDay } from "../lib/waktu/rows.js";
 import { listRows, screenState } from "../lib/waktu/schedule.js";
 import Banner from "./Banner.jsx";
@@ -26,16 +28,36 @@ export default function TvApp() {
 		() => parseConfig(new URLSearchParams(window.location.search), import.meta.env.MODE),
 		[],
 	);
-	const now = useNow(config.now);
-	const { days, meta, status } = useYear(zone, now);
-	const portrait = usePortrait();
-	const drift = useKiosk(now);
+	return <TvScreen zone={zone} config={config} />;
+}
 
-	// Full-screen TV: no page scroll, true black behind everything.
+// Full-screen TV: no page scroll, true black behind everything.
+function useTvMode() {
 	useEffect(() => {
 		document.documentElement.classList.add("tv-mode");
 		return () => document.documentElement.classList.remove("tv-mode");
 	}, []);
+}
+
+// One full-screen message before there is anything to show (/m/:id).
+export function TvMessage({ title, text }) {
+	useTvMode();
+	return (
+		<div className="tv">
+			<Message title={title} text={text} />
+		</div>
+	);
+}
+
+// feed: a mosque's upcoming programmes (or null); notice: a short line in
+// the header (a deleted mosque).
+export function TvScreen({ zone, config, feed = null, notice = null }) {
+	const now = useNow(config.now);
+	const { days, meta, status } = useYear(zone, now);
+	const portrait = usePortrait();
+	const drift = useKiosk(now);
+	useTvMode();
+	const programmes = liveProgrammes(feed, days, now);
 
 	const found = dayFor(days, now);
 	let body;
@@ -59,7 +81,14 @@ export default function TvApp() {
 				<SolatNotice label={state.label} />
 			) : (
 				<>
-					<Header now={now} zone={zone} nama={config.nama} meta={meta} hijri={today.hijri} />
+					<Header
+						now={now}
+						zone={zone}
+						nama={config.nama}
+						meta={meta}
+						hijri={today.hijri}
+						notice={notice}
+					/>
 					<main className="tv-main">
 						<Lead now={now} state={shown} />
 						<PrayerList {...listRows(now, today, state)} estimate={estimate} />
@@ -69,7 +98,7 @@ export default function TvApp() {
 						today={today}
 						next={state.kind === "after-isyak" ? null : state.prayer}
 					/>
-					<Banner />
+					<Banner programmes={programmes} now={now} />
 				</>
 			);
 	}

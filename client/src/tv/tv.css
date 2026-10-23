@@ -294,6 +294,59 @@ html.tv-mode body {
 	white-space: nowrap;
 }
 
+/* A mosque's programme in the banner slot (ProgrammeCard.jsx). It fills
+   the card edge to edge: the photo is the slot's full height. Three lines
+   at line-height 1.15 fit the 15vh slot with 1.4vh above and below. */
+.tv-prog {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	align-items: center;
+	height: 15vh;
+	margin: -2vh -3vh;
+	padding: 1.4vh 3vh;
+}
+.tv-prog.has-photo {
+	grid-template-columns: 15vh minmax(0, 1fr);
+	gap: 3vh;
+	padding-left: 0;
+}
+.tv-prog-photo {
+	width: 15vh;
+	height: 15vh;
+	object-fit: cover;
+	border-radius: var(--radius) 0 0 var(--radius);
+}
+.tv-prog-text {
+	min-width: 0;
+	line-height: 1.15;
+}
+.tv-prog-when {
+	color: var(--accent);
+	font-size: var(--fs-small);
+	font-variant-numeric: tabular-nums;
+}
+.tv-prog-title {
+	overflow: hidden;
+	color: var(--text);
+	font-size: var(--fs-row);
+	font-weight: 600;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.tv-prog-title.two-lines {
+	display: -webkit-box;
+	white-space: normal;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+.tv-prog-speaker {
+	overflow: hidden;
+	color: var(--muted);
+	font-size: var(--fs-small);
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
 /* Full-screen states: one centred moment. */
 .tv-full {
 	grid-row: 1 / -1;

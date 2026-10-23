@@ -88,7 +88,10 @@ Notes:
 
 ## 📺 Paparan TV (mosque TV display)
 
-A full-screen prayer-time display for a mosque or surau TV, free to use: open `https://waktusolat.me/tv/<zone>` in the TV's browser (zone codes below, e.g. `wly01`).
+A full-screen prayer-time display for a mosque or surau TV, free to use. Two ways to run it:
+
+- **Registered mosque (recommended):** register at `/m/baru` (no account). You get a short TV link, `https://waktusolat.me/m/<id>`, and a private edit link for a phone page (`/m/<id>/edit`). There you set the iqamah minutes and keep the mosque's programmes (kuliah, classes) with the ustaz's photo. The TV shows the mosque's name, uses its settings, and rotates the next 7 days' programmes with the ayat and hadith. Edits reach the TV within a minute without touching it, and it keeps working offline. A programme leaves the screen 2 hours after it starts.
+- **Zone only:** open `https://waktusolat.me/tv/<zone>` (zone codes below, e.g. `wly01`), with the settings in the URL:
 
 ```
 /tv/wly01?nama=Masjid%20Al-Ikhlas&iqamah=10,10,10,5,10&jumaat=30&solat=10
@@ -103,7 +106,7 @@ A full-screen prayer-time display for a mosque or surau TV, free to use: open `h
 
 What it does: a large countdown to the next azan, then to iqamah, a dim screen during solat, all seven times with the next one lit, and a day track with the sun. Verses and hadith rotate along the bottom. It runs on the server-corrected time (a wrong TV clock or timezone does not matter), keeps the screen awake where the browser allows, shifts a few pixels over time against burn-in, and reloads itself once a day at 03:00 (only when the server answers). After one online load it also boots with the network off: prayer times are cached in the browser and a small service worker (`/tv-sw.js`, scope `/tv/` only) keeps the app files. Landscape only; a phone held upright gets a link to the normal page instead.
 
-Screenshots of every state: `node scripts/tv-shots.mjs` (needs `bun dev` running and `playwright-core`).
+Screenshots of every state: `node scripts/tv-shots.mjs` (needs `bun dev` running and `playwright-core`; add `MOSQUE=<id>` for a registered mosque's screen).
 
 # 🔗 API Endpoints
 
