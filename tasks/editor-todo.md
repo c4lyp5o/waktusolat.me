@@ -21,4 +21,4 @@ Fixed on the way: Inter's contextual alternates drew "7x4" in an id as "7×4"; l
 Not done: the TV link is still the `/tv/:zone?…` form; it becomes `/m/:id` with `tv-mosque-mode`.
 
 ## Checkpoint
-- [ ] Owner review on a phone, then `tv-mosque-mode`.
+- [x] Owner review on a phone (2026-10-23: "Looks good. Lets move forward"). Next: `tv-mosque-mode`.
