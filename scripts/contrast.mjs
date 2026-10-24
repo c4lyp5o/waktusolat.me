@@ -14,6 +14,15 @@ const css = (f) => readFileSync(new URL(`../client/src/${f}`, import.meta.url), 
 // [label, file, selector, base label or null, grounds, texts]
 const SITE_TEXT = ["ink", "muted", "faint", "spent", "accent", "danger"];
 const SKY_TEXT = ["ink", "muted", "faint", "spent", "accent"];
+const TV_TEXT = ["text", "muted", "faint", "spent", "accent"];
+const tv = (label, selector) => [
+	label,
+	"tv/themes/langit.css",
+	selector,
+	null,
+	["ground", "surface"],
+	TV_TEXT,
+];
 const BLOCKS = [
 	[
 		"light",
@@ -39,6 +48,10 @@ const BLOCKS = [
 		["sky", "surface"],
 		SKY_TEXT,
 	]),
+	tv("tv langit", '.tv[data-tema="langit"],\n.tv[data-tema="langit"][data-sky="malam"]'),
+	...["subuh", "pagi", "zohor", "asar", "senja"].map((k) =>
+		tv(`tv langit ${k}`, `.tv[data-tema="langit"][data-sky="${k}"]`),
+	),
 ];
 
 function block(src, selector) {

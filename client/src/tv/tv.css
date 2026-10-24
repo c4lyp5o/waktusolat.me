@@ -1,4 +1,7 @@
-/* tv.css — /tv/:zone. True black with lamp amber as the one data hue (SPEC-tv-display.md, Art direction).
+/* tv.css — /tv/:zone and /m/:id: the layout every theme shares
+   (SPEC-redesign.md). Colours and fonts come from the theme (themes/*.css,
+   on .tv[data-tema]): --ground --surface --text --muted --faint --spent
+   --accent (text), --sun --sun-ring --arc (the day track), --font, --font-num.
    Read from 3-10 m: every size is in vh so 720p, 1080p and 4K scale alike;
    nothing meant to be read from the hall is under 3.2vh (~35px at 1080p). */
 
@@ -9,14 +12,8 @@ html.tv-mode body {
 }
 
 .tv {
-	--ground: #000000;
-	--surface: #111111;
-	--raised: #2a2a2a;
-	--text: #ffffff;
-	--muted: #b4b4b4;
-	--faint: #949494;
-	--spent: #6b6b6b; /* passed times: a clear step below --faint, still 3.9:1 */
-	--accent: #f2b33d; /* lamp amber: next/current prayer, the sun */
+	--font: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	--font-num: var(--font);
 	--radius: 1.85vh;
 	--pad-x: 6vh;
 	--pad-y: 4.4vh;
@@ -33,11 +30,17 @@ html.tv-mode body {
 	padding: var(--pad-y) var(--pad-x);
 	background: var(--ground);
 	color: var(--text);
-	font-family: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	font-family: var(--font);
 	line-height: 1.2;
 	cursor: none;
 	overflow: hidden;
 	user-select: none;
+}
+
+/* The burn-in drift moves this, not .tv, so the theme's ground always
+   reaches the screen's edges. */
+.tv-drift {
+	height: 100%;
 }
 
 .tv-view {
@@ -54,6 +57,11 @@ html.tv-mode body {
 .tv-lead-meta,
 .tv-row-time {
 	font-variant-numeric: tabular-nums;
+}
+.tv-clock,
+.tv-lead-count,
+.tv-row-time {
+	font-family: var(--font-num);
 }
 
 .tv p,
@@ -205,7 +213,7 @@ html.tv-mode body {
 }
 .tv-arc {
 	fill: none;
-	stroke: #444444; /* visible from the hall, still quieter than any text */
+	stroke: var(--arc);
 	stroke-width: 3px;
 }
 .tv-star {
@@ -229,7 +237,8 @@ html.tv-mode body {
 .tv-sun {
 	width: 3.4vh;
 	height: 3.4vh;
-	background: var(--accent);
+	background: var(--sun);
+	box-shadow: 0 0 0 0.3vh var(--sun-ring);
 }
 .tv-now {
 	bottom: 0;
@@ -368,10 +377,10 @@ html.tv-mode body {
 }
 /* Solat in progress: very dim, nothing moves. */
 .tv-solat .tv-full-title {
-	color: #7a7a7a;
+	color: var(--faint);
 }
 .tv-solat .tv-full-text {
-	color: var(--spent); /* dim, but still 3.9:1 from the hall */
+	color: var(--spent);
 }
 
 /* Portrait (a phone): only the pointer to the phone page. */

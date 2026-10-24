@@ -6,6 +6,7 @@
 // year (useYear) and the config: the URL's here, the mosque's on /m/:id.
 // Bricolage Grotesque is bundled site-wide in main.jsx.
 import "./tv.css";
+import "./themes/langit.css";
 import { domAnimation, LazyMotion, m } from "motion/react";
 import { useEffect, useMemo } from "react";
 import { useParams } from "react-router";
@@ -13,6 +14,7 @@ import { parseConfig } from "../lib/waktu/config.js";
 import { liveProgrammes } from "../lib/waktu/mosqueTv.js";
 import { dayFor, nextDay } from "../lib/waktu/rows.js";
 import { listRows, screenState } from "../lib/waktu/schedule.js";
+import { skyPhase } from "../lib/waktu/sky.js";
 import Banner from "./Banner.jsx";
 import DayTrack from "./DayTrack.jsx";
 import Header from "./Header.jsx";
@@ -40,10 +42,10 @@ function useTvMode() {
 }
 
 // One full-screen message before there is anything to show (/m/:id).
-export function TvMessage({ title, text }) {
+export function TvMessage({ title, text, tema = "langit" }) {
 	useTvMode();
 	return (
-		<div className="tv">
+		<div className="tv" data-tema={tema}>
 			<Message title={title} text={text} />
 		</div>
 	);
@@ -60,6 +62,9 @@ export function TvScreen({ zone, config, feed = null, notice = null }) {
 	const programmes = liveProgrammes(feed, days, now);
 
 	const found = dayFor(days, now);
+	// The theme (themes/*.css); Langit also follows the sky over the zone.
+	const tema = config.tema ?? "langit";
+	const sky = found ? skyPhase(now, found.day) : undefined;
 	let body;
 	let view = "message";
 	if (status === "unknown-zone") {
@@ -97,6 +102,7 @@ export function TvScreen({ zone, config, feed = null, notice = null }) {
 						now={now}
 						today={today}
 						next={state.kind === "after-isyak" ? null : state.prayer}
+						palette={`${tema}:${sky}`}
 					/>
 					<Banner programmes={programmes} now={now} />
 				</>
@@ -107,21 +113,23 @@ export function TvScreen({ zone, config, feed = null, notice = null }) {
 	// not the full motion bundle.
 	return (
 		<LazyMotion features={domAnimation} strict>
-			<div className="tv" style={drift}>
-				{portrait ? (
-					<PortraitNotice zone={zone} />
-				) : (
-					// Crossfade between views (main <-> solat <-> messages).
-					<m.div
-						key={view}
-						className="tv-view"
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						transition={{ duration: 0.8 }}
-					>
-						{body}
-					</m.div>
-				)}
+			<div className="tv" data-tema={tema} data-sky={sky}>
+				<div className="tv-drift" style={drift}>
+					{portrait ? (
+						<PortraitNotice zone={zone} />
+					) : (
+						// Crossfade between views (main <-> solat <-> messages).
+						<m.div
+							key={view}
+							className="tv-view"
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{ duration: 0.8 }}
+						>
+							{body}
+						</m.div>
+					)}
+				</div>
 			</div>
 		</LazyMotion>
 	);

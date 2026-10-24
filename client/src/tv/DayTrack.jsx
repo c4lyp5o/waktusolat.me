@@ -31,8 +31,8 @@ export function DayTrackSvg({ track }) {
 			>
 				<defs>
 					<radialGradient id="tv-horizon" cx="0.5" cy="1" r="0.5">
-						<stop offset="0" stopColor="#f2b33d" stopOpacity="0.18" />
-						<stop offset="1" stopColor="#f2b33d" stopOpacity="0" />
+						<stop offset="0" style={{ stopColor: "var(--sun)" }} stopOpacity="0.18" />
+						<stop offset="1" style={{ stopColor: "var(--sun)" }} stopOpacity="0" />
 					</radialGradient>
 				</defs>
 				{glowX !== null && (
@@ -59,11 +59,20 @@ function webglAvailable() {
 
 // The three.js sky (DayTrackGl.js, its own lazy chunk). Any failure (load,
 // init, a slow GPU, a lost context) calls onFail and the SVG takes over.
-function GlSky({ track, onFail }) {
+// palette changes with the theme or the sky; the colours themselves are the
+// theme's --arc and --sun, read from the canvas, so both renderers agree.
+function GlSky({ track, palette, onFail }) {
 	const canvasRef = useRef(null);
 	const rendererRef = useRef(null);
 	const trackRef = useRef(track);
 	trackRef.current = track;
+	const paint = () => {
+		const style = getComputedStyle(canvasRef.current);
+		rendererRef.current?.setColors({
+			arc: style.getPropertyValue("--arc"),
+			glow: style.getPropertyValue("--sun"),
+		});
+	};
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: created once; onFail is stable
 	useEffect(() => {
@@ -73,6 +82,7 @@ function GlSky({ track, onFail }) {
 				if (disposed) return;
 				rendererRef.current = createSkyRenderer(canvasRef.current, { onSlow: onFail });
 				rendererRef.current.update(trackRef.current);
+				paint();
 			})
 			.catch(() => onFail("load"));
 		return () => {
@@ -86,10 +96,13 @@ function GlSky({ track, onFail }) {
 		rendererRef.current?.update(track);
 	}, [track]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: palette names the colours paint reads
+	useEffect(paint, [palette]);
+
 	return <canvas className="tv-track-gl" ref={canvasRef} />;
 }
 
-export default function DayTrack({ now, today, next }) {
+export default function DayTrack({ now, today, next, palette }) {
 	const track = dayTrack(now, today);
 	// Decided once per load: WebGL when available, the SVG for good after
 	// any failure (spec: Motion and three.js budget).
@@ -102,7 +115,7 @@ export default function DayTrack({ now, today, next }) {
 		<section className="tv-track" data-phase={track.phase} aria-hidden="true">
 			<div className="tv-track-sky">
 				{renderer === "gl" ? (
-					<GlSky track={track} onFail={onFail} />
+					<GlSky track={track} palette={palette} onFail={onFail} />
 				) : (
 					<DayTrackSvg track={track} />
 				)}

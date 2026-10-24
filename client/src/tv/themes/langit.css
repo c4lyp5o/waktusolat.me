@@ -1,0 +1,83 @@
+/* langit.css — the TV's default theme (SPEC-redesign.md): the screen is the
+   sky over the zone right now, as on the site (main.css .sky). TvScreen sets
+   data-sky; before the times are in, it is the night sky.
+   --sun fills the sun, --sun-ring outlines it, --arc strokes the arc (SVG
+   and three.js read the same tokens). */
+.tv[data-tema="langit"],
+.tv[data-tema="langit"][data-sky="malam"] {
+	--ground: #10162a;
+	--surface: rgb(255 255 255 / 0.08);
+	--text: #ffffff;
+	--muted: #cdd3e2;
+	--faint: #b4bccf;
+	--spent: #a3acc2;
+	--accent: #f8c867;
+	--sun: #f8c867;
+	--sun-ring: transparent;
+	--arc: rgb(255 255 255 / 0.35);
+}
+.tv[data-tema="langit"][data-sky="subuh"] {
+	--ground: #2a3157;
+	--surface: rgb(255 255 255 / 0.1);
+	--text: #ffffff;
+	--muted: #dadff0;
+	--faint: #c6cce2;
+	--spent: #b8bfd8;
+	--accent: #f8c867;
+	--sun: #f8c867;
+	--sun-ring: transparent;
+	--arc: rgb(255 255 255 / 0.4);
+}
+.tv[data-tema="langit"][data-sky="pagi"] {
+	--ground: #bfdcef;
+	--surface: rgb(255 255 255 / 0.55);
+	--text: #0f1b22;
+	--muted: #233843;
+	--faint: #2f4855;
+	--spent: #3b5462;
+	--accent: #6b3f00;
+	--sun: #e9a21f;
+	--sun-ring: #0f1b22;
+	--arc: rgb(15 27 34 / 0.5);
+}
+.tv[data-tema="langit"][data-sky="zohor"] {
+	--ground: #a9d3ee;
+	--surface: rgb(255 255 255 / 0.55);
+	--text: #0b1720;
+	--muted: #1f3442;
+	--faint: #29404f;
+	--spent: #334b5a;
+	--accent: #5e3600;
+	--sun: #f2b33d;
+	--sun-ring: #0b1720;
+	--arc: rgb(11 23 32 / 0.5);
+}
+.tv[data-tema="langit"][data-sky="asar"] {
+	--ground: #f0a868;
+	--surface: rgb(255 255 255 / 0.35);
+	--text: #2b1306;
+	--muted: #3f2210;
+	--faint: #4a2a16;
+	--spent: #56351f;
+	--accent: #552300;
+	--sun: #fff4dc;
+	--sun-ring: #2b1306;
+	--arc: rgb(43 19 6 / 0.55);
+}
+.tv[data-tema="langit"][data-sky="senja"] {
+	--ground: #6e2f45;
+	--surface: rgb(255 255 255 / 0.1);
+	--text: #ffffff;
+	--muted: #f6dde3;
+	--faint: #f0d0d9;
+	--spent: #ebc6d0;
+	--accent: #ffd38a;
+	--sun: #ffc35c;
+	--sun-ring: transparent;
+	--arc: rgb(255 255 255 / 0.4);
+}
+.tv[data-tema="langit"] {
+	transition:
+		background-color 3s ease,
+		color 3s ease;
+}

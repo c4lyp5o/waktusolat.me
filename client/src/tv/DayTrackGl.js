@@ -20,6 +20,7 @@ import {
 	Points,
 	Scene,
 	ShaderMaterial,
+	SRGBColorSpace,
 	WebGLRenderer,
 } from "three";
 import { ARC_TOP, STARS } from "../lib/waktu/daytrack.js";
@@ -29,13 +30,32 @@ const STAR_FPS = 15;
 const SLOW_FRAME_MS = 50;
 const PROBE_WINDOW_MS = 5000;
 
+// A CSS colour token (the theme's --arc, --sun) as rgb 0..1 and alpha:
+// #rrggbb or rgb(r g b / a), as the theme files write them.
+export function cssColor(value) {
+	const v = String(value).trim();
+	const hex = v.match(/^#([0-9a-f]{6})$/i);
+	if (hex) {
+		const n = Number.parseInt(hex[1], 16);
+		return { rgb: [(n >> 16) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255], a: 1 };
+	}
+	const rgb = v.match(/^rgba?\(\s*(\d+)[\s,]+(\d+)[\s,]+(\d+)(?:\s*[/,]\s*([\d.]+))?\s*\)$/);
+	if (rgb) {
+		return {
+			rgb: [rgb[1] / 255, rgb[2] / 255, rgb[3] / 255],
+			a: rgb[4] === undefined ? 1 : +rgb[4],
+		};
+	}
+	return null;
+}
+
 // A soft radial light: alpha falls from `strength` at the centre to 0.
 function glowMaterial(strength) {
 	return new ShaderMaterial({
 		transparent: true,
 		depthWrite: false,
 		blending: AdditiveBlending,
-		uniforms: { strength: { value: strength }, color: { value: AMBER } },
+		uniforms: { strength: { value: strength }, color: { value: [...AMBER] } },
 		vertexShader:
 			"varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
 		fragmentShader: `
@@ -121,7 +141,10 @@ export function createSkyRenderer(canvas, { onSlow }) {
 	const horizon = new Mesh(new PlaneGeometry(1, 1), glowMaterial(0.22));
 	// WebGL ignores line width, so the arc is a thin triangle ribbon (3 px,
 	// matching the SVG fallback's stroke).
-	const arc = new Mesh(new BufferGeometry(), new MeshBasicMaterial({ color: 0x444444 }));
+	const arc = new Mesh(
+		new BufferGeometry(),
+		new MeshBasicMaterial({ color: 0x444444, transparent: true }),
+	);
 	let stars = starField(1);
 	scene.add(arc, horizon, sunLight, stars);
 
@@ -215,6 +238,22 @@ export function createSkyRenderer(canvas, { onSlow }) {
 			track = next;
 			place();
 			render();
+		},
+		// The theme's colours (TV themes, Langit's skies). Unreadable tokens
+		// keep the last good colour.
+		setColors({ arc: arcCss, glow: glowCss }) {
+			const a = cssColor(arcCss);
+			if (a) {
+				arc.material.color.setRGB(...a.rgb, SRGBColorSpace);
+				arc.material.opacity = a.a;
+			}
+			const g = cssColor(glowCss);
+			if (g) {
+				for (const m of [sunLight.material, horizon.material]) m.uniforms.color.value = g.rgb;
+			}
+			// Not before the first update: drawing the arc before its geometry
+			// exists leaves three.js with an empty mesh for good.
+			if (track) render();
 		},
 		dispose() {
 			cancelAnimationFrame(raf);
