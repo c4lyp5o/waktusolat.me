@@ -13,7 +13,7 @@
 - [x] 1. Browser run at 1920×1080 (production build, scratch DB, real time). The header shows the mosque's name and the iqamah follows its settings. Three live programmes rotated, and the one already past today was dropped. An API edit reached the TV in 34 s with no reload. An offline reload kept the name, programmes and photo. A delete brought the "tidak lagi aktif" line with no card left. An unknown id gets its own message.
 - [x] 2. Idle for 125 s: exactly 4 requests, all 304 (two a minute).
 - [x] 3. `bun test` and Biome green; no new dependency. Main bundle +0.13 KB gzip; `/m/:id` loads a 0.8 KB chunk on top of the TV chunk.
-- [ ] 4. Owner check on the Android TV: open `/m/:id`, edit a programme on the phone, see it within a minute.
+- [x] 4. Owner check on the Android TV: open `/m/:id`, edit a programme on the phone, see it within a minute.
 
 Found on the way: a programme card stayed on screen up to 20 s after its mosque was deleted (or its 2 hours ran out). It now leaves at once. A first version of that fix broke rendering ("shown is not defined"), and the browser run caught it before commit.
 
