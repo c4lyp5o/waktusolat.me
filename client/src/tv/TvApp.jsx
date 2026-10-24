@@ -8,7 +8,7 @@
 import "./tv.css";
 import "./themes/langit.css";
 import { domAnimation, LazyMotion, m } from "motion/react";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
 import { parseConfig } from "../lib/waktu/config.js";
 import { liveProgrammes } from "../lib/waktu/mosqueTv.js";
@@ -41,6 +41,30 @@ function useTvMode() {
 	}, []);
 }
 
+// Langit is in this chunk; the other themes bring their own fonts, so each
+// is a chunk of its own, loaded only by a screen that uses it.
+const THEMES = {
+	takwim: () => import("./themes/takwim.js"),
+	songket: () => import("./themes/songket.js"),
+};
+
+// The theme to paint: the chosen one once its chunk is in, Langit until then
+// (and for good if it fails to load), so the screen is never unstyled.
+function useTheme(tema) {
+	const [loaded, setLoaded] = useState(() => new Set(["langit"]));
+	useEffect(() => {
+		if (loaded.has(tema) || !THEMES[tema]) return;
+		let alive = true;
+		THEMES[tema]()
+			.then(() => alive && setLoaded((s) => new Set(s).add(tema)))
+			.catch(() => console.info(`[tv] theme ${tema} failed to load; showing langit`));
+		return () => {
+			alive = false;
+		};
+	}, [tema, loaded]);
+	return loaded.has(tema) ? tema : "langit";
+}
+
 // One full-screen message before there is anything to show (/m/:id).
 export function TvMessage({ title, text, tema = "langit" }) {
 	useTvMode();
@@ -62,8 +86,8 @@ export function TvScreen({ zone, config, feed = null, notice = null }) {
 	const programmes = liveProgrammes(feed, days, now);
 
 	const found = dayFor(days, now);
-	// The theme (themes/*.css); Langit also follows the sky over the zone.
-	const tema = config.tema ?? "langit";
+	// The theme (themes/*); Langit also follows the sky over the zone.
+	const tema = useTheme(config.tema ?? "langit");
 	const sky = found ? skyPhase(now, found.day) : undefined;
 	let body;
 	let view = "message";

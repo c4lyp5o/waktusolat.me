@@ -1,6 +1,6 @@
 // TV display: Malaysia-time helpers, prayer names and URL config.
 import { describe, expect, test } from "bun:test";
-import { DEFAULTS, parseConfig } from "../client/src/lib/waktu/config.js";
+import { DEFAULTS, parseConfig, TEMAS } from "../client/src/lib/waktu/config.js";
 import { mytEpoch, mytParts } from "../client/src/lib/waktu/mytime.js";
 import { ADVISORY, ORDER, PRAYERS, prayerLabel } from "../client/src/lib/waktu/names.js";
 
@@ -59,6 +59,16 @@ describe("parseConfig", () => {
 			nama: null,
 			now: null,
 		});
+	});
+
+	test("tema: one of the three themes, anything else is langit", () => {
+		expect(TEMAS).toEqual(["langit", "takwim", "songket"]);
+		expect(parse("").tema).toBe("langit");
+		expect(parse("tema=songket").tema).toBe("songket");
+		expect(parse("tema=takwim").tema).toBe("takwim");
+		for (const bad of ["tema=SONGKET", "tema=", "tema=dark", "tema=__proto__"]) {
+			expect(parse(bad).tema).toBe("langit");
+		}
 	});
 
 	test("valid values are taken", () => {

@@ -29,8 +29,8 @@ The data, behaviour, offline support and APIs don't change, apart from one new m
    - A theme sets colours, fonts, the header pattern (Songket only) and the ellipse strokes.
    - All sizes stay in `vh`. Nothing read from the hall is under 3.2vh.
 6. **Langit on the TV:** the sky fills the screen, like the site. At night (malam/subuh/senja) it is dark, so a TV in a dark hall isn't a lamp. The ellipse and countdown follow the site.
-7. **Takwim:** `#121212` ground, ivory ink, red `#ff5a52` for next and the sun, Newsreader numerals, ruled times table, dotted arc ahead of the sun.
-8. **Songket:** `#0c1c17` ground, gold `#d9ae55`, Reem Kufi numerals and Jawi, a faint 8-point star pattern in the header, gold sun with a halo.
+7. **Takwim:** `#121212` ground, ivory ink, red `#ff5a52` for next and the sun, Newsreader numerals, a ruled times table, the hadith in italic. (The mockup's dotted arc ahead of the sun is left out: the three.js renderer, which most TVs use, draws no dashes, and both renderers must look alike.)
+8. **Songket:** `#0c1c17` ground, gold `#d9ae55`, Reem Kufi numerals over Readex Pro, a faint 8-point star pattern behind the header, the next prayer filled with gold, a gold sun with a halo.
 9. **Burn-in drift, the solat screen, the iqamah countdown, programme cards and offline** behave the same in every theme. Each theme is checked in every TV state.
 
 ### Choosing

@@ -1,17 +1,21 @@
 // config.js — the TV display's settings, read from the URL query.
 //
-// /tv/wly01?iqamah=10,8,10,5,10&jumaat=30&solat=10&nama=Masjid%20Al-Ikhlas
+// /tv/wly01?iqamah=10,8,10,5,10&jumaat=30&solat=10&nama=Masjid%20Al-Ikhlas&tema=songket
 // Every field is validated on its own; an invalid value falls back to that
 // field's default and is never shown. `now` (a fixed Malaysia wall time for
 // previews and screenshots) is honoured only outside production builds.
 import { mytEpoch } from "./mytime.js";
 import { PRAYERS } from "./names.js";
 
+// The TV's themes (SPEC-redesign.md); the first is the default.
+export const TEMAS = Object.freeze(["langit", "takwim", "songket"]);
+
 export const DEFAULTS = Object.freeze({
 	iqamah: Object.freeze({ subuh: 10, zohor: 10, asar: 10, maghrib: 10, isyak: 10 }),
 	jumaat: 30,
 	solat: 10,
 	nama: null,
+	tema: "langit",
 	now: null,
 });
 
@@ -54,6 +58,7 @@ export function parseConfig(params, mode) {
 		jumaat: intIn(params.get("jumaat"), 0, 90) ?? DEFAULTS.jumaat,
 		solat: intIn(params.get("solat"), 1, 60) ?? DEFAULTS.solat,
 		nama: parseName(params.get("nama")),
+		tema: TEMAS.includes(params.get("tema")) ? params.get("tema") : DEFAULTS.tema,
 		now: mode !== "production" && params.has("now") ? parseNow(params.get("now")) : null,
 	};
 }
