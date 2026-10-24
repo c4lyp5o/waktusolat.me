@@ -2,11 +2,28 @@
 import { Elysia } from "elysia";
 import { HadithsHelpers, QuranHelpers, TimeHelpers } from "../controllers/helpers.js";
 import {
+	createMosque,
+	deleteMosque,
+	getMosque,
+	rotateToken,
+	updateMosque,
+} from "../controllers/mosques.js";
+import {
+	createProgramme,
+	deletePhoto,
+	deleteProgramme,
+	getPhoto,
+	listProgrammes,
+	putPhoto,
+	upcomingProgrammes,
+	updateProgramme,
+} from "../controllers/programmes.js";
+import { apiKeyAuth } from "../middlewares/auth.js";
+import {
 	cacheAfterHandle,
 	cacheBeforeHandle,
 	getCacheStats,
 	invalidateCache,
-	localAuthBefore,
 } from "../middlewares/cache.js";
 import { getVisitorStats, getVisitors, insertVisitor } from "../middlewares/visitors.js";
 import { adaptElysia } from "../utils/expressLike.js";
@@ -14,22 +31,22 @@ import { adaptElysia } from "../utils/expressLike.js";
 const wrap = (fn) => adaptElysia(fn);
 
 // Routes that are response-cached (GET /quran*, GET /hadis).
-// Only content with a deterministic value is cached. /hadis/:book is
-// intentionally NOT cached here — it returns a RANDOM hadith, and caching
-// it would serve the same hadith to everyone for the full TTL.
+// Only content with a deterministic value is cached. /quran/random and
+// /hadis/:book are intentionally NOT cached here — they return a RANDOM
+// item, and caching would serve everyone the same one for the full TTL.
 const cachedRoutes = new Elysia()
 	.onBeforeHandle(cacheBeforeHandle)
 	.onAfterHandle(cacheAfterHandle)
 	.get("/quran", wrap(QuranHelpers.getSurahNames))
 	.get("/quran/:lang/:id", wrap(QuranHelpers.getFullSurah))
 	.get("/quran/:lang/:id/:ayat", wrap(QuranHelpers.getAyatFromSurah))
-	.get("/quran/random", wrap(QuranHelpers.getRandomAyat))
 	.get("/hadis", wrap(HadithsHelpers.getHadithBook));
 
-// Dev-only raw visitor log, protected by localhost auth
-const protectedRoutes = new Elysia()
-	.onBeforeHandle(localAuthBefore)
-	.get("/visitors", wrap(getVisitors));
+// Admin-only routes: require `x-api-key: <ADMIN_API_KEY>` (see auth.js).
+const adminRoutes = new Elysia()
+	.onBeforeHandle(apiKeyAuth)
+	.get("/visitors", wrap(getVisitors))
+	.post("/cache/invalidate", () => invalidateCache());
 
 export const apiRoutes = new Elysia({ prefix: "/api/v1" })
 	// root usage text
@@ -55,21 +72,43 @@ export const apiRoutes = new Elysia({ prefix: "/api/v1" })
 	)
 	// record visitor
 	.get("/thanks", wrap(insertVisitor))
-	// raw visitors (dev only, localhost auth)
-	.use(protectedRoutes)
+	// raw visitor log + cache invalidation (x-api-key)
+	.use(adminRoutes)
 	// aggregated, anonymized usage stats (safe for public display)
 	.get("/visitors/stats", wrap(getVisitorStats))
 	// cached surah routes
 	.use(cachedRoutes)
+	// random verse — uncached (see cachedRoutes note)
+	.get("/quran/random", wrap(QuranHelpers.getRandomAyat))
 	// hadith routes — NOTE: /hadis (book list) is served via cachedRoutes;
 	// /hadis/:book is here and intentionally UNCACHED (it returns a random
 	// hadith — caching it would serve everyone the same one for the TTL).
 	.get("/hadis/:book", wrap(HadithsHelpers.getHadith))
 	// prayer time routes
 	.get("/waktusolat/:period/:zone", wrap(TimeHelpers.getTime))
-	// cache management
+	// cache stats (invalidation is admin-only, above)
 	.get("/cache", () => getCacheStats())
-	.get("/cache/invalidate", () => invalidateCache())
+	// server clock for the TV display (/tv) to correct a drifting TV clock
+	.get("/time", ({ set }) => {
+		set.headers["cache-control"] = "no-store";
+		return { now: Date.now(), tz: "Asia/Kuala_Lumpur" };
+	})
+	// mosque registry (SPEC-mosque-registry.md); bodies are parsed in the
+	// controller so a malformed one gets the registry's 400 shape
+	.post("/mosques", createMosque, { parse: "none" })
+	.get("/mosques/:id", getMosque)
+	.patch("/mosques/:id", updateMosque, { parse: "none" })
+	.post("/mosques/:id/token", rotateToken, { parse: "none" })
+	.delete("/mosques/:id", deleteMosque, { parse: "none" })
+	// a mosque's programmes and speaker photos (SPEC-programmes.md)
+	.get("/mosques/:id/programmes", listProgrammes)
+	.get("/mosques/:id/programmes/upcoming", upcomingProgrammes)
+	.post("/mosques/:id/programmes", createProgramme, { parse: "none" })
+	.patch("/mosques/:id/programmes/:pid", updateProgramme, { parse: "none" })
+	.delete("/mosques/:id/programmes/:pid", deleteProgramme, { parse: "none" })
+	.get("/mosques/:id/programmes/:pid/photo", getPhoto)
+	.put("/mosques/:id/programmes/:pid/photo", putPhoto, { parse: "none" })
+	.delete("/mosques/:id/programmes/:pid/photo", deletePhoto, { parse: "none" })
 	// real healthcheck for the Docker HEALTHCHECK (JSON, not the SPA shell)
 	.get("/healthcheck", () => ({ ok: true }));
 

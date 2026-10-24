@@ -1,88 +1,69 @@
-import { useEffect, useState } from "react";
-import ZoneSelector from "../components/ZoneSelector";
-
-/** Compact number formatting, e.g. 12_480 -> "12,480" */
-function nf(n) {
-	if (n === null || n === undefined) return "0";
-	return Number(n).toLocaleString("en-MY");
-}
+// `/` — a returning visitor sees their zone's times with zero taps; a first
+// visit (or "Tukar zon", /?pilih) leads with the zone search.
+import { useMemo } from "react";
+import { Link, useSearchParams } from "react-router";
+import tvDisplay from "../assets/tv-display.webp";
+import SkySheet from "../components/SkySheet.jsx";
+import ZoneSearch from "../components/ZoneSearch.jsx";
+import ZoneTimes from "../components/ZoneTimes.jsx";
+import { safeStorage } from "../lib/storage.js";
+import { loadZone } from "../lib/zoneMemory.js";
+import { zoneIndex, zoneInfo } from "../lib/zones.js";
+import { changeZoneLink } from "./ZonePrayerTimes.jsx";
 
 export default function Landing() {
-	const [stats, setStats] = useState(null);
+	const [params] = useSearchParams();
+	const remembered = useMemo(() => loadZone(safeStorage()), []);
+	const picking = params.has("pilih") || !remembered || !zoneInfo(remembered);
 
-	useEffect(() => {
-		let cancelled = false;
-		const load = async () => {
-			try {
-				const json = await fetch("/api/v1/visitors/stats").then((r) => r.json());
-				if (!cancelled && json?.data) setStats(json.data);
-			} catch (_error) {
-				// Silent fail — page works fine without the counter
-			}
-		};
-		load();
-		return () => {
-			cancelled = true;
-		};
-	}, []);
+	if (!picking) return <ZoneTimes zone={remembered} changeZone={changeZoneLink} />;
 
 	return (
-		<>
-			<title>Waktu Solat Malaysia</title>
-			<meta name="description" content="Waktu Solat Untuk Malaysia Straight Dari JAKIM" />
-			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-			<link rel="icon" href="/favicon.ico" />
-
-			<main className="bg-ambient relative flex min-h-screen flex-col overflow-hidden">
-				{/* Decorative Islamic pattern */}
-				<div className="islamic-pattern pointer-events-none absolute inset-0" aria-hidden="true" />
-
-				{/* Centered hero — as minimal as it gets */}
-				<div className="flex flex-1 flex-col items-center justify-center px-4 pt-10 pb-16">
-					<div className="rise-1 relative w-full max-w-3xl text-center">
-						<h1 className="text-5xl font-extrabold tracking-tight text-slate-50 md:text-7xl">
-							Waktu Solat <span className="text-acre-500">Malaysia</span>
-						</h1>
-					</div>
-
-					{/* The one thing to do here */}
-					<div className="rise-2 relative mt-8 w-full max-w-md px-2">
-						<ZoneSelector />
+		<SkySheet>
+			<main className="mx-auto grid max-w-6xl gap-14 px-4 py-12 md:px-6 md:py-16 lg:grid-cols-[minmax(0,1fr)_30rem]">
+				<title>Waktu Solat Malaysia</title>
+				<div>
+					<h1 className="text-2xl font-semibold leading-tight tracking-tight md:text-[32px]">
+						Waktu solat di zon anda
+					</h1>
+					<p className="mt-3 text-lg text-muted">
+						Terus dari JAKIM e-Solat, untuk {zoneIndex.length} zon di seluruh Malaysia.
+					</p>
+					<div className="mt-10">
+						<ZoneSearch autoFocus={!remembered} />
 					</div>
 				</div>
-
-				{/* Visitor stats — quiet fixed footer, pinned to bottom of viewport */}
-				{stats && (
-					<div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-800/60 bg-night-950/60 backdrop-blur-sm">
-						<div className="flex items-center justify-center gap-8 px-4 py-2">
-							<div className="text-center">
-								<p className="text-sm font-semibold tabular-nums text-slate-300">
-									{nf(stats.total_visits)}
-								</p>
-								<p className="mt-0.5 text-[10px] uppercase tracking-widest text-slate-500">
-									Kunjungan
-								</p>
-							</div>
-							<div className="text-center">
-								<p className="text-sm font-semibold tabular-nums text-slate-300">
-									{nf(stats.unique_visitors)}
-								</p>
-								<p className="mt-0.5 text-[10px] uppercase tracking-widest text-slate-500">
-									Pelawat
-								</p>
-							</div>
-							<div className="text-center">
-								<p className="text-sm font-semibold tabular-nums text-slate-300">
-									{nf(stats.active_days)}
-								</p>
-								<p className="mt-0.5 text-[10px] uppercase tracking-widest text-slate-500">
-									Hari Aktif
-								</p>
-							</div>
-						</div>
-					</div>
-				)}
+				<TvPromo />
 			</main>
-		</>
+		</SkySheet>
+	);
+}
+
+// For mosques: the free TV display, shown as it really looks.
+function TvPromo() {
+	return (
+		<section aria-labelledby="tv-title" className="self-start rounded-2xl bg-surface p-6">
+			<h2 id="tv-title" className="text-xl font-semibold">
+				Paparan TV untuk masjid
+			</h2>
+			<p className="mt-2 text-[17px] text-muted">
+				Waktu solat, kiraan ke azan dan iqamah, serta program masjid anda di TV dewan solat.
+				Percuma, tanpa akaun.
+			</p>
+			<img
+				src={tvDisplay}
+				width="1200"
+				height="675"
+				alt="Paparan TV: kiraan ke Zohor, waktu solat hari ini dan ayat Al-Quran"
+				className="mt-5 w-full rounded-lg"
+				loading="lazy"
+			/>
+			<Link
+				to="/m/baru"
+				className="mt-5 inline-flex min-h-12 items-center rounded-full bg-ink px-6 text-[17px] font-semibold text-ground"
+			>
+				Daftar masjid anda
+			</Link>
+		</section>
 	);
 }

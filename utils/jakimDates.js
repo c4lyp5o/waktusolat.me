@@ -40,3 +40,21 @@ export const CHRIST_MONTH_NAME = {
 	11: "November",
 	12: "Disember",
 };
+
+// "01-Mac-2026" / "01-Jan-2026" -> "2026-03-01"; null if unparseable.
+export const jakimDateToIso = (date) => {
+	const parts = String(date ?? "").split("-");
+	if (parts.length !== 3) return null;
+	const [day, abbrev, year] = parts;
+	const month = MONTH_ABBREV_NUM[abbrev];
+	if (!month) return null;
+	return `${year}-${String(month).padStart(2, "0")}-${day.padStart(2, "0")}`;
+};
+
+// Today's local date (TZ=Asia/Kuala_Lumpur in prod) as "YYYY-MM-DD".
+export const todayIso = () => {
+	const now = new Date();
+	const m = String(now.getMonth() + 1).padStart(2, "0");
+	const d = String(now.getDate()).padStart(2, "0");
+	return `${now.getFullYear()}-${m}-${d}`;
+};

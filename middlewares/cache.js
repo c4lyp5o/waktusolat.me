@@ -1,8 +1,8 @@
-// Elysia-native in-memory cache + dev-auth helpers for waktusolat.me.
+// Elysia-native in-memory response cache for waktusolat.me.
 //
 // NOTE: Rather than exporting Elysia plugin instances (whose hooks are
 // unreliable when .use()'d into a sub-app), we export plain hook functions
-// that routes apply inline. Similarly the localhost auth guard.
+// that routes apply inline. (Admin auth lives in middlewares/auth.js.)
 
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 const MAX_CACHE_SIZE = 100;
@@ -103,13 +103,12 @@ export function cacheBeforeHandle({ request, set }) {
 // onAfterHandle hook — store a successful JSON GET response.
 // NOTE: Elysia does not populate set.response at afterHandle time, so the
 // adapter stashes the real body on set.__cacheBody; we store from that.
-export function cacheAfterHandle({ request, set }) {
+export function cacheAfterHandle({ set }) {
 	const key = set?.__cacheKey;
 	const body = set?.__cacheBody;
 	if (!key) return;
 	delete set.__cacheKey;
 	delete set.__cacheBody;
-	const _method = (request?.method || "GET").toUpperCase();
 	if (set.status !== 200) return;
 	if (body === undefined) return;
 	// Only cache JSON responses (skip HTML/text passthrough).
@@ -126,14 +125,3 @@ export const invalidateCache = (pattern) => {
 	cacheStore.invalidate(pattern || ".*");
 	return { message: "Cache invalidated", pattern: pattern || ".*" };
 };
-
-// Localhost-only auth guard (onBeforeHandle). Allows loopback; rejects all else.
-export function localAuthBefore({ request, set }) {
-	const ip =
-		request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-		request.headers.get("x-real-ip")?.trim() ||
-		"";
-	if (ip === "127.0.0.1" || ip === "::1" || ip === "localhost") return;
-	set.status = 403;
-	return { message: "Forbidden" };
-}

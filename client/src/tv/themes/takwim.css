@@ -1,0 +1,58 @@
+/* takwim.css — a printed almanac, inverted for the hall (SPEC-redesign.md):
+   near-black ground, ivory ink, one red for next and the sun, Newsreader
+   numerals over IBM Plex Sans, a ruled times table. Layout is tv.css's. */
+.tv[data-tema="takwim"] {
+	--ground: #121212;
+	--surface: rgb(255 255 255 / 0.06);
+	--text: #f3efe6;
+	--muted: #d8d3c9;
+	--faint: #b9b4aa;
+	--spent: #9a958c;
+	--accent: #ff5a52;
+	--sun: #ff5a52;
+	--sun-ring: transparent;
+	--arc: rgb(243 239 230 / 0.5);
+	--font: "IBM Plex Sans", system-ui, sans-serif;
+	--font-num: "Newsreader Variable", Georgia, serif;
+}
+.tv[data-tema="takwim"] .tv-header {
+	padding-bottom: 1.6vh;
+	border-bottom: 1px solid var(--text);
+}
+.tv[data-tema="takwim"] .tv-lead-count,
+.tv[data-tema="takwim"] .tv-clock {
+	font-weight: 400;
+	letter-spacing: -0.02em;
+}
+/* Newsreader's figures stand taller than Bricolage's: a little smaller and
+   tighter, so the lead keeps the shared layout's height. */
+.tv[data-tema="takwim"] .tv-lead-count {
+	margin-top: 1.2vh;
+	font-size: 20vh;
+	line-height: 0.85;
+}
+.tv[data-tema="takwim"] .tv-lead-prayer {
+	font-weight: 600;
+}
+/* The ruled table: hairlines, no filled rows; next is red. */
+.tv[data-tema="takwim"] .tv-row {
+	padding-block: 0.3vh;
+	border-radius: 0;
+	border-bottom: 1px solid rgb(255 255 255 / 0.14);
+	line-height: 1.1;
+}
+.tv[data-tema="takwim"] .tv-row[data-state="next"],
+.tv[data-tema="takwim"] .tv-row[data-state="current"] {
+	background: transparent;
+	color: var(--accent);
+	font-weight: 600;
+}
+.tv[data-tema="takwim"] .tv-banner {
+	border-radius: 0;
+	border-top: 1px solid rgb(255 255 255 / 0.14);
+	background: transparent;
+}
+.tv[data-tema="takwim"] .tv-banner-text {
+	font-family: var(--font-num);
+	font-style: italic;
+}

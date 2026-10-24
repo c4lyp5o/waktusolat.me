@@ -1,0 +1,407 @@
+/* tv.css — /tv/:zone and /m/:id: the layout every theme shares
+   (SPEC-redesign.md). Colours and fonts come from the theme (themes/*.css,
+   on .tv[data-tema]): --ground --surface --text --muted --faint --spent
+   --accent (text), --sun --sun-ring --arc (the day track), --font, --font-num.
+   Read from 3-10 m: every size is in vh so 720p, 1080p and 4K scale alike;
+   nothing meant to be read from the hall is under 3.2vh (~35px at 1080p). */
+
+html.tv-mode,
+html.tv-mode body {
+	overflow: hidden;
+	background: #000;
+}
+
+.tv {
+	--font: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	--font-num: var(--font);
+	--radius: 1.85vh;
+	--pad-x: 6vh;
+	--pad-y: 4.4vh;
+	--fs-count: 22vh;
+	--fs-name: 7.5vh;
+	--fs-clock: 7vh;
+	--fs-row: 4.2vh;
+	--fs-title: 4.4vh;
+	--fs-meta: 3.6vh;
+	--fs-small: 3.2vh;
+
+	position: fixed;
+	inset: 0;
+	padding: var(--pad-y) var(--pad-x);
+	background: var(--ground);
+	color: var(--text);
+	font-family: var(--font);
+	line-height: 1.2;
+	cursor: none;
+	overflow: hidden;
+	user-select: none;
+}
+
+/* The burn-in drift moves this, not .tv, so the theme's ground always
+   reaches the screen's edges. */
+.tv-drift {
+	height: 100%;
+}
+
+.tv-view {
+	display: grid;
+	grid-template-rows: auto minmax(0, 1fr) auto auto;
+	gap: 2.4vh;
+	height: 100%;
+}
+
+/* Tabular figures on numbers only, so punctuation keeps its own width. */
+.tv-clock,
+.tv-dates,
+.tv-lead-count,
+.tv-lead-meta,
+.tv-row-time {
+	font-variant-numeric: tabular-nums;
+}
+.tv-clock,
+.tv-lead-count,
+.tv-row-time {
+	font-family: var(--font-num);
+}
+
+.tv p,
+.tv h1,
+.tv ol {
+	margin: 0;
+	padding: 0;
+}
+
+/* Header: name left, dates and clock right. */
+.tv-header {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto auto;
+	align-items: end;
+	gap: 6vh;
+}
+.tv-title {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6vh;
+	min-width: 0;
+	font-weight: 600;
+}
+.tv-title-name {
+	overflow: hidden;
+	color: var(--muted);
+	font-size: var(--fs-title);
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.tv-title-zone {
+	overflow: hidden;
+	color: var(--faint);
+	font-size: var(--fs-small);
+	font-weight: 400;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.tv-dates {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6vh;
+	color: var(--muted);
+	font-size: var(--fs-small);
+	text-align: right;
+}
+.tv-clock {
+	font-size: var(--fs-clock);
+	font-weight: 500;
+	letter-spacing: -0.02em;
+	line-height: 1;
+}
+.tv-clock-s {
+	margin-left: 0.8vh;
+	color: var(--faint);
+	font-size: var(--fs-meta);
+}
+
+/* Main: the lead (largest) beside the list. */
+.tv-main {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 62vh;
+	align-items: center;
+	gap: 8vh;
+	min-height: 0;
+}
+
+.tv-lead {
+	display: flex;
+	flex-direction: column;
+	gap: 2vh;
+}
+.tv-lead-name {
+	font-size: var(--fs-name);
+	font-weight: 600;
+	line-height: 1;
+}
+.tv-lead-prayer {
+	color: var(--accent);
+}
+.tv-lead-dalam {
+	color: var(--muted);
+	font-weight: 500;
+}
+.tv-lead-count {
+	font-size: var(--fs-count);
+	font-weight: 500;
+	letter-spacing: -0.04em;
+	line-height: 0.9;
+}
+.tv-lead-meta {
+	color: var(--muted);
+	font-size: var(--fs-meta);
+}
+
+.tv-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4vh;
+	list-style: none;
+}
+.tv-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	padding: 0.6vh 2.6vh;
+	border-radius: var(--radius);
+	color: var(--muted);
+	font-size: var(--fs-row);
+	font-weight: 500;
+	transition:
+		background-color 0.6s ease-out,
+		color 0.6s ease-out;
+}
+.tv-row[data-advisory] {
+	color: var(--faint);
+	font-weight: 400;
+}
+.tv-row[data-state="passed"] {
+	color: var(--spent);
+}
+.tv-row[data-state="next"],
+.tv-row[data-state="current"] {
+	background: var(--surface);
+	color: var(--text);
+}
+.tv-row[data-state="next"] .tv-row-time,
+.tv-row[data-state="current"] .tv-row-time {
+	color: var(--accent);
+}
+
+/* Day track: the signature element (DayTrack.jsx). The sky sits above
+   the labels; the glow stays inside this band (spec deviation, by design). */
+.tv-track {
+	display: grid;
+	grid-template-rows: 7vh auto;
+	gap: 1.2vh;
+}
+.tv-track-sky {
+	position: relative;
+	overflow: hidden;
+}
+.tv-track-svg,
+.tv-track-gl {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+.tv-arc {
+	fill: none;
+	stroke: var(--arc);
+	stroke-width: 3px;
+}
+.tv-star {
+	position: absolute;
+	width: 0.25vh;
+	height: 0.25vh;
+	border-radius: 50%;
+	background: var(--faint);
+	opacity: 0.6;
+}
+.tv-star[data-big] {
+	width: 0.4vh;
+	height: 0.4vh;
+}
+.tv-sun,
+.tv-now {
+	position: absolute;
+	border-radius: 50%;
+	transform: translate(-50%, 50%);
+}
+.tv-sun {
+	width: 3.4vh;
+	height: 3.4vh;
+	background: var(--sun);
+	box-shadow: 0 0 0 0.3vh var(--sun-ring);
+}
+.tv-now {
+	bottom: 0;
+	width: 1.4vh;
+	height: 1.4vh;
+	background: var(--muted);
+}
+.tv-track-ticks {
+	position: relative;
+	height: calc(var(--fs-small) * 1.2);
+	list-style: none;
+}
+.tv-track-ticks li {
+	position: absolute;
+	top: 0;
+	color: var(--spent);
+	font-size: var(--fs-small);
+	transform: translateX(-50%);
+	white-space: nowrap;
+}
+.tv-track-ticks li[data-next] {
+	color: var(--accent);
+}
+
+/* Banner: a short ayat or hadith (Banner.jsx). Two lines at most by
+   construction (?max=160), so text is never shrunk; the clamp is only a
+   guard against an unexpected item. */
+.tv-banner {
+	display: grid;
+	align-content: center;
+	height: 15vh;
+	padding: 2vh 3vh;
+	overflow: hidden;
+	border-radius: var(--radius);
+	background: var(--surface);
+}
+.tv-banner-text {
+	display: -webkit-box;
+	overflow: hidden;
+	color: var(--muted);
+	font-size: 3.4vh;
+	line-height: 1.35;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+.tv-banner-foot {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 4vh;
+	margin-top: 0.8vh;
+	color: var(--faint);
+	font-size: var(--fs-small);
+}
+.tv-banner-arabic {
+	overflow: hidden;
+	color: var(--muted);
+	font-family: "Uthmanic", serif;
+	font-size: 4vh;
+	line-height: 1.2;
+	white-space: nowrap;
+}
+
+/* A mosque's programme in the banner slot (ProgrammeCard.jsx). It fills
+   the card edge to edge: the photo is the slot's full height. Three lines
+   at line-height 1.15 fit the 15vh slot with 1.4vh above and below. */
+.tv-prog {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	align-items: center;
+	height: 15vh;
+	margin: -2vh -3vh;
+	padding: 1.4vh 3vh;
+}
+.tv-prog.has-photo {
+	grid-template-columns: 15vh minmax(0, 1fr);
+	gap: 3vh;
+	padding-left: 0;
+}
+.tv-prog-photo {
+	width: 15vh;
+	height: 15vh;
+	object-fit: cover;
+	border-radius: var(--radius) 0 0 var(--radius);
+}
+.tv-prog-text {
+	min-width: 0;
+	line-height: 1.15;
+}
+.tv-prog-when {
+	color: var(--accent);
+	font-size: var(--fs-small);
+	font-variant-numeric: tabular-nums;
+}
+.tv-prog-title {
+	overflow: hidden;
+	color: var(--text);
+	font-size: var(--fs-row);
+	font-weight: 600;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.tv-prog-title.two-lines {
+	display: -webkit-box;
+	white-space: normal;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+.tv-prog-speaker {
+	overflow: hidden;
+	color: var(--muted);
+	font-size: var(--fs-small);
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Full-screen states: one centred moment. */
+.tv-full {
+	grid-row: 1 / -1;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 3vh;
+	text-align: center;
+}
+.tv-full-title {
+	color: var(--muted);
+	font-size: var(--fs-name);
+	font-weight: 600;
+}
+.tv-full-text {
+	color: var(--faint);
+	font-size: var(--fs-meta);
+}
+/* Solat in progress: very dim, nothing moves. */
+.tv-solat .tv-full-title {
+	color: var(--faint);
+}
+.tv-solat .tv-full-text {
+	color: var(--spent);
+}
+
+/* Portrait (a phone): only the pointer to the phone page. */
+.tv-portrait {
+	padding: 0 6vw;
+	cursor: auto;
+}
+.tv-portrait .tv-full-title {
+	font-size: clamp(24px, 7vw, 32px);
+}
+.tv-portrait .tv-full-text {
+	max-width: 36em;
+	font-size: clamp(16px, 4.4vw, 20px);
+	line-height: 1.5;
+}
+.tv-portrait a {
+	color: var(--accent);
+	cursor: pointer;
+}
+@media (orientation: portrait) {
+	.tv {
+		cursor: auto;
+	}
+}

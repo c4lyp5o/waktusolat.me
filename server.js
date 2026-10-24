@@ -7,8 +7,19 @@ import { Zones } from "./controllers/library.js";
 import { apolloResolvers } from "./graphql/apollo.js";
 import { SDL } from "./graphql/schema/index.js";
 import apiRoutes from "./routes/api.js";
+import {
+	CHAT_BURST,
+	CHAT_REFILL_PER_SEC,
+	MAX_NAME_LENGTH,
+	MAX_SOCKET_PAYLOAD_BYTES,
+	TokenBucket,
+	TYPING_MIN_INTERVAL_MS,
+	validateChatMessage,
+} from "./utils/chatLimits.js";
+import { CLIENT_IP_HEADER, resolveClientIp } from "./utils/clientIp.js";
 import logger from "./utils/logger.js";
-import { RateLimiter } from "./utils/rateLimit.js";
+import { isRateLimited, RateLimiter } from "./utils/rateLimit.js";
+import { readBody } from "./utils/readBody.js";
 import { startTimesRefresher } from "./utils/timesRefresh.js";
 
 const PORT = process.env.PORT || 5000;
@@ -20,12 +31,10 @@ startTimesRefresher(Zones);
 
 const app = new Elysia()
 	.use(cors())
-	// global rate limit (In-Memory, per request)
+	// rate limit API + GraphQL (In-Memory, per client IP resolved by the bridge)
 	.onBeforeHandle(({ request, set }) => {
-		const key =
-			request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-			request.headers.get("x-real-ip") ||
-			"local";
+		if (!isRateLimited(new URL(request.url).pathname)) return;
+		const key = request.headers.get(CLIENT_IP_HEADER) || "unknown";
 		if (!limiter.allow(key)) {
 			set.status = 429;
 			return { message: "Too Many Requests" };
@@ -82,20 +91,25 @@ const httpServer = createServer((req, res) => {
 	// Let socket.io handle its own transport endpoints.
 	if (req.url?.startsWith("/socket.io")) return;
 
-	const body = [];
-	req.on("data", (chunk) => body.push(chunk));
-	req.on("end", async () => {
+	(async () => {
 		try {
 			const method = req.method || "GET";
+			// Capped at MAX_BODY_BYTES; overflow rejects with a 413 (below).
+			const body = await readBody(req);
 			const url = `http://${req.headers.host || "localhost"}${req.url}`;
 			const headers = new Headers();
 			for (const [k, v] of Object.entries(req.headers)) {
 				if (v) headers.set(k, v);
 			}
+			// Overwrites any client-sent value — see utils/clientIp.js.
+			headers.set(
+				CLIENT_IP_HEADER,
+				resolveClientIp(req.socket.remoteAddress, req.headers["x-forwarded-for"]),
+			);
 			const request = new Request(url, {
 				method,
 				headers,
-				body: method === "GET" || method === "HEAD" ? undefined : Buffer.concat(body),
+				body: method === "GET" || method === "HEAD" ? undefined : body,
 			});
 			const response = await app.fetch(request);
 			const responseHeaders = {};
@@ -106,45 +120,64 @@ const httpServer = createServer((req, res) => {
 			const data = response.body ? Buffer.from(await response.arrayBuffer()) : Buffer.alloc(0);
 			res.end(data);
 		} catch (error) {
+			if (error.status === 413) {
+				if (!res.headersSent) {
+					res.writeHead(413, { "content-type": "text/plain", connection: "close" });
+				}
+				res.end("Payload Too Large");
+				return;
+			}
 			logger.error("[http] bridge error:", error);
 			if (!res.headersSent) {
 				res.writeHead(500, { "content-type": "text/plain" });
 			}
 			res.end("Internal Server Error");
 		}
-	});
+	})();
 });
 
 const io = new Server(httpServer, {
 	path: "/socket.io",
 	cors: { origin: "*" },
+	maxHttpBufferSize: MAX_SOCKET_PAYLOAD_BYTES,
 });
 
 io.on("connection", (socket) => {
+	// Per-socket abuse limits (see utils/chatLimits.js).
+	const chatBucket = new TokenBucket(CHAT_BURST, CHAT_REFILL_PER_SEC);
+	let lastTyping = 0;
+
 	socket.on("join", (payload) => {
-		const name = String(payload?.name || "Anon").slice(0, 30);
+		const name = String(payload?.name || "Anon").slice(0, MAX_NAME_LENGTH);
 		socket.data.name = name;
 		users.set(socket.id, name);
 		logger.info(`[ws] ${name} joined. Total users: ${users.size}`);
 		io.emit("system", {
 			username: "system",
-			message: `${name} joined the chat. Total users: ${users.size}`,
+			message: `${name} menyertai sembang. ${users.size} dalam talian.`,
 		});
 		io.emit("users", { list: [...users.values()] });
 	});
 
 	socket.on("chat", (text) => {
-		const str = String(text ?? "").trim();
-		if (!str) {
-			socket.emit("error", { message: "Invalid message format." });
+		const result = validateChatMessage(text);
+		if (!result.ok) {
+			socket.emit("error", { message: result.error });
+			return;
+		}
+		if (!chatBucket.take()) {
+			socket.emit("error", { message: "You are sending messages too fast. Please wait a moment." });
 			return;
 		}
 		// Message body carries no name — the client renders the author in the
 		// bubble header. Prepending "Name: " here would double it up.
-		io.emit("chat", { username: socket.data.name || "Anon", message: str });
+		io.emit("chat", { username: socket.data.name || "Anon", message: result.message });
 	});
 
 	socket.on("typing", () => {
+		const now = Date.now();
+		if (now - lastTyping < TYPING_MIN_INTERVAL_MS) return; // silently drop
+		lastTyping = now;
 		// broadcast to everyone except the sender
 		socket.broadcast.emit("typing", { username: socket.data.name || "Anon" });
 	});
@@ -155,7 +188,7 @@ io.on("connection", (socket) => {
 			users.delete(socket.id);
 			io.emit("system", {
 				username: "system",
-				message: `${nickname} left the chat. Total users: ${users.size}`,
+				message: `${nickname} meninggalkan sembang. ${users.size} dalam talian.`,
 			});
 			io.emit("users", { list: [...users.values()] });
 			logger.info(`[ws] ${nickname} left. Total users: ${users.size}`);
@@ -171,4 +204,6 @@ httpServer.listen(PORT, () => {
 	logger.info(`[ws] Chat is running on http://localhost:${PORT}/socket.io`);
 });
 
-export default app;
+// No `export default app`: Bun auto-serves a default export that has a
+// fetch() method, which started a second, unbridged server on :3000 that
+// bypassed the client-IP overwrite and the body cap.

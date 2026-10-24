@@ -12,6 +12,7 @@
  *   write, end, setHeader, getHeaders, redirect.
  */
 import path from "node:path";
+import { CLIENT_IP_HEADER } from "./clientIp.js";
 
 function headersToObject(headers) {
 	if (headers instanceof Headers) {
@@ -29,20 +30,9 @@ export function adaptElysia(fn) {
 		const headersObj = headersToObject(request?.headers);
 		const method = (request?.method || "GET").toUpperCase();
 
-		// Elysia does not populate ctx.ip; derive it from headers, falling back
-		// to the real socket IP via ctx.server.requestIP() when no proxy headers
-		// are present (e.g. direct localhost / non-reverse-proxied requests).
-		let ip =
-			String(headersObj["x-forwarded-for"] || "")
-				.split(",")[0]
-				?.trim() ||
-			String(headersObj["x-real-ip"] || "").trim() ||
-			String(headersObj["cf-connecting-ip"] || "").trim();
-
-		if (!ip) {
-			const reqIp = ctx.server?.requestIP?.(request)?.address || ctx.requestIP?.(request)?.address;
-			if (reqIp && typeof reqIp === "string") ip = reqIp;
-		}
+		// Client IP as resolved (proxy-aware, spoof-resistant) by the node:http
+		// bridge in server.js — see utils/clientIp.js.
+		const ip = headersObj[CLIENT_IP_HEADER] || "";
 
 		const req = {
 			method,

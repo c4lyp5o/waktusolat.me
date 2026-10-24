@@ -12,6 +12,8 @@ COPY package*.json ./
 RUN bun install
 
 COPY client ./client
+# The client imports the server's zone registry (vite alias @zones).
+COPY controllers/zones.js ./controllers/zones.js
 WORKDIR /app/client
 RUN bun install && \
     if [ "$NODE_ENV" = "staging" ]; then \

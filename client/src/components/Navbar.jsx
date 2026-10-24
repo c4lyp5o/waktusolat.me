@@ -1,81 +1,96 @@
+// Navbar.jsx — wordmark, plain links (active by brightness), theme toggle.
+// On phones the destinations move to a bottom bar, within thumb reach.
+// The top band is painted in the sky over the visitor's zone (useZoneSky).
 import { NavLink, useLocation } from "react-router";
+import ThemeToggle from "./ThemeToggle.jsx";
+import useZoneSky, { skyZone } from "./useZoneSky.js";
 
-/** Brand mark: a crescent + 4-point star, kept tiny so it reads as a utility mark. */
-function BrandMark() {
+const LINKS = [
+	{ to: "/", label: "Waktu Solat", match: (p) => p === "/" || p.startsWith("/times") },
+	{ to: "/quran", label: "Al-Quran", match: (p) => p.startsWith("/quran") },
+	{ to: "/hadith", label: "Hadis" },
+	{ to: "/radio", label: "Radio" },
+	{ to: "/chat", label: "Chat" },
+	{ to: "/about", label: "Tentang" },
+	{ to: "/m/baru", label: "Untuk Masjid", match: (p) => p.startsWith("/m/") },
+];
+
+function Wordmark() {
 	return (
 		<NavLink
 			to="/"
-			className="flex items-center gap-2 mr-2 shrink-0"
-			aria-label="Waktu Solat Malaysia — Laman Utama"
+			className="flex items-center gap-2 font-semibold text-ink"
+			aria-label="Waktu Solat, laman utama"
 		>
-			<span className="grid place-items-center h-9 w-9 rounded-xl bg-acre-500/15 border border-acre-500/30">
-				<svg
-					className="h-5 w-5 text-acre-400"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					strokeWidth="1.6"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-					aria-hidden="true"
-				>
-					<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
-					<path d="M9.5 7.5 10 9l1.5.5-1.5.5-.5 1.5-.5-1.5L7.5 9.5 9 9l.5-1.5Z" />
-				</svg>
-			</span>
-			<span className="hidden sm:inline text-sm font-bold tracking-tight text-slate-50">
-				Waktu Solat
-			</span>
+			<svg className="h-6 w-6 text-accent-fill" viewBox="0 0 24 24" aria-hidden="true">
+				<path fill="currentColor" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
+			</svg>
+			<span className="text-[17px] tracking-tight">Waktu Solat</span>
 		</NavLink>
 	);
 }
 
 export default function Navbar() {
-	const location = useLocation();
-
-	function ActiveLink({ root, to, title }) {
-		const isPathActive = root ? location.pathname.startsWith(root) : location.pathname === to;
-
-		const baseClasses =
-			"whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border shrink-0";
-
-		// Active: emerald (acre) — keeps the pop on dark
-		const activeClasses =
-			"bg-acre-500 text-night-950 border-acre-500 shadow-lg shadow-acre-900/20 scale-105";
-
-		// Inactive: transparent, gray text
-		const inactiveClasses =
-			"bg-transparent text-slate-400 border-transparent hover:bg-night-800 hover:text-acre-300";
-
-		return (
-			<NavLink
-				to={to}
-				className={({ isActive }) =>
-					isActive || isPathActive
-						? `${baseClasses} ${activeClasses}`
-						: `${baseClasses} ${inactiveClasses}`
-				}
-			>
-				{title}
-			</NavLink>
-		);
-	}
+	const { pathname } = useLocation();
+	const active = (l) => (l.match ? l.match(pathname) : pathname === l.to);
+	const tone = (l) => (active(l) ? "text-ink font-semibold" : "text-faint hover:text-ink");
+	const sky = useZoneSky(skyZone(pathname));
 
 	return (
-		<header className="sticky top-0 z-50 w-full border-b border-night-800 bg-night-900/80 backdrop-blur-md">
-			<div className="max-w-4xl mx-auto px-4">
-				<nav className="flex items-center h-16">
-					<BrandMark />
-					<ul className="flex flex-nowrap items-center gap-2 overflow-x-auto w-full pb-0 no-scrollbar sm:justify-center">
-						<ActiveLink root="/times" to="/" title="Waktu Solat" />
-						<ActiveLink root="/quran" to="/quran" title="Al Quran" />
-						<ActiveLink to="/hadith" title="Hadis" />
-						<ActiveLink to="/radio" title="Radio" />
-						<ActiveLink to="/chat" title="Chat" />
-						<ActiveLink to="/about" title="About" />
+		<>
+			<header className={sky ? "sky" : "bg-ground"} data-sky={sky ?? undefined}>
+				<nav
+					className="mx-auto flex h-12 max-w-6xl items-center gap-2 px-4 md:h-16 md:px-6"
+					aria-label="Utama"
+				>
+					<Wordmark />
+					<ul className="ml-auto hidden items-center gap-1 md:flex">
+						{LINKS.map((l) => (
+							<li key={l.to}>
+								<NavLink
+									to={l.to}
+									aria-current={active(l) ? "page" : undefined}
+									className={`rounded-lg px-3 py-2 text-[15px] transition-colors ${tone(l)}`}
+								>
+									{l.label}
+								</NavLink>
+							</li>
+						))}
 					</ul>
+					<NavLink
+						to="/m/baru"
+						className={`ml-auto rounded-lg px-3 py-2 text-[15px] md:hidden ${tone(LINKS[6])}`}
+					>
+						Masjid
+					</NavLink>
+					<NavLink
+						to="/about"
+						className={`rounded-lg px-3 py-2 text-[15px] md:hidden ${tone(LINKS[5])}`}
+					>
+						Tentang
+					</NavLink>
+					<ThemeToggle />
 				</nav>
-			</div>
-		</header>
+			</header>
+
+			<nav
+				className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-sheet pb-[env(safe-area-inset-bottom)] md:hidden"
+				aria-label="Utama (telefon)"
+			>
+				<ul className="grid h-14 grid-cols-5">
+					{LINKS.slice(0, 5).map((l) => (
+						<li key={l.to} className="flex">
+							<NavLink
+								to={l.to}
+								aria-current={active(l) ? "page" : undefined}
+								className={`flex flex-1 items-center justify-center text-[14px] ${tone(l)}`}
+							>
+								{l.label === "Waktu Solat" ? "Waktu" : l.label}
+							</NavLink>
+						</li>
+					))}
+				</ul>
+			</nav>
+		</>
 	);
 }

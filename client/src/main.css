@@ -3,71 +3,71 @@
 @theme {
 	/* ── Typography ── */
 	--font-uthmanic: "Uthmanic", serif;
-	--font-sans: "Inter", system-ui, -apple-system, sans-serif;
+	--font-sans: "Bricolage Grotesque Variable", system-ui, -apple-system, sans-serif;
+	/* Jawi prayer names; Uthmanic stays for Quranic text only. */
+	--font-jawi: "Noto Naskh Arabic Variable", serif;
+}
 
-	/* ── Design tokens — Navy / Emerald / Gold (spiritual, trustworthy) ── */
-	/* Night = deep navy surfaces & text */
-	--color-night-950: #070b14;
-	--color-night-900: #0b1120;
-	--color-night-800: #111a2e;
-	--color-night-700: #1a2740;
-	--color-night-600: #24365a;
-	/* Acre = emerald (primary action, "live") — mirrors Tailwind emerald scale */
-	--color-acre-50: #ecfdf5;
-	--color-acre-100: #d1fae5;
-	--color-acre-200: #a7f3d0;
-	--color-acre-300: #6ee7b7;
-	--color-acre-400: #34d399;
-	--color-acre-500: #22c55e;
-	--color-acre-600: #059669;
-	--color-acre-700: #047857;
-	--color-acre-800: #065f46;
-	--color-acre-900: #064e3b;
-	/* Dinar = gold (accent, highlights, Arabic) */
-	--color-dinar-300: #f7d98c;
-	--color-dinar-400: #f5c95b;
-	--color-dinar-500: #e9b44c;
-	--color-dinar-600: #d99e30;
+/* ── Site palette (SPEC-site-revamp.md): the TV's language in light and
+   dark. Lamp amber marks now/next only; --accent is text-safe on its
+   ground, --accent-fill is the amber used for shapes (the sun, a dot). ── */
+:root,
+:root[data-theme="light"],
+.sheet {
+	--sheet: #fffaf3;
+	--ground: #faf6f0;
+	--surface: #ffffff;
+	--raised: #efe8de;
+	--line: #e4dccf;
+	--ink: #1d130b;
+	--muted: #4d4136;
+	--faint: #5f5246;
+	--spent: #6b5e52;
+	--accent: #8a4f00;
+	--accent-fill: #f2b33d;
+	--on-accent: #1d130b;
+	--danger: #b3261e; /* errors and destructive actions (mosque editor) */
+	color-scheme: light;
+}
+/* The sheet (ZoneTimes.jsx): the light/dark panel set on the sky. It
+   re-declares the mode's tokens (with :root above), so text inside reads on
+   the sheet whatever sky surrounds it. */
+.sheet {
+	background-color: var(--sheet);
+	color: var(--ink);
+}
 
-	/* ── Motion ── */
-	--animate-breath: breath 3s ease-in-out infinite;
-	--animate-glow: glow 6s ease-in-out infinite;
-	--animate-rise: rise 0.6s ease-out both;
-
-	@keyframes breath {
-		0%,
-		100% {
-			transform: scale(1);
-			box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-		}
-		50% {
-			transform: scale(1.05);
-			box-shadow: 0 0 20px 5px rgba(16, 185, 129, 0.4);
-		}
-	}
-
-	@keyframes glow {
-		0%,
-		100% {
-			opacity: 0.4;
-			transform: translateY(0);
-		}
-		50% {
-			opacity: 0.8;
-			transform: translateY(-8px);
-		}
-	}
-
-	@keyframes rise {
-		from {
-			opacity: 0;
-			transform: translateY(14px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
+:root[data-theme="dark"],
+:root[data-theme="dark"] .sheet {
+	--sheet: #141416;
+	--ground: #0b0b0d;
+	--surface: #151517;
+	--raised: #222226;
+	--line: #26262a;
+	--ink: #ffffff;
+	--muted: #b8b8bf;
+	--faint: #a0a0a8;
+	--spent: #8c8c94;
+	--accent: #f2b33d;
+	--accent-fill: #f2b33d;
+	--on-accent: #000000;
+	--danger: #ff8a80;
+	color-scheme: dark;
+}
+@theme inline {
+	--color-ground: var(--ground);
+	--color-surface: var(--surface);
+	--color-sheet: var(--sheet);
+	--color-raised: var(--raised);
+	--color-line: var(--line);
+	--color-ink: var(--ink);
+	--color-muted: var(--muted);
+	--color-faint: var(--faint);
+	--color-spent: var(--spent);
+	--color-accent: var(--accent);
+	--color-accent-fill: var(--accent-fill);
+	--color-on-accent: var(--on-accent);
+	--color-danger: var(--danger);
 }
 
 /* Uthmanic typeface for Quranic Arabic */
@@ -80,29 +80,176 @@
 
 /* ── Base ── */
 body {
-	background-color: var(--color-night-950);
-	color: #e2e8f0;
+	background-color: var(--ground);
+	color: var(--ink);
 	font-family: var(--font-sans);
 	-webkit-font-smoothing: antialiased;
+}
+
+/* ── The sky (ZoneTimes.jsx): the lead band takes the colour of the sky
+   over the zone right now (lib/waktu/sky.js). Flat fields, not gradients;
+   each sky re-sets the tokens so everything inside keeps its contrast,
+   in either theme. ── */
+.sky {
+	background-color: var(--sky);
+	color: var(--ink);
+	transition:
+		background-color 3s ease,
+		color 3s ease;
+}
+.sky[data-sky="malam"] {
+	--sky: #10162a;
+	--ink: #ffffff;
+	--muted: #cdd3e2;
+	--faint: #b4bccf;
+	--spent: #a3acc2;
+	--accent: #f8c867;
+	--accent-fill: #f8c867;
+	--surface: rgb(255 255 255 / 0.08);
+	--raised: rgb(255 255 255 / 0.12);
+	--line: rgb(255 255 255 / 0.14);
+}
+.sky[data-sky="subuh"] {
+	--sky: #2a3157;
+	--ink: #ffffff;
+	--muted: #dadff0;
+	--faint: #c6cce2;
+	--spent: #b8bfd8;
+	--accent: #f8c867;
+	--accent-fill: #f8c867;
+	--surface: rgb(255 255 255 / 0.1);
+	--raised: rgb(255 255 255 / 0.14);
+	--line: rgb(255 255 255 / 0.16);
+}
+.sky[data-sky="pagi"] {
+	--sky: #bfdcef;
+	--ink: #0f1b22;
+	--muted: #233843;
+	--faint: #2f4855;
+	--spent: #3b5462;
+	--accent: #6b3f00;
+	--accent-fill: #e9a21f;
+	--surface: rgb(255 255 255 / 0.6);
+	--raised: rgb(255 255 255 / 0.5);
+	--line: rgb(15 27 34 / 0.12);
+}
+.sky[data-sky="zohor"] {
+	--sky: #a9d3ee;
+	--ink: #0b1720;
+	--muted: #1f3442;
+	--faint: #29404f;
+	--spent: #334b5a;
+	--accent: #5e3600;
+	--accent-fill: #f2b33d;
+	--surface: rgb(255 255 255 / 0.6);
+	--raised: rgb(255 255 255 / 0.5);
+	--line: rgb(13 26 34 / 0.12);
+}
+.sky[data-sky="asar"] {
+	--sky: #f0a868;
+	--ink: #2b1306;
+	--muted: #3f2210;
+	--faint: #4a2a16;
+	--spent: #56351f;
+	--accent: #552300;
+	--accent-fill: #fff4dc;
+	--surface: rgb(255 255 255 / 0.5);
+	--raised: rgb(255 255 255 / 0.45);
+	--line: rgb(42 27 5 / 0.14);
+}
+.sky[data-sky="senja"] {
+	--sky: #6e2f45;
+	--ink: #ffffff;
+	--muted: #f6dde3;
+	--faint: #f0d0d9;
+	--spent: #ebc6d0;
+	--accent: #ffd38a;
+	--accent-fill: #ffc35c;
+	--surface: rgb(255 255 255 / 0.1);
+	--raised: rgb(255 255 255 / 0.16);
+	--line: rgb(255 255 255 / 0.18);
+}
+
+/* Day track stars (ZoneTimes.jsx): only under a night or pre-dawn sky. */
+.site-star {
+	display: none;
+	width: 3px;
+	height: 3px;
+	background: var(--faint);
+	opacity: 0.6;
+}
+.sky[data-sky="malam"] .site-star,
+.sky[data-sky="subuh"] .site-star {
+	display: block;
+}
+
+/* The next prayer's pulse (ZoneTimes.jsx): a dot before its time, with a
+   ring that breathes out. Transform and opacity only; no glow. Still under reduced motion. */
+.pulse-dot {
+	position: relative;
+	flex: none;
+	width: 0.6rem;
+	height: 0.6rem;
+	border-radius: 9999px;
+	background: var(--accent-fill);
+}
+.pulse-dot::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: 9999px;
+	background: var(--accent-fill);
+	animation: pulse-ring 2.4s ease-out infinite;
+}
+@keyframes pulse-ring {
+	from {
+		transform: scale(1);
+		opacity: 0.75;
+	}
+	to {
+		transform: scale(2.8);
+		opacity: 0;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.pulse-dot::after {
+		animation: none;
+		opacity: 0;
+	}
+}
+
+/* Chat names (Chat.jsx): one hue per person, lightness per theme. */
+.chat-name {
+	color: hsl(var(--hue) 55% 32%);
+}
+:root[data-theme="dark"] .chat-name {
+	color: hsl(var(--hue) 65% 72%);
+}
+
+/* Room for the phone bottom bar (Navbar.jsx). */
+@media (max-width: 767px) {
+	body {
+		padding-bottom: calc(3.5rem + env(safe-area-inset-bottom));
+	}
 }
 
 input,
 select,
 textarea {
-	background-color: var(--color-night-800);
-	border: 1px solid var(--color-night-700);
-	color: #fff;
+	background-color: var(--surface);
+	border: 1px solid var(--line);
+	color: var(--ink);
 	border-radius: 0.5rem;
 	padding: 0.5rem 0.75rem;
 }
 input::placeholder,
 textarea::placeholder {
-	color: #64748b;
+	color: var(--faint);
 }
 
 /* Accessible focus ring for every interactive element */
 :focus-visible {
-	outline: 2px solid var(--color-acre-400);
+	outline: 2px solid var(--accent);
 	outline-offset: 2px;
 	border-radius: 0.375rem;
 }
@@ -113,40 +260,4 @@ textarea::placeholder {
 .no-scrollbar {
 	-ms-overflow-style: none;
 	scrollbar-width: none;
-}
-
-/* ── Ambient + decorative surface ── */
-.bg-ambient {
-	background:
-		radial-gradient(1200px 600px at 50% -10%, rgba(16, 185, 129, 0.12), transparent 60%),
-		radial-gradient(900px 500px at 85% 110%, rgba(233, 180, 76, 0.06), transparent 60%),
-		var(--color-night-950);
-}
-
-/* Dot-grid star field, CSS-drawn, crisp + light */
-.islamic-pattern {
-	background-image:
-		radial-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
-		radial-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px);
-	background-size:
-		28px 28px,
-		28px 28px;
-	background-position:
-		0 0,
-		14px 14px;
-	mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
-}
-
-/* Staggered hero entrance */
-.rise-1 {
-	animation: rise 0.6s ease-out both;
-	animation-delay: 0.05s;
-}
-.rise-2 {
-	animation: rise 0.6s ease-out both;
-	animation-delay: 0.15s;
-}
-.rise-3 {
-	animation: rise 0.6s ease-out both;
-	animation-delay: 0.25s;
 }

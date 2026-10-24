@@ -1,0 +1,51 @@
+/* songket.css — night green and gold (SPEC-redesign.md): Reem Kufi numerals
+   over Readex Pro, a faint 8-point star pattern behind the header, the next
+   prayer filled with gold, a gold sun with a halo. Layout is tv.css's. */
+.tv[data-tema="songket"] {
+	--ground: #0c1c17;
+	--surface: #13291f;
+	--text: #f1ebdc;
+	--muted: #c9d1c6;
+	--faint: #b9c2b7;
+	--spent: #93a092;
+	--accent: #d9ae55;
+	--sun: #d9ae55;
+	--sun-ring: rgb(217 174 85 / 0.18);
+	--arc: rgb(217 174 85 / 0.6);
+	--font: "Readex Pro Variable", system-ui, sans-serif;
+	--font-num: "Reem Kufi Variable", "Readex Pro Variable", sans-serif;
+}
+/* Two squares, one turned 45°: the 8-point star, as a quiet band of tiles. */
+.tv[data-tema="songket"]::before {
+	content: "";
+	position: absolute;
+	inset: 0 0 auto;
+	height: 15.5vh; /* the header only, clear of the first row */
+	border-bottom: 1px solid #23423a;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44'%3E%3Cg fill='none' stroke='%23d9ae55' stroke-opacity='0.16'%3E%3Crect x='12' y='12' width='20' height='20'/%3E%3Crect x='12' y='12' width='20' height='20' transform='rotate(45 22 22)'/%3E%3C/g%3E%3C/svg%3E");
+	background-size: 6.4vh 6.4vh;
+	pointer-events: none;
+}
+.tv[data-tema="songket"] .tv-drift {
+	position: relative;
+}
+.tv[data-tema="songket"] .tv-sun {
+	box-shadow: 0 0 0 1.2vh var(--sun-ring);
+}
+.tv[data-tema="songket"] .tv-row[data-state="next"],
+.tv[data-tema="songket"] .tv-row[data-state="current"] {
+	background: var(--accent);
+	color: var(--ground);
+}
+.tv[data-tema="songket"] .tv-row[data-state="next"] .tv-row-time,
+.tv[data-tema="songket"] .tv-row[data-state="current"] .tv-row-time {
+	color: var(--ground);
+}
+.tv[data-tema="songket"] .tv-lead-count {
+	font-weight: 500;
+}
+/* Full-screen states (solat, messages) have no header: no band either, so
+   the solat screen stays dim and still. */
+.tv[data-tema="songket"]:has(.tv-full)::before {
+	display: none;
+}
