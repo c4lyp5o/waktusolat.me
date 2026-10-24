@@ -114,9 +114,10 @@ export default function Chat() {
 	return (
 		<>
 			<title>Chat | Waktu Solat</title>
-			{/* Fills the screen between the top bar and (on phones) the bottom
-			    bar, so the composer is always visible. */}
-			<div className="flex h-[calc(100dvh-3rem-3.5rem-env(safe-area-inset-bottom))] flex-col md:h-[calc(100dvh-4rem)]">
+			{/* Fills the screen between the top bar (and the sky strip under it,
+			    SkySheet) and, on phones, the bottom bar, so the composer is always
+			    visible. */}
+			<div className="flex h-[calc(100dvh-3.5rem-3.5rem-env(safe-area-inset-bottom))] flex-col md:h-[calc(100dvh-5rem)]">
 				<header className="border-b border-line">
 					<div className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-4 py-3 md:px-6">
 						<div className="min-w-0">

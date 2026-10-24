@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router";
 import tvDisplay from "../assets/tv-display.webp";
+import SkySheet from "../components/SkySheet.jsx";
 import ZoneSearch from "../components/ZoneSearch.jsx";
 import ZoneTimes from "../components/ZoneTimes.jsx";
 import { safeStorage } from "../lib/storage.js";
@@ -18,21 +19,23 @@ export default function Landing() {
 	if (!picking) return <ZoneTimes zone={remembered} changeZone={changeZoneLink} />;
 
 	return (
-		<main className="mx-auto grid max-w-6xl gap-14 px-4 py-12 md:px-6 md:py-16 lg:grid-cols-[minmax(0,1fr)_30rem]">
-			<title>Waktu Solat Malaysia</title>
-			<div>
-				<h1 className="text-2xl font-semibold leading-tight tracking-tight md:text-[32px]">
-					Waktu solat di zon anda
-				</h1>
-				<p className="mt-3 text-lg text-muted">
-					Terus dari JAKIM e-Solat, untuk {zoneIndex.length} zon di seluruh Malaysia.
-				</p>
-				<div className="mt-10">
-					<ZoneSearch autoFocus={!remembered} />
+		<SkySheet>
+			<main className="mx-auto grid max-w-6xl gap-14 px-4 py-12 md:px-6 md:py-16 lg:grid-cols-[minmax(0,1fr)_30rem]">
+				<title>Waktu Solat Malaysia</title>
+				<div>
+					<h1 className="text-2xl font-semibold leading-tight tracking-tight md:text-[32px]">
+						Waktu solat di zon anda
+					</h1>
+					<p className="mt-3 text-lg text-muted">
+						Terus dari JAKIM e-Solat, untuk {zoneIndex.length} zon di seluruh Malaysia.
+					</p>
+					<div className="mt-10">
+						<ZoneSearch autoFocus={!remembered} />
+					</div>
 				</div>
-			</div>
-			<TvPromo />
-		</main>
+				<TvPromo />
+			</main>
+		</SkySheet>
 	);
 }
 

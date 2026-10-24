@@ -161,7 +161,7 @@ export default function ProgrammeSheet({ mosqueId, token, programme, onClose, on
 			ref={dialog}
 			onClose={onClose}
 			aria-labelledby="sheet-title"
-			className="mt-auto mb-0 max-h-[92dvh] w-full max-w-none overflow-y-auto rounded-t-2xl bg-ground p-0 text-ink backdrop:bg-black/60 md:m-auto md:max-w-xl md:rounded-2xl"
+			className="mt-auto mb-0 max-h-[92dvh] w-full max-w-none overflow-y-auto rounded-t-2xl bg-sheet p-0 text-ink backdrop:bg-black/60 md:m-auto md:max-w-xl md:rounded-2xl"
 		>
 			<form
 				onSubmit={save}

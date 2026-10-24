@@ -151,7 +151,7 @@ function Editor({ mosque, setMosque, token, setToken, remembered, storage }) {
 
 			<nav
 				aria-label="Bahagian"
-				className="sticky top-0 z-20 -mx-4 mt-6 border-b border-line bg-ground px-4 md:-mx-6 md:px-6"
+				className="sticky top-0 z-20 -mx-4 mt-6 border-b border-line bg-sheet px-4 md:-mx-6 md:px-6"
 			>
 				<ul className="no-scrollbar flex gap-1 overflow-x-auto">
 					{TABS.map(([anchor, label]) => (

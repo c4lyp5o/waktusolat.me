@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router";
 import Navbar from "./components/Navbar";
+import SkySheet from "./components/SkySheet.jsx";
 import { isTvPath } from "./lib/routes.js";
 import About from "./pages/About";
 import Chat from "./pages/Chat";
@@ -88,33 +89,11 @@ function App() {
 				<Route index element={<Landing />} />
 
 				<Route path="/times/:zone" element={<ZonePrayerTimes />} />
-				<Route path="/quran" element={<QuranSurahSelect />} />
-				<Route path="/quran/:surah" element={<QuranWithSurah />} />
-				<Route path="/hadith" element={<Hadith />} />
-				<Route path="/radio" element={<Radio />} />
-				<Route path="/chat" element={<Chat />} />
-				<Route path="/about" element={<About />} />
-				<Route
-					path="/m/baru"
-					element={
-						<Suspense fallback={null}>
-							<MosqueNew />
-						</Suspense>
-					}
-				/>
 				<Route
 					path="/m/:id"
 					element={
 						<Suspense fallback={null}>
 							<MosqueTv />
-						</Suspense>
-					}
-				/>
-				<Route
-					path="/m/:id/edit"
-					element={
-						<Suspense fallback={null}>
-							<MosqueEditor />
 						</Suspense>
 					}
 				/>
@@ -127,7 +106,32 @@ function App() {
 					}
 				/>
 
-				<Route path="*" element={<NotFound />} />
+				{/* Every page but the zone page and the TV sits on the sheet. */}
+				<Route element={<SkySheet />}>
+					<Route path="/quran" element={<QuranSurahSelect />} />
+					<Route path="/quran/:surah" element={<QuranWithSurah />} />
+					<Route path="/hadith" element={<Hadith />} />
+					<Route path="/radio" element={<Radio />} />
+					<Route path="/chat" element={<Chat />} />
+					<Route path="/about" element={<About />} />
+					<Route
+						path="/m/baru"
+						element={
+							<Suspense fallback={null}>
+								<MosqueNew />
+							</Suspense>
+						}
+					/>
+					<Route
+						path="/m/:id/edit"
+						element={
+							<Suspense fallback={null}>
+								<MosqueEditor />
+							</Suspense>
+						}
+					/>
+					<Route path="*" element={<NotFound />} />
+				</Route>
 			</Routes>
 		</BrowserRouter>
 	);
