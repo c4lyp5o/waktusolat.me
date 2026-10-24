@@ -19,20 +19,29 @@ export function dayTrack(now, day) {
 	return {
 		ticks: TRACK_KEYS.map((key) => ({ key, x: x(day.times[key]) })),
 		arc: { from: x(syuruk), to: x(maghrib) },
-		sun: daylight
-			? { x: x(now), lift: Math.sin(Math.PI * ((now - syuruk) / (maghrib - syuruk))) }
-			: null,
+		// f: how far along the arc the sun is (0 at Syuruk, 1 at Maghrib).
+		sun: daylight ? sunAt((now - syuruk) / (maghrib - syuruk), x(now)) : null,
 		nowX: now >= subuh && now <= isyak ? x(now) : null,
 		phase,
 	};
 }
+
+const sunAt = (f, x) => ({ x, f, lift: SHAPES.sine(f) });
+
+// Lift (0..1) at a point f (0..1) along the arc. The TV draws a sine hump;
+// the site draws a half ellipse, whose full shoulders leave room for the
+// countdown inside it. Either way x stays linear in time.
+export const SHAPES = {
+	sine: (f) => Math.sin(Math.PI * f),
+	ellipse: (f) => Math.sqrt(Math.max(0, 1 - (2 * f - 1) ** 2)),
+};
 
 // Drawing helpers shared by the TV and the site (SVG renderers).
 // Share of the sky's height the arc may rise to. Leaves room above the
 // arc's top for the sun's radius (TV: 3.4vh sun in a 7vh band; site: 20px in
 // 64px), so the sun is never clipped at solar noon.
 export const ARC_TOP = 0.75;
-const SAMPLES = 48;
+const SAMPLES = 96;
 
 // Stars for the night sky: fixed positions (x 0..1, y 0..1 from the top),
 // so the sky does not reshuffle on every render. A hash scatter: an earlier
@@ -48,11 +57,15 @@ export const STARS = Array.from({ length: 24 }, (_, i) => ({
 	big: scatter(i + 201) > 0.8,
 }));
 
-export function arcPoints(from, to) {
+// The arc as SVG polyline points in a 1000x100 box, up to `until` (0..1) of
+// its length: 1 for the whole arc, the sun's f for the part already travelled.
+export function arcPoints(from, to, { until = 1, shape = "sine" } = {}) {
+	const lift = SHAPES[shape];
 	return Array.from({ length: SAMPLES + 1 }, (_, i) => {
-		const f = i / SAMPLES;
+		// Cosine spacing: denser near the ends, where the ellipse is steep.
+		const f = (until * (1 - Math.cos((Math.PI * i) / SAMPLES))) / 2;
 		const x = (from + (to - from) * f) * 1000;
-		const y = 100 - ARC_TOP * 100 * Math.sin(Math.PI * f);
+		const y = 100 - ARC_TOP * 100 * lift(f);
 		return `${x.toFixed(1)},${y.toFixed(1)}`;
 	}).join(" ");
 }

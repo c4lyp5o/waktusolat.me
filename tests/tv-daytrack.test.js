@@ -1,6 +1,13 @@
 // TV display: day-track geometry (shared by the SVG and three.js renderers).
 import { describe, expect, test } from "bun:test";
-import { dayTrack, STARS, TRACK_PAD } from "../client/src/lib/waktu/daytrack.js";
+import {
+	ARC_TOP,
+	arcPoints,
+	dayTrack,
+	SHAPES,
+	STARS,
+	TRACK_PAD,
+} from "../client/src/lib/waktu/daytrack.js";
 import { mytEpoch } from "../client/src/lib/waktu/mytime.js";
 
 // Real WLY01 times for 22 Oct 2026.
@@ -79,6 +86,39 @@ describe("dayTrack", () => {
 		const { arc, ticks } = dayTrack(at(12, 0), day);
 		expect(arc.from).toBeCloseTo(ticks.find((t) => t.key === "syuruk").x, 6);
 		expect(arc.to).toBeCloseTo(ticks.find((t) => t.key === "maghrib").x, 6);
+	});
+});
+
+describe("arc shapes (site: ellipse, TV: sine)", () => {
+	const pts = (str) => str.split(" ").map((p) => p.split(",").map(Number));
+	test("both rise from 0 to 1 and back, and the ellipse is fuller", () => {
+		for (const lift of Object.values(SHAPES)) {
+			expect(lift(0)).toBeCloseTo(0, 6);
+			expect(lift(0.5)).toBeCloseTo(1, 6);
+			expect(lift(1)).toBeCloseTo(0, 6);
+		}
+		expect(SHAPES.ellipse(0.17)).toBeGreaterThan(SHAPES.sine(0.17) + 0.2);
+	});
+
+	test("sun.f runs Syuruk 0 -> Maghrib 1 and its x lies on the arc", () => {
+		const { sun, arc } = dayTrack(at(16, 18), day);
+		expect(sun.f).toBeCloseTo((at(16, 18) - at(6, 56)) / (at(19, 0) - at(6, 56)), 6);
+		expect(sun.x).toBeCloseTo(arc.from + (arc.to - arc.from) * sun.f, 6);
+	});
+
+	test("the travelled part ends at the sun, on the same curve", () => {
+		const { sun, arc } = dayTrack(at(16, 18), day);
+		const part = pts(arcPoints(arc.from, arc.to, { until: sun.f, shape: "ellipse" }));
+		const [x, y] = part.at(-1);
+		expect(x).toBeCloseTo(sun.x * 1000, 0);
+		expect(y).toBeCloseTo(100 - ARC_TOP * 100 * SHAPES.ellipse(sun.f), 0);
+		expect(part[0]).toEqual([Number((arc.from * 1000).toFixed(1)), 100]);
+	});
+
+	test("default stays the TV's sine over the whole arc", () => {
+		const whole = pts(arcPoints(0.1, 0.9));
+		expect(whole.at(-1)[0]).toBeCloseTo(900, 1);
+		expect(Math.min(...whole.map(([, y]) => y))).toBeCloseTo(100 - ARC_TOP * 100, 1);
 	});
 });
 

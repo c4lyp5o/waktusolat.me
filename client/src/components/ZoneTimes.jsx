@@ -1,22 +1,26 @@
 // ZoneTimes.jsx — a zone's prayer times: the site's main job.
 //
-// The TV's tested logic (lib/waktu) at phone and desktop size: the lead
-// answers "how long until the next prayer", then today's times (next lit
-// amber), the day track, and the week or month as a table. No iqamah here:
-// that is a mosque setting, so the countdown always targets the azan.
+// The TV's tested logic (lib/waktu) at phone and desktop size, in Langit
+// (SPEC-redesign.md): the page is the sky over the zone right now, the sun's
+// arc is the hero with "how long until the next prayer" inside it, and
+// today's times sit on the sheet below (the next one filled with the sky),
+// then the week or month as a table. No iqamah here: that is a mosque
+// setting, so the countdown always targets the azan.
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import useSWR from "swr";
 import { mosqueFor } from "../lib/mosques.js";
 import { DEFAULTS } from "../lib/waktu/config.js";
-import { ARC_TOP, arcPoints, dayTrack, STARS } from "../lib/waktu/daytrack.js";
+import { ARC_TOP, arcPoints, dayTrack, SHAPES, STARS } from "../lib/waktu/daytrack.js";
 import { areaName, formatCountdown, formatDate, formatTime } from "../lib/waktu/format.js";
 import { mytIsoDate } from "../lib/waktu/mytime.js";
 import { ADVISORY, ORDER, prayerJawi, prayerLabel } from "../lib/waktu/names.js";
-import { dayFor, nextDay, parseYear } from "../lib/waktu/rows.js";
+import { dayFor, nextDay } from "../lib/waktu/rows.js";
 import { listRows, screenState } from "../lib/waktu/schedule.js";
+import { siteNow } from "../lib/waktu/siteNow.js";
 import { skyPhase } from "../lib/waktu/sky.js";
 import { zoneInfo } from "../lib/zones.js";
+import { fetchDays } from "./useZoneSky.js";
 
 const SITE_CONFIG = {
 	...DEFAULTS,
@@ -25,19 +29,13 @@ const SITE_CONFIG = {
 	solat: 0,
 };
 
-async function fetchDays(url) {
-	const res = await fetch(url);
-	if (!res.ok) throw Object.assign(new Error(`HTTP ${res.status}`), { status: res.status });
-	return parseYear(await res.json());
-}
-
 // Ticks on each whole second.
 function useNow() {
-	const [now, setNow] = useState(Date.now);
+	const [now, setNow] = useState(siteNow);
 	useEffect(() => {
 		let timer;
 		const tick = () => {
-			const t = Date.now();
+			const t = siteNow();
 			setNow(t);
 			timer = setTimeout(tick, 1000 - (t % 1000) + 5);
 		};
@@ -52,71 +50,61 @@ const LEAD = {
 	"after-isyak": (label) => `${label} esok`,
 };
 
+// Set inside the arc, centred: the prayer, the countdown, its azan time.
 function Lead({ now, state }) {
 	return (
-		<section aria-labelledby="lead-title">
-			<p id="lead-title" className="text-xl font-semibold md:text-3xl">
+		<section aria-labelledby="lead-title" className="flex flex-col items-center text-center">
+			<p id="lead-title" className="text-[17px] font-semibold md:text-2xl">
 				<span className="text-accent">{(LEAD[state.kind] ?? LEAD.countdown)(state.label)}</span>{" "}
-				<span className="font-medium text-muted">dalam</span>
-				<span
-					lang="ar"
-					dir="rtl"
-					className="ml-4 font-uthmanic text-[1.1em] font-normal text-faint"
-				>
-					{prayerJawi(state.prayer, state.azan)}
-				</span>
-				{/* On a phone the azan time joins this line (all seven times must
-				    fit above the bottom bar); its own line returns from md up. */}
-				<span className="ml-2 text-base font-normal text-muted tabular-nums md:hidden">
-					· Azan {state.estimate ? "~" : ""}
-					{formatTime(state.azan)}
-				</span>
+				dalam
 			</p>
-			<p className="mt-1 text-[clamp(3.25rem,15vw,8.5rem)] font-medium leading-none tracking-[-0.04em] tabular-nums md:mt-3 [@media(max-height:620px)]:text-[2.75rem]">
+			<p className="text-[clamp(2.75rem,12.5vw,7.5rem)] font-extrabold leading-[0.95] tracking-[-0.045em] tabular-nums [@media(max-height:620px)]:text-[2.5rem]">
 				{formatCountdown(state.target - now)}
 			</p>
-			<p className="mt-3 hidden text-lg text-muted tabular-nums md:block">
-				Azan {state.estimate ? "~" : ""}
+			<p className="mt-1 text-[15px] text-muted tabular-nums md:mt-2 md:text-lg">
+				<span lang="ar" dir="rtl" className="font-jawi">
+					{prayerJawi(state.prayer, state.azan)}
+				</span>{" "}
+				· Azan {state.estimate ? "~" : ""}
 				{formatTime(state.azan)}
 			</p>
 		</section>
 	);
 }
 
-function TodayList({ times, rows }) {
+// On the sheet: a list on a phone, a row of seven from md up. The next
+// prayer is filled with the sky (its own .sky, so its text keeps contrast).
+function TodayList({ times, rows, sky }) {
 	return (
-		<ol className="flex flex-col gap-0.5 md:gap-1" aria-label="Waktu solat hari ini">
+		<ol className="grid gap-0.5 md:grid-cols-7 md:gap-2" aria-label="Waktu solat hari ini">
 			{ORDER.map((key) => {
 				const state = rows[key];
 				const lit = state === "next" || state === "current";
 				const tone = lit
-					? "bg-surface text-ink"
+					? "sky font-bold"
 					: state === "passed"
 						? "text-spent"
 						: ADVISORY.includes(key)
 							? "text-faint"
-							: "text-muted";
+							: "text-ink";
 				return (
 					<li
 						key={key}
-						className={`flex items-baseline justify-between rounded-xl px-4 py-1.5 text-[17px] md:py-2.5 md:text-xl [@media(max-height:620px)]:py-0.5 [@media(max-height:620px)]:text-base ${tone} ${
-							ADVISORY.includes(key) ? "font-normal" : "font-medium"
+						data-sky={lit ? sky : undefined}
+						className={`flex items-baseline justify-between rounded-2xl px-4 py-1 text-[17px] md:flex-col md:items-center md:gap-1 md:py-4 md:text-lg [@media(max-height:620px)]:py-0.5 [@media(max-height:620px)]:text-base ${tone} ${
+							ADVISORY.includes(key) || lit ? "" : "font-medium"
 						}`}
 					>
-						<span className="flex items-baseline gap-3">
+						<span className="flex items-baseline gap-3 md:gap-2">
 							<span>{prayerLabel(key, times[key])}</span>
-							<span
-								lang="ar"
-								dir="rtl"
-								className="font-uthmanic text-[1.15em] font-normal opacity-80"
-							>
+							<span lang="ar" dir="rtl" className="font-jawi text-[0.9em] font-normal opacity-75">
 								{prayerJawi(key, times[key])}
 							</span>
 						</span>
-						<span className={`flex items-center gap-3 tabular-nums ${lit ? "text-accent" : ""}`}>
-							{/* The next prayer breathes: a small amber dot before its time,
-							    clear of the text; still under reduced motion. */}
-							{lit && <span className="pulse-dot" aria-hidden="true" />}
+						<span className="flex items-center gap-3 tabular-nums md:text-[1.75rem] md:font-extrabold md:tracking-[-0.02em]">
+							{/* The next prayer breathes: a small dot before its time, clear
+							    of the text; still under reduced motion. */}
+							{lit && <span className="pulse-dot md:hidden" aria-hidden="true" />}
 							{formatTime(times[key])}
 						</span>
 					</li>
@@ -135,54 +123,83 @@ function hiddenOnPhone(key, next) {
 	return PAIR[key] === next || key === "subuh" || key === "isyak";
 }
 
-// The TV's day track, SVG only (no three.js outside /tv).
-function DayTrack({ now, today, next }) {
+// The hero: the TV's day track drawn as a half ellipse, the travelled part
+// as a wide faint stroke, the sun an outlined disc; the lead sits inside.
+// SVG only (no three.js outside /tv).
+function DayArc({ now, today, next, children }) {
 	const track = dayTrack(now, today);
+	const { arc, sun } = track;
 	const starry = track.phase === "night" || track.phase === "dawn";
 	return (
-		<section aria-hidden="true" className="px-3">
-			<div className="relative h-16 overflow-hidden md:h-20">
-				{starry &&
-					STARS.map((s) => (
-						<span
-							key={`${s.x}-${s.y}`}
-							className="site-star absolute rounded-full"
-							style={{ left: `${s.x * 100}%`, top: `${s.y * 100}%` }}
+		<section>
+			<div className="relative h-[10.5rem] md:h-[19rem] [@media(max-height:620px)]:h-36">
+				<div aria-hidden="true">
+					{starry &&
+						STARS.map((s) => (
+							<span
+								key={`${s.x}-${s.y}`}
+								className="site-star absolute rounded-full"
+								style={{ left: `${s.x * 100}%`, top: `${s.y * 100}%` }}
+							/>
+						))}
+					<svg
+						className="absolute inset-0 h-full w-full overflow-visible"
+						viewBox="0 0 1000 100"
+						preserveAspectRatio="none"
+						role="presentation"
+					>
+						<line
+							x1="0"
+							y1="100"
+							x2="1000"
+							y2="100"
+							stroke="var(--line)"
+							strokeWidth="1"
+							vectorEffect="non-scaling-stroke"
 						/>
-					))}
-				<svg
-					className="absolute inset-0 h-full w-full"
-					viewBox="0 0 1000 100"
-					preserveAspectRatio="none"
-					role="presentation"
-				>
-					<polyline
-						points={arcPoints(track.arc.from, track.arc.to)}
-						fill="none"
-						stroke="var(--faint)"
-						strokeOpacity="0.45"
-						strokeWidth="2"
-						vectorEffect="non-scaling-stroke"
-					/>
-				</svg>
-				{track.sun && (
-					<span
-						className="absolute h-5 w-5 -translate-x-1/2 translate-y-1/2 rounded-full bg-accent-fill"
-						style={{ left: `${track.sun.x * 100}%`, bottom: `${track.sun.lift * ARC_TOP * 100}%` }}
-					/>
-				)}
-				{!track.sun && track.nowX !== null && (
-					<span
-						className="absolute bottom-0 h-2.5 w-2.5 -translate-x-1/2 translate-y-1/2 rounded-full bg-faint"
-						style={{ left: `${track.nowX * 100}%` }}
-					/>
-				)}
+						<polyline
+							points={arcPoints(arc.from, arc.to, { shape: "ellipse" })}
+							fill="none"
+							stroke="var(--ink)"
+							strokeOpacity={sun ? 0.7 : 0.35}
+							strokeWidth="2"
+							vectorEffect="non-scaling-stroke"
+						/>
+						{sun && (
+							<polyline
+								points={arcPoints(arc.from, arc.to, { until: sun.f, shape: "ellipse" })}
+								fill="none"
+								stroke="var(--ink)"
+								strokeOpacity="0.16"
+								strokeWidth="9"
+								strokeLinecap="round"
+								vectorEffect="non-scaling-stroke"
+							/>
+						)}
+					</svg>
+					{sun && (
+						<span
+							className="absolute h-7 w-7 -translate-x-1/2 translate-y-1/2 rounded-full border-2 border-ink bg-accent-fill md:h-10 md:w-10"
+							style={{
+								left: `${sun.x * 100}%`,
+								bottom: `${SHAPES.ellipse(sun.f) * ARC_TOP * 100}%`,
+							}}
+						/>
+					)}
+					{!sun && track.nowX !== null && (
+						<span
+							className="absolute bottom-0 h-2.5 w-2.5 -translate-x-1/2 translate-y-1/2 rounded-full bg-faint"
+							style={{ left: `${track.nowX * 100}%` }}
+						/>
+					)}
+				</div>
+				<div className="absolute inset-x-0 bottom-[7%]">{children}</div>
 			</div>
-			<ol className="relative mt-2 h-5 text-[13px] md:text-sm">
+			<ol aria-hidden="true" className="relative mt-2 h-5 text-[13px] md:text-sm">
 				{track.ticks.map((t) => (
 					<li
 						key={t.key}
-						className={`absolute -translate-x-1/2 whitespace-nowrap ${t.key === next ? "text-accent" : "text-faint"} ${
+						className={`absolute -translate-x-1/2 whitespace-nowrap ${t.key === next ? "font-bold text-accent" : "text-faint"} ${
 							hiddenOnPhone(t.key, next) ? "max-md:hidden" : ""
 						}`}
 						style={{ left: `${t.x * 100}%` }}
@@ -347,10 +364,6 @@ export default function ZoneTimes({ zone, changeZone }) {
 					{areaName(info.name)}{" "}
 					<span className="hidden text-faint md:inline">· {zone.toUpperCase()}</span>
 				</p>
-				<p className="mt-0.5 text-[13px] text-faint md:hidden [@media(max-height:620px)]:hidden">
-					{formatDate(now)}
-					{found?.day.hijri ? ` · ${found.day.hijri}` : ""}
-				</p>
 			</div>
 			<div className="flex items-center gap-4">
 				<p className="hidden text-[15px] text-muted md:block md:text-right">
@@ -364,6 +377,11 @@ export default function ZoneTimes({ zone, changeZone }) {
 				</p>
 				{changeZone}
 			</div>
+			{/* Phone only: the date under both columns, so it stays one line. */}
+			<p className="col-span-2 mt-0.5 text-[13px] text-faint md:hidden [@media(max-height:620px)]:hidden">
+				{formatDate(now)}
+				{found?.day.hijri ? ` · ${found.day.hijri}` : ""}
+			</p>
 		</header>
 	);
 
@@ -385,34 +403,34 @@ export default function ZoneTimes({ zone, changeZone }) {
 	const shown = estimate ? { ...state, estimate: true } : state;
 	const { rows, times } = listRows(now, today, state);
 
+	const sky = skyPhase(now, today);
+
 	return (
-		<main className="pb-16">
-			{/* The sky over the zone right now: a flat field of its colour. */}
-			<section className="sky" data-sky={skyPhase(now, today)}>
-				<div className="mx-auto max-w-6xl px-4 pt-4 pb-10 md:px-6 md:pt-10 md:pb-12">
-					{header}
-					<div className="mt-5 grid gap-4 [@media(max-height:620px)]:mt-3 [@media(max-height:620px)]:gap-2 md:mt-10 md:gap-10 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-center">
+		// The sky over the zone right now: a flat field of its colour, the
+		// whole page down to the sheet (the navbar above takes it too).
+		<main className="sky" data-sky={sky}>
+			<div className="mx-auto max-w-6xl px-4 pt-4 md:px-6 md:pt-10">
+				{header}
+				<div className="mx-auto mt-3 max-w-4xl md:mt-8 [@media(max-height:620px)]:mt-1">
+					<DayArc now={now} today={today} next={state.kind === "after-isyak" ? null : state.prayer}>
 						<Lead now={now} state={shown} />
-						<TodayList times={times} rows={rows} />
-					</div>
-					<div className="mt-10">
-						<DayTrack
-							now={now}
-							today={today}
-							next={state.kind === "after-isyak" ? null : state.prayer}
-						/>
+					</DayArc>
+				</div>
+			</div>
+			<div className="sheet mt-3 rounded-t-[28px] md:mt-10 md:rounded-t-[40px]">
+				<div className="mx-auto max-w-6xl px-3 pt-3 pb-16 md:px-6 md:pt-8">
+					<TodayList times={times} rows={rows} sky={sky} />
+					<div className="px-1 md:px-0">
+						<StateMosque negeri={info.negeri} />
+						<TimesTable zone={zone} todayIso={mytIsoDate(now)} />
+						<p className="mt-10 text-[15px] text-muted">
+							Waktu ini di TV masjid anda, bersama program masjid?{" "}
+							<Link to="/m/baru" className="font-semibold text-ink underline underline-offset-2">
+								Daftar masjid, percuma
+							</Link>
+						</p>
 					</div>
 				</div>
-			</section>
-			<div className="mx-auto max-w-6xl px-4 md:px-6">
-				<StateMosque negeri={info.negeri} />
-				<TimesTable zone={zone} todayIso={mytIsoDate(now)} />
-				<p className="mt-10 text-[15px] text-muted">
-					Waktu ini di TV masjid anda, bersama program masjid?{" "}
-					<Link to="/m/baru" className="font-semibold text-ink underline underline-offset-2">
-						Daftar masjid, percuma
-					</Link>
-				</p>
 			</div>
 		</main>
 	);

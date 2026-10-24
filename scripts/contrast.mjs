@@ -18,12 +18,19 @@ const BLOCKS = [
 	[
 		"light",
 		"main.css",
-		':root,\n:root[data-theme="light"]',
+		':root,\n:root[data-theme="light"],\n.sheet',
 		null,
 		["ground", "surface", "sheet"],
 		SITE_TEXT,
 	],
-	["dark", "main.css", ':root[data-theme="dark"]', null, ["ground", "surface", "sheet"], SITE_TEXT],
+	[
+		"dark",
+		"main.css",
+		':root[data-theme="dark"],\n:root[data-theme="dark"] .sheet',
+		null,
+		["ground", "surface", "sheet"],
+		SITE_TEXT,
+	],
 	...["malam", "subuh", "pagi", "zohor", "asar", "senja"].map((s) => [
 		`sky ${s}`,
 		"main.css",

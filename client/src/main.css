@@ -12,7 +12,8 @@
    dark. Lamp amber marks now/next only; --accent is text-safe on its
    ground, --accent-fill is the amber used for shapes (the sun, a dot). ── */
 :root,
-:root[data-theme="light"] {
+:root[data-theme="light"],
+.sheet {
 	--sheet: #fffaf3;
 	--ground: #faf6f0;
 	--surface: #ffffff;
@@ -28,7 +29,16 @@
 	--danger: #b3261e; /* errors and destructive actions (mosque editor) */
 	color-scheme: light;
 }
-:root[data-theme="dark"] {
+/* The sheet (ZoneTimes.jsx): the light/dark panel set on the sky. It
+   re-declares the mode's tokens (with :root above), so text inside reads on
+   the sheet whatever sky surrounds it. */
+.sheet {
+	background-color: var(--sheet);
+	color: var(--ink);
+}
+
+:root[data-theme="dark"],
+:root[data-theme="dark"] .sheet {
 	--sheet: #141416;
 	--ground: #0b0b0d;
 	--surface: #151517;

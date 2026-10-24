@@ -1,7 +1,9 @@
 // Navbar.jsx — wordmark, plain links (active by brightness), theme toggle.
 // On phones the destinations move to a bottom bar, within thumb reach.
+// The top band is painted in the sky over the visitor's zone (useZoneSky).
 import { NavLink, useLocation } from "react-router";
 import ThemeToggle from "./ThemeToggle.jsx";
+import useZoneSky, { skyZone } from "./useZoneSky.js";
 
 const LINKS = [
 	{ to: "/", label: "Waktu Solat", match: (p) => p === "/" || p.startsWith("/times") },
@@ -32,10 +34,11 @@ export default function Navbar() {
 	const { pathname } = useLocation();
 	const active = (l) => (l.match ? l.match(pathname) : pathname === l.to);
 	const tone = (l) => (active(l) ? "text-ink font-semibold" : "text-faint hover:text-ink");
+	const sky = useZoneSky(skyZone(pathname));
 
 	return (
 		<>
-			<header className="border-b border-line bg-ground">
+			<header className={sky ? "sky" : "bg-ground"} data-sky={sky ?? undefined}>
 				<nav
 					className="mx-auto flex h-12 max-w-6xl items-center gap-2 px-4 md:h-16 md:px-6"
 					aria-label="Utama"
