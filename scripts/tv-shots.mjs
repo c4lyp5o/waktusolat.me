@@ -13,7 +13,7 @@
 import { mkdirSync } from "node:fs";
 import { chromium } from "playwright-core";
 
-const out = process.argv[2] ?? ".taste-skill/tv-shots";
+const out = process.argv[2] ?? ".shots/tv";
 const base = process.argv[3] ?? "http://localhost:3000";
 
 const THU = "2026-10-22";

@@ -12,6 +12,8 @@ data/times/
 # Persistent runtime state for docker-compose (sqlite DB)
 storage/
 
-# taste-skill working files (screenshots etc.); keep the dealt direction
-.taste-skill/*
-!.taste-skill/direction.json
+# screenshot runs (scripts/tv-shots.mjs)
+.shots/
+
+# personal Claude Code settings
+.claude/settings.local.json

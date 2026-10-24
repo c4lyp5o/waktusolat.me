@@ -9,7 +9,7 @@ Free waktu solat dashboard for mosque TVs, with each mosque's own programmes sho
 | How a TV enters dashboard mode | **Dedicated URL** bookmarked on the TV (`/tv/:zone`, later `/m/:id`). Aspect ratio never switches modes, so laptops and phones are unaffected. |
 | Who edits programmes | **Secret edit link**, no accounts. Creating a mosque returns a public TV link and a private edit link that carries a token. |
 | Orientation | **Landscape only** (16:9). Portrait is out of scope. |
-| Stack additions | `three` (ambient background) and `motion` (transitions). Both are lazy-loaded on the TV routes only. Art direction via the taste skill. |
+| Stack additions | `three` (ambient background) and `motion` (transitions). Both are lazy-loaded on the TV routes only. |
 | Mosque URL | `/m/:id`: a short random id, so pages can't be guessed or enumerated. No slugs. |
 | Who can create a mosque | Anyone, rate-limited. Pages are unlisted. You can delete one with `ADMIN_API_KEY`. |
 | Jumaat | On Friday, Zohor is shown as **Jumaat**, with its own iqamah/khutbah offset. |
