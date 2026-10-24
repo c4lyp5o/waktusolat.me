@@ -1,6 +1,6 @@
 # Spec: `redesign`
 
-Status: **approved 2026-10-24**. It replaces the art direction from `SPEC-site-revamp.md` and `SPEC-tv-display.md`, which came from the taste skill, now removed. Mockups: [design canvas](https://claude.ai/artifact/UaEJ5FujuBwq22pRhp7FGy).
+Status: **done 2026-10-24** (owner checked on the Android TV). It replaces the art direction from `SPEC-site-revamp.md` and `SPEC-tv-display.md`, which came from the taste skill, now removed. Mockups: [design canvas](https://claude.ai/artifact/UaEJ5FujuBwq22pRhp7FGy).
 
 ## Objective
 

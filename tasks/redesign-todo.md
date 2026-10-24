@@ -7,4 +7,4 @@
 - [x] 5. TV: Takwim and Songket themes, each a lazy chunk with its fonts (`useTheme`: Langit until it is in), `?tema=` validated in `parseConfig` (+ test), contrast 176 pairs; checked countdown, iqamah and solat states
 - [x] 6. `tema` on mosques: validated field (400 otherwise), `addMissingColumns` adds the column to an existing DB (+ test on the old schema), `mosqueConfig` maps it, `TemaPicker` in Tetapan. Browser: an API edit to songket reached the TV in 57 s with no reload. Found on the way: `db.js` read `DB_PATH` at import, so a test importing it first sent the mosque tests to the dev DB; now read at open (40 stray dev rows removed)
 - [x] 7. README (`tema` parameter, theme picker, contrast script), `tv-shots.mjs` shoots every zone state in each theme (39 shots at 1080p reviewed; Songket's star band now hidden on full-screen states)
-- [ ] 8. Owner check on the Android TV: each theme, and switching theme from the phone
+- [x] 8. Owner check on the Android TV: each theme, and switching theme from the phone (owner: "looks good", 2026-10-24)
