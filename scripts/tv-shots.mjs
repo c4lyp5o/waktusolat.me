@@ -7,6 +7,9 @@
 // Playwright's own browser is not installed. Times are WLY01's for 22 and
 // 23 Oct 2026 (Zohor 13:01, Isyak 20:10; the 23rd is a Friday).
 //
+// Every zone state is taken in each TV theme (SPEC-redesign.md); TEMA=songket
+// (or a comma list) narrows that. Files are named <state>-<theme>-<size>.
+//
 // A registered mosque's screen (/m/:id) is added when MOSQUE=<id> names a
 // mosque in the server's database (create one in /m/baru, with a few
 // programmes; WLY01 zone for the times above).
@@ -39,6 +42,13 @@ if (process.env.MOSQUE) {
 		["mosque-evening", `${m}?now=${THU}T18:30:00`],
 	);
 }
+const TEMAS = (process.env.TEMA ?? "langit,takwim,songket").split(",");
+// A zone path in each theme; a mosque's screen uses the mosque's own theme.
+const shots = STATES.flatMap(([name, path]) =>
+	path.startsWith("/tv/")
+		? TEMAS.map((t) => [`${name}-${t}`, `${path}${path.includes("?") ? "&" : "?"}tema=${t}`])
+		: [[name, path]],
+);
 const SIZES = [
 	["1080p", 1920, 1080],
 	["4k", 3840, 2160],
@@ -51,12 +61,12 @@ const browser = await chromium.launch({
 });
 for (const [sizeName, width, height] of SIZES) {
 	const ctx = await browser.newContext({ viewport: { width, height } });
-	for (const [name, path] of STATES) {
+	for (const [name, path] of shots) {
 		const page = await ctx.newPage();
 		await page.goto(base + path, { waitUntil: "networkidle" });
-		// The crossfade and the day track; a mosque's first programme card
-		// arrives on the banner's next turn.
-		await page.waitForTimeout(path.startsWith("/m/") ? 22_000 : 1500);
+		// The crossfade, Langit's 3 s sky transition and a theme's lazy fonts;
+		// a mosque's first programme card arrives on the banner's next turn.
+		await page.waitForTimeout(path.startsWith("/m/") ? 22_000 : 4000);
 		await page.screenshot({ path: `${out}/${name}-${sizeName}.png` });
 		await page.close();
 	}
@@ -67,4 +77,4 @@ const phone = await browser.newPage({ viewport: { width: 390, height: 844 } });
 await phone.goto(`${base}/tv/wly01`, { waitUntil: "networkidle" });
 await phone.screenshot({ path: `${out}/portrait-notice.png` });
 await browser.close();
-console.log(`${STATES.length * SIZES.length + 1} screenshots in ${out}`);
+console.log(`${shots.length * SIZES.length + 1} screenshots in ${out}`);

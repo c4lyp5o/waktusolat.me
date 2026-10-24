@@ -44,3 +44,8 @@
 .tv[data-tema="songket"] .tv-lead-count {
 	font-weight: 500;
 }
+/* Full-screen states (solat, messages) have no header: no band either, so
+   the solat screen stays dim and still. */
+.tv[data-tema="songket"]:has(.tv-full)::before {
+	display: none;
+}

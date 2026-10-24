@@ -6,4 +6,5 @@
 - [x] 4. TV: layout/theme split (`tv.css` layout, `themes/langit.css` tokens per sky on `.tv[data-tema][data-sky]`), burn-in drift on an inner wrapper, three.js reads `--arc`/`--sun` (a first version drew the arc before its geometry existed, so it vanished; caught in the browser), contrast 156 pairs
 - [x] 5. TV: Takwim and Songket themes, each a lazy chunk with its fonts (`useTheme`: Langit until it is in), `?tema=` validated in `parseConfig` (+ test), contrast 176 pairs; checked countdown, iqamah and solat states
 - [x] 6. `tema` on mosques: validated field (400 otherwise), `addMissingColumns` adds the column to an existing DB (+ test on the old schema), `mosqueConfig` maps it, `TemaPicker` in Tetapan. Browser: an API edit to songket reached the TV in 57 s with no reload. Found on the way: `db.js` read `DB_PATH` at import, so a test importing it first sent the mosque tests to the dev DB; now read at open (40 stray dev rows removed)
-- [ ] 7. README, screenshots, owner check on the Android TV
+- [x] 7. README (`tema` parameter, theme picker, contrast script), `tv-shots.mjs` shoots every zone state in each theme (39 shots at 1080p reviewed; Songket's star band now hidden on full-screen states)
+- [ ] 8. Owner check on the Android TV: each theme, and switching theme from the phone
