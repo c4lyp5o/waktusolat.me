@@ -33,7 +33,7 @@ html.tv-mode body {
 	padding: var(--pad-y) var(--pad-x);
 	background: var(--ground);
 	color: var(--text);
-	font-family: "Inter", system-ui, sans-serif;
+	font-family: "Bricolage Grotesque Variable", system-ui, sans-serif;
 	line-height: 1.2;
 	cursor: none;
 	overflow: hidden;
@@ -47,7 +47,7 @@ html.tv-mode body {
 	height: 100%;
 }
 
-/* Tabular figures on numbers only: Inter's tnum also widens punctuation. */
+/* Tabular figures on numbers only, so punctuation keeps its own width. */
 .tv-clock,
 .tv-dates,
 .tv-lead-count,

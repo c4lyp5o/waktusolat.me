@@ -4,7 +4,7 @@
 // Lazy-loaded from App.jsx, outside the site's Navbar. Everything shown is
 // derived each second from server-corrected time (useNow), the zone's cached
 // year (useYear) and the config: the URL's here, the mosque's on /m/:id.
-// Inter is bundled site-wide in main.jsx.
+// Bricolage Grotesque is bundled site-wide in main.jsx.
 import "./tv.css";
 import { domAnimation, LazyMotion, m } from "motion/react";
 import { useEffect, useMemo } from "react";

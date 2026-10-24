@@ -6,7 +6,12 @@
       "name": "client",
       "dependencies": {
         "@biomejs/biome": "^2.5.12",
-        "@fontsource/inter": "5.3.0",
+        "@fontsource-variable/bricolage-grotesque": "5.3.0",
+        "@fontsource-variable/newsreader": "5.3.0",
+        "@fontsource-variable/noto-naskh-arabic": "5.3.0",
+        "@fontsource-variable/readex-pro": "5.3.0",
+        "@fontsource-variable/reem-kufi": "5.3.0",
+        "@fontsource/ibm-plex-sans": "5.3.0",
         "@tailwindcss/vite": "^4.1.18",
         "motion": "13.5.1",
         "react": "^19.2.4",
@@ -94,7 +99,17 @@
 
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.25.4", "", { "os": "win32", "cpu": "x64" }, "sha512-nOT2vZNw6hJ+z43oP1SPea/G/6AbN6X+bGNhNuq8NtRHy4wsMhw765IKLNmnjek7GvjWBYQ8Q5VBoYTFg9y1UQ=="],
 
-    "@fontsource/inter": ["@fontsource/inter@5.3.0", "", {}, "sha512-RofMylZmjlJEfELXeNHFWBRcSs75rGU/6bV2S2jfnvv/3rPXPGe0LgUJTklcHZ9lM4OZmAVFhcJPnACfb91A3g=="],
+    "@fontsource-variable/bricolage-grotesque": ["@fontsource-variable/bricolage-grotesque@5.3.0", "", {}, "sha512-TLi9Q4hJjS2UvoTMRSS2nHu6c4R56lAw60NR9QYtVRCHn0XtsFpiEhNffZ8Glsoxu6wEEwLKBP8lb94J52PNBA=="],
+
+    "@fontsource-variable/newsreader": ["@fontsource-variable/newsreader@5.3.0", "", {}, "sha512-rrzYi43qMpbzwuFtf9OkWH8sxAPVPcQQQEwXpPtwaKYeJ8yVg5aLs5kawmo1f2Q1t1M38TLmEKCkGVDsYwgdFw=="],
+
+    "@fontsource-variable/noto-naskh-arabic": ["@fontsource-variable/noto-naskh-arabic@5.3.0", "", {}, "sha512-Ot0G5iln5MeLPKp1WNt6AGi4KHbPIVm0GEow2ED6rZ+8Rao+OuswhX4D+RPerc3aQ6teneLdqXSL8VPGorJvGg=="],
+
+    "@fontsource-variable/readex-pro": ["@fontsource-variable/readex-pro@5.3.0", "", {}, "sha512-ebrEcz8sjzQk92x6K3WtYzOgEKTIDe5D+iPqef0YYvPdqCfxzVkRgpsog5POX4sWa7e4wccCQ1IhmMuRka2hZg=="],
+
+    "@fontsource-variable/reem-kufi": ["@fontsource-variable/reem-kufi@5.3.0", "", {}, "sha512-Q2MbKKWX2JVUIGbs0GTdFp2GTahGmink5mFCo7kKLPYfbY9S8xdvCFC+eMSDI33jj8Cvox5QpWrifTUQol07iw=="],
+
+    "@fontsource/ibm-plex-sans": ["@fontsource/ibm-plex-sans@5.3.0", "", {}, "sha512-CbE4CbbEEZJX860XyUiRpsksXIQR8Rp2XDva2VO53NJox9tVNtusrysd2x5YkUEY3ErQ66W1IiiQL8/wihhw5w=="],
 
     "@jridgewell/gen-mapping": ["@jridgewell/gen-mapping@0.3.13", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.0", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA=="],
 

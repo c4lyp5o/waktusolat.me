@@ -1,6 +1,6 @@
 # Spec: `redesign`
 
-Status: **draft 2026-10-24**. It replaces the art direction from `SPEC-site-revamp.md` and `SPEC-tv-display.md`, which came from the taste skill, now removed. Mockups: [design canvas](https://claude.ai/artifact/UaEJ5FujuBwq22pRhp7FGy).
+Status: **approved 2026-10-24**. It replaces the art direction from `SPEC-site-revamp.md` and `SPEC-tv-display.md`, which came from the taste skill, now removed. Mockups: [design canvas](https://claude.ai/artifact/UaEJ5FujuBwq22pRhp7FGy).
 
 ## Objective
 
@@ -46,7 +46,7 @@ The data, behaviour, offline support and APIs don't change, apart from one new m
 
 ## Type and tokens
 
-- **Fonts are self-hosted** (woff2 in `client/src/styles/fonts/`, like Uthmanic), so the TV works offline and nothing comes from Google at run time:
+- **Fonts are self-hosted** (bundled from `@fontsource` packages, like Inter was), so the TV works offline and nothing comes from Google at run time:
   - Bricolage Grotesque (site and Langit)
   - Noto Naskh Arabic (Jawi on the site)
   - Newsreader and IBM Plex Sans (Takwim)
@@ -83,7 +83,7 @@ The data, behaviour, offline support and APIs don't change, apart from one new m
 6. **`tema` on mosques:** the API, the migration and the editor picker, so the TV follows the mosque.
 7. README, screenshots and the owner check.
 
-## Open questions
+## Decisions (owner, 2026-10-24)
 
-1. **Takwim and Songket on the website too?** As a visitor's own choice next to the light/dark toggle. Recommended: **no**. The site has one look, and the themes are a mosque's choice for its hall.
-2. **Langit on a TV in daylight skies** (pagi, zohor, asar) is a light screen. Recommended: **keep it**. It is the idea of Langit. A mosque that wants dark all day picks Takwim or Songket.
+1. **Takwim and Songket stay TV-only.** The website has one look, Langit.
+2. **Langit on the TV keeps the light daytime skies.** A mosque that wants a dark screen all day picks Takwim or Songket.
