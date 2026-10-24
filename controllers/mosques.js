@@ -17,8 +17,10 @@ const db = await initializeDatabase();
 // Bounds match tv-display's URL parameters (client/src/lib/waktu/config.js).
 const PRAYERS = ["subuh", "zohor", "asar", "maghrib", "isyak"];
 const MAX_NAME = 60;
-const DEFAULTS = { jumaat: 30, solat: 10, iqamah: 10 };
-const FIELDS = new Set(["name", "zone", "iqamah", "jumaat", "solat"]);
+const DEFAULTS = { jumaat: 30, solat: 10, iqamah: 10, tema: "langit" };
+const FIELDS = new Set(["name", "zone", "iqamah", "jumaat", "solat", "tema"]);
+// The TV's themes (client/src/lib/waktu/config.js TEMAS; SPEC-redesign.md).
+const TEMAS = ["langit", "takwim", "songket"];
 
 // Creation limits: per client IP, and a daily backstop across all IPs.
 // Replaceable by tests.
@@ -87,6 +89,12 @@ export function validateSettings(input, { partial = false } = {}) {
 			value[field] = DEFAULTS[field];
 		}
 	}
+	if ("tema" in input) {
+		if (!TEMAS.includes(input.tema)) return bad("tema", `tema must be one of ${TEMAS.join(", ")}`);
+		value.tema = input.tema;
+	} else if (!partial) {
+		value.tema = DEFAULTS.tema;
+	}
 	return { value };
 }
 
@@ -112,6 +120,7 @@ const toPublic = (row) => ({
 	iqamah: JSON.parse(row.iqamah),
 	jumaat: row.jumaat,
 	solat: row.solat,
+	tema: row.tema,
 	updatedAt: row.updated_at,
 });
 
@@ -158,8 +167,8 @@ export async function createMosque({ request, set }) {
 	const token = newToken();
 	const now = Date.now();
 	const insert = db.prepare(
-		`INSERT INTO mosques (id, name, zone, iqamah, jumaat, solat, token_hash, created_at, updated_at)
-		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		`INSERT INTO mosques (id, name, zone, iqamah, jumaat, solat, tema, token_hash, created_at, updated_at)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 	);
 	for (let attempt = 0; ; attempt++) {
 		const id = newId();
@@ -171,6 +180,7 @@ export async function createMosque({ request, set }) {
 				JSON.stringify(value.iqamah),
 				value.jumaat,
 				value.solat,
+				value.tema,
 				hashToken(token),
 				now,
 				now,
@@ -211,13 +221,14 @@ export async function updateMosque({ params, request, set }) {
 	const next = { ...toPublic(row), ...value };
 	const updatedAt = nextVersion(row.updated_at);
 	db.prepare(
-		"UPDATE mosques SET name = ?, zone = ?, iqamah = ?, jumaat = ?, solat = ?, updated_at = ? WHERE id = ?",
+		"UPDATE mosques SET name = ?, zone = ?, iqamah = ?, jumaat = ?, solat = ?, tema = ?, updated_at = ? WHERE id = ?",
 	).run(
 		next.name,
 		next.zone,
 		JSON.stringify(next.iqamah),
 		next.jumaat,
 		next.solat,
+		next.tema,
 		updatedAt,
 		row.id,
 	);

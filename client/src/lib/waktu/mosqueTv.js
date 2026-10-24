@@ -2,7 +2,7 @@
 // its settings as the TV's config, its cache for offline boots, and which
 // programmes the banner shows, in what order, with what "when" line.
 import { atText, dayLabel, resolveAt } from "../programmeText.js";
-import { DEFAULTS } from "./config.js";
+import { DEFAULTS, TEMAS } from "./config.js";
 import { mytIsoDate, mytParts } from "./mytime.js";
 
 // No end times exist, so an occurrence leaves the banner this long after it
@@ -18,6 +18,8 @@ export function mosqueConfig(mosque, now = null) {
 		jumaat: mosque.jumaat,
 		solat: mosque.solat,
 		nama: mosque.name,
+		// A mosque saved before themes (or by an older server) has none.
+		tema: TEMAS.includes(mosque.tema) ? mosque.tema : DEFAULTS.tema,
 		now,
 	};
 }

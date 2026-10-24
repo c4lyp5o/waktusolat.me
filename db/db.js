@@ -2,7 +2,31 @@ import { Database } from "bun:sqlite";
 import logger from "../utils/logger.js";
 
 let dbInstance;
-const DB_PATH = process.env.DB_PATH || "./db/visitors.sqlite";
+// Read when the database opens, not at import: a test that imports this
+// module early must not pin it to the real DB before DB_PATH is pointed
+// at a temp file.
+const dbPath = () => process.env.DB_PATH || "./db/visitors.sqlite";
+
+// Columns added after their table first shipped. CREATE TABLE IF NOT EXISTS
+// leaves an existing table as it is, so each is added here when missing;
+// existing rows take the column's default. Idempotent.
+const ADDED_COLUMNS = [
+	// SPEC-redesign.md: the mosque's TV theme.
+	["mosques", "tema", "TEXT NOT NULL DEFAULT 'langit'"],
+];
+
+export function addMissingColumns(db) {
+	for (const [table, column, definition] of ADDED_COLUMNS) {
+		const has = db
+			.prepare(`PRAGMA table_info(${table})`)
+			.all()
+			.some((c) => c.name === column);
+		if (!has) {
+			db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+			logger.info(`[db] added ${table}.${column}`);
+		}
+	}
+}
 
 /**
  * Initializes the SQLite database.
@@ -12,7 +36,7 @@ const DB_PATH = process.env.DB_PATH || "./db/visitors.sqlite";
 const initializeDatabase = async () => {
 	if (!dbInstance) {
 		try {
-			dbInstance = new Database(DB_PATH, { create: true });
+			dbInstance = new Database(dbPath(), { create: true });
 
 			dbInstance.exec(`
 				CREATE TABLE IF NOT EXISTS visitors (
@@ -64,13 +88,14 @@ const initializeDatabase = async () => {
 				);
 				CREATE INDEX IF NOT EXISTS idx_photos_mosque ON programme_photos (mosque_id);
 			`);
+			addMissingColumns(dbInstance);
 		} catch (error) {
 			console.error("Error creating tables:", error.message);
 			process.exit(1);
 		}
 	}
 
-	logger.info(`[db] Database initialized at ${DB_PATH}`);
+	logger.info(`[db] Database initialized at ${dbPath()}`);
 	return dbInstance;
 };
 

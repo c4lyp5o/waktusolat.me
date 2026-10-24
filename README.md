@@ -139,7 +139,7 @@ Unknown zone or period → `400`. A zone with no data yet (e.g. right after a fr
 
 A mosque's TV settings, saved under a random id (no accounts; see `SPEC-mosque-registry.md`).
 
-POST /mosques : register a mosque. Body `{ "name", "zone", "iqamah"?, "jumaat"?, "solat"? }` (iqamah: all five prayers, 0-60 min each; jumaat 0-90; solat 1-60). Returns the settings, the TV path `/m/(id)`, and an edit token **shown only once**. Limited to 5 per IP per hour and 500 per day in total\
+POST /mosques : register a mosque. Body `{ "name", "zone", "iqamah"?, "jumaat"?, "solat"?, "tema"? }` (iqamah: all five prayers, 0-60 min each; jumaat 0-90; solat 1-60; tema `langit` (default), `takwim` or `songket`). Returns the settings, the TV path `/m/(id)`, and an edit token **shown only once**. Limited to 5 per IP per hour and 500 per day in total\
 GET /mosques/(id) : public settings (never the token). Sends an `ETag`; `If-None-Match` gets a `304`\
 PATCH /mosques/(id) : change any of the fields above. Needs `Authorization: Bearer (token)`\
 POST /mosques/(id)/token : replace a leaked token; the old one stops working. Needs the current token\

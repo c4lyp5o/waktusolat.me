@@ -46,6 +46,7 @@ describe("create and read", () => {
 			iqamah: { subuh: 10, zohor: 10, asar: 10, maghrib: 10, isyak: 10 },
 			jumaat: 30,
 			solat: 10,
+			tema: "langit",
 		});
 		expect(data.mosque.id).toMatch(/^[0-9a-hjkmnp-tv-z]{10}$/);
 		expect(data.token).toMatch(/^[A-Za-z0-9_-]{43}$/);
@@ -60,13 +61,27 @@ describe("create and read", () => {
 		const text = await res.text();
 		expect(text).not.toContain(data.token);
 		expect(Object.keys(JSON.parse(text)).sort()).toEqual(
-			["id", "iqamah", "jumaat", "name", "solat", "updatedAt", "zone"].sort(),
+			["id", "iqamah", "jumaat", "name", "solat", "tema", "updatedAt", "zone"].sort(),
 		);
 		const row = new Database(dbPath, { readonly: true })
 			.prepare("SELECT token_hash FROM mosques WHERE id = ?")
 			.get(data.mosque.id);
 		expect(row.token_hash).toMatch(/^[0-9a-f]{64}$/);
 		expect(row.token_hash).not.toContain(data.token);
+	});
+
+	test("tema: chosen at creation or by edit; anything else is 400", async () => {
+		const { data } = await create({ name: "Surau An-Nur", zone: "sgr01", tema: "takwim" });
+		expect(data.mosque.tema).toBe("takwim");
+		const res = await patch(data.mosque.id, data.token, { tema: "songket" });
+		expect(res.status).toBe(200);
+		expect((await res.json()).tema).toBe("songket");
+		for (const tema of ["dark", "SONGKET", "", null, 1]) {
+			const bad = await patch(data.mosque.id, data.token, { tema });
+			expect(bad.status).toBe(400);
+			expect((await bad.json()).field).toBe("tema");
+		}
+		expect((await create({ name: "Masjid X", zone: "wly01", tema: "neon" })).res.status).toBe(400);
 	});
 
 	test("unknown id is 404", async () => {

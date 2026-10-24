@@ -15,6 +15,7 @@ import { PRAYERS } from "../lib/waktu/names.js";
 import { zoneInfo } from "../lib/zones.js";
 import LinkCard from "../mosque/LinkCard.jsx";
 import ProgrammeSheet from "../mosque/ProgrammeSheet.jsx";
+import TemaPicker from "../mosque/TemaPicker.jsx";
 import { BTN, BTN_DANGER, BTN_SOFT, ERROR, FIELD, LABEL } from "../mosque/ui.js";
 import WeekPreview from "../mosque/WeekPreview.jsx";
 
@@ -350,11 +351,11 @@ function Settings({ mosque, token, onSaved }) {
 	const save = async (e) => {
 		e.preventDefault();
 		setBusy(true);
-		const { name, zone, iqamah, jumaat, solat } = form;
+		const { name, zone, iqamah, jumaat, solat, tema } = form;
 		const r = await api(`/mosques/${mosque.id}`, {
 			method: "PATCH",
 			token,
-			json: { name, zone, iqamah, jumaat, solat },
+			json: { name, zone, iqamah, jumaat, solat, tema: tema ?? "langit" },
 		});
 		setBusy(false);
 		setResult(r);
@@ -440,6 +441,7 @@ function Settings({ mosque, token, onSaved }) {
 						/>
 					</div>
 				</fieldset>
+				<TemaPicker value={form.tema ?? "langit"} onChange={(tema) => setForm({ ...form, tema })} />
 				<div className="flex flex-wrap items-center gap-4">
 					<button type="submit" disabled={busy} className={BTN}>
 						{busy ? "Menyimpan…" : "Simpan tetapan"}

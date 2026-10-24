@@ -55,8 +55,11 @@ describe("settings and cache", () => {
 			jumaat: 25,
 			solat: 12,
 			nama: "Masjid Al-Ikhlas",
+			tema: "langit",
 			now: null,
 		});
+		expect(mosqueConfig({ ...m, tema: "songket" }).tema).toBe("songket");
+		expect(mosqueConfig({ ...m, tema: "neon" }).tema).toBe("langit");
 	});
 
 	test("cache round-trip; blocked or corrupt storage reads as nothing", () => {
