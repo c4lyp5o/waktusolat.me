@@ -1,5 +1,7 @@
 # Spec: `redesign`
 
+> **Superseded in part (2026-11-23):** the TV themes section below — one layout shared by three themes, TV only — and "portrait is out of scope" are replaced by [`SPEC-tema-bundles.md`](SPEC-tema-bundles.md): one tema per mosque and per visitor, a layout per surface, a site page per tema. Type, colour and spacing decisions here still stand.
+
 Status: **done 2026-10-24** (owner checked on the Android TV). It replaces the art direction from `SPEC-site-revamp.md` and `SPEC-tv-display.md`, which came from the taste skill, now removed. Mockups: [design canvas](https://claude.ai/artifact/UaEJ5FujuBwq22pRhp7FGy).
 
 ## Objective
@@ -24,19 +26,19 @@ The data, behaviour, offline support and APIs don't change, apart from one new m
 4. **The sun ellipse** on the website keeps its current geometry (`lib/waktu/daytrack.js`) and stars at night. Only its drawing changes: a 2px ink line, the travelled part as a wider faint stroke, the sun as an outlined disc.
 
 ### TV themes
-5. **One layout, three themes:**
-   - `tv.css` is split into the shared layout and per-theme tokens: `[data-tema="langit|takwim|songket"]` on `.tv`.
-   - A theme sets colours, fonts, the header pattern (Songket only) and the ellipse strokes.
+5. **One layout, per-theme tokens:**
+   - `tv.css` holds the shared layout; `[data-tema="langit|takwim"]` on `.tv` holds the tokens.
+   - A theme sets colours, fonts and the ellipse strokes.
    - All sizes stay in `vh`. Nothing read from the hall is under 3.2vh.
 6. **Langit on the TV:** the sky fills the screen, like the site. At night (malam/subuh/senja) it is dark, so a TV in a dark hall isn't a lamp. The ellipse and countdown follow the site.
 7. **Takwim:** `#121212` ground, ivory ink, red `#ff5a52` for next and the sun, Newsreader numerals, a ruled times table, the hadith in italic. (The mockup's dotted arc ahead of the sun is left out: the three.js renderer, which most TVs use, draws no dashes, and both renderers must look alike.)
-8. **Songket:** `#0c1c17` ground, gold `#d9ae55`, Reem Kufi numerals over Readex Pro, a faint 8-point star pattern behind the header, the next prayer filled with gold, a gold sun with a halo.
+8. **Songket:** retired 2026-11-23 (no live mosques; the two registered rows were test data). Its CSS and font chunk are gone.
 9. **Burn-in drift, the solat screen, the iqamah countdown, programme cards and offline** behave the same in every theme. Each theme is checked in every TV state.
 
 ### Choosing
-10. **A registered mosque** picks its theme in the editor's Tetapan. The picker is three cards, each a small preview of the theme. The TV applies a change within 60 s without a reload, through the poll it already does.
-11. **A zone-only TV** picks it in the URL: `/tv/wly01?tema=songket`. An unknown or missing `tema` means `langit`.
-12. **The API:** `tema` becomes a mosque field: `"langit" | "takwim" | "songket"`, defaulting to `"langit"`. Any other value returns `400`. `GET /api/v1/mosques/:id` returns it.
+10. **A registered mosque** picks its theme in the editor's Tetapan. The picker is one card per theme, each a small preview. The TV applies a change within 60 s without a reload, through the poll it already does.
+11. **A zone-only TV** picks it in the URL: `/tv/wly01?tema=takwim`. An unknown or missing `tema` means `langit`.
+12. **The API:** `tema` becomes a mosque field: `"langit" | "takwim"`, defaulting to `"langit"`. Any other value returns `400`. `GET /api/v1/mosques/:id` returns it.
 
 ## Data
 
