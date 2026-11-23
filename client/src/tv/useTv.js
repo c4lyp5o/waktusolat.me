@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { safeStorage } from "../lib/storage.js";
 import { createClock } from "../lib/waktu/clock.js";
 import { createYearLoader } from "../lib/waktu/yearLoader.js";
+import { surfaceOf } from "./surface.js";
 
 const CLOCK_SYNC_MS = 30 * 60 * 1000;
 const DATA_CHECK_MS = 60 * 1000;
@@ -64,20 +65,17 @@ export function useYear(zone, now) {
 	return year ?? loader.initial();
 }
 
-// True on a portrait screen (a phone): the TV layout is landscape only.
-export function usePortrait() {
-	// One MediaQueryList for the component's life (it re-renders every second).
-	const query = useMemo(
-		() =>
-			typeof window.matchMedia === "function" ? window.matchMedia("(orientation: portrait)") : null,
-		[],
+// Which screen this page is on: "tv" (landscape) or "tvPotret" (a tall panel).
+// Width and height, not `orientation`: a 4K portrait panel and a phone have
+// the same shape, and the rule stays testable (surface.js).
+export function useSurface() {
+	const [surface, setSurface] = useState(() =>
+		typeof window === "undefined" ? "tv" : surfaceOf(window.innerWidth, window.innerHeight),
 	);
-	const [portrait, setPortrait] = useState(() => query?.matches ?? false);
 	useEffect(() => {
-		if (!query) return;
-		const onChange = (e) => setPortrait(e.matches);
-		query.addEventListener?.("change", onChange);
-		return () => query.removeEventListener?.("change", onChange);
-	}, [query]);
-	return portrait;
+		const onResize = () => setSurface(surfaceOf(window.innerWidth, window.innerHeight));
+		window.addEventListener("resize", onResize);
+		return () => window.removeEventListener("resize", onResize);
+	}, []);
+	return surface;
 }

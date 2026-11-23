@@ -1,0 +1,36 @@
+/* kaca.css — the Kaca tema on the TV (draft TV 04): a photograph behind glass.
+   Near-white ink, gold accents, a heavy veil so text never fights the picture.
+   The photograph itself is set as --kaca-photo by kaca.js (a hashed asset). */
+@import "@fontsource-variable/reem-kufi/wght.css";
+@import "@fontsource-variable/newsreader/wght.css";
+
+.tv[data-tema="kaca"] {
+	--ground: #050a08;
+	--line: rgb(246 243 236 / 0.16);
+	--surface: rgb(10 18 15 / 0.42);
+	--text: #f6f3ec;
+	--muted: rgb(246 243 236 / 0.78);
+	--faint: rgb(246 243 236 / 0.62);
+	--spent: rgb(246 243 236 / 0.52);
+	--accent: #e6c78f;
+	--sun: #e6c78f;
+	--sun-ring: transparent;
+	--arc: rgb(246 243 236 / 0.34);
+	--font: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	--font-num: "Newsreader Variable", Georgia, serif;
+}
+
+.tv[data-tema="kaca"] .tv-title-name {
+	font-family: "Reem Kufi Variable", "Bricolage Grotesque Variable", sans-serif;
+	font-weight: 400;
+}
+/* The numbers are the printed ones: Newsreader, light, wide. */
+.tv[data-tema="kaca"] .tv-lead-count {
+	font-family: "Newsreader Variable", Georgia, serif;
+	font-weight: 300;
+	letter-spacing: -0.04em;
+}
+.tv[data-tema="kaca"] .tv-row-time {
+	font-family: "Newsreader Variable", Georgia, serif;
+	font-weight: 400;
+}

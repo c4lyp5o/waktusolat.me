@@ -1,0 +1,243 @@
+/* kaca-layout.css — draft TV 04: the photograph covers the screen, a veil
+   keeps it quiet, the answer sits on the left and the times in a glass panel
+   on the right. Scoped to [data-layout="kaca"]. */
+
+.tv[data-layout="kaca"] .tv-kaca-view {
+	position: relative;
+	display: grid;
+	grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+	grid-template-rows: auto minmax(0, 1fr) auto;
+	gap: 0 5vh;
+	height: 100%;
+	overflow: hidden;
+}
+
+.tv[data-layout="kaca"] .tv-photo,
+.tv[data-layout="kaca"] .tv-veil {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+}
+
+.tv[data-layout="kaca"] .tv-photo {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: 50% 45%;
+}
+
+/* Two layers, as in the draft: the left side darker for the answer, and a
+   floor under the panel. It is heavy on purpose — legibility first. */
+.tv[data-layout="kaca"] .tv-veil {
+	background:
+		linear-gradient(90deg, rgb(4 10 8 / 0.9) 0%, rgb(4 10 8 / 0.62) 42%, rgb(4 10 8 / 0.38) 62%, rgb(4 10 8 / 0.82) 100%),
+		linear-gradient(180deg, rgb(4 10 8 / 0.62), rgb(4 10 8 / 0.18) 38%, rgb(4 10 8 / 0.86));
+}
+
+/* Everything else sits above the glass. */
+.tv[data-layout="kaca"] .tv-header,
+.tv[data-layout="kaca"] .tv-lead,
+.tv[data-layout="kaca"] .tv-kaca-panel,
+.tv[data-layout="kaca"] .tv-banner {
+	position: relative;
+	z-index: 1;
+}
+
+.tv[data-layout="kaca"] .tv-header {
+	grid-column: 1 / -1;
+	grid-template-columns: minmax(0, 1fr) auto;
+	grid-template-areas:
+		"title clock"
+		"title dates";
+	align-items: center;
+	gap: 0 4vh;
+	padding-bottom: 1.6vh;
+}
+.tv[data-layout="kaca"] .tv-title {
+	grid-area: title;
+	gap: 0.9vh;
+}
+.tv[data-layout="kaca"] .tv-title-name {
+	overflow: visible;
+	font-size: 4.6vh;
+	line-height: 1.1;
+	white-space: normal;
+	text-overflow: clip;
+}
+.tv[data-layout="kaca"] .tv-title-zone {
+	font-size: 1.9vh;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+}
+.tv[data-layout="kaca"] .tv-clock {
+	grid-area: clock;
+	font-family: var(--font-num);
+	font-size: 8.6vh;
+	font-weight: 200;
+	line-height: 1;
+	text-align: right;
+}
+.tv[data-layout="kaca"] .tv-dates {
+	grid-area: dates;
+	flex-direction: row;
+	justify-content: flex-end;
+	gap: 2.6vh;
+	font-size: 2vh;
+}
+
+/* The answer, sitting straight on the glass. */
+.tv[data-layout="kaca"] .tv-lead {
+	align-self: center;
+	align-items: flex-start;
+	gap: 1.4vh;
+	padding-bottom: 3vh;
+}
+.tv[data-layout="kaca"] .tv-lead-name {
+	font-size: 2.4vh;
+	font-weight: 500;
+	letter-spacing: 0.3em;
+	text-transform: uppercase;
+	color: var(--accent);
+}
+.tv[data-layout="kaca"] .tv-lead-count {
+	font-family: var(--font-num);
+	font-size: 21vh;
+	font-weight: 300;
+	line-height: 0.86;
+	letter-spacing: -0.04em;
+}
+.tv[data-layout="kaca"] .tv-lead-meta {
+	font-size: 2.4vh;
+	line-height: 1.5;
+	color: var(--muted);
+}
+
+/* The panel: the day, in a sheet of glass. */
+.tv[data-layout="kaca"] .tv-kaca-panel {
+	align-self: end;
+	padding: 2.2vh 2.6vh 1.4vh;
+	border: 1px solid var(--line);
+	border-radius: 2.6vh;
+	background: var(--surface);
+	-webkit-backdrop-filter: blur(2.2vh) saturate(1.1);
+	backdrop-filter: blur(2.2vh) saturate(1.1);
+}
+.tv[data-layout="kaca"] .tv-kaca-head {
+	display: flex;
+	justify-content: space-between;
+	padding-bottom: 1.4vh;
+	border-bottom: 1px solid var(--line);
+	color: var(--faint);
+	font-size: 1.8vh;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+}
+.tv[data-layout="kaca"] .tv-row {
+	display: grid;
+	grid-template-areas:
+		"name status time"
+		"jawi status time";
+	grid-template-columns: minmax(0, 1fr) 12vh auto;
+	align-items: baseline;
+	gap: 0.3vh 2vh;
+	padding: 1.1vh 0;
+	background: none;
+	border-bottom: 1px solid rgb(246 243 236 / 0.09);
+	border-radius: 0;
+	box-shadow: none;
+}
+.tv[data-layout="kaca"] .tv-row:last-child {
+	border-bottom: 0;
+}
+.tv[data-layout="kaca"] .tv-row > span:first-child {
+	grid-area: name;
+	font-size: 2.6vh;
+	color: var(--text);
+}
+.tv[data-layout="kaca"] .tv-row-jawi {
+	grid-area: jawi;
+	font-family: "Noto Naskh Arabic Variable", serif;
+	font-size: 2vh;
+	line-height: 1.2;
+	color: var(--faint);
+}
+.tv[data-layout="kaca"] .tv-row-status {
+	grid-area: status;
+	justify-self: end;
+	color: var(--faint);
+	font-size: 1.5vh;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+.tv[data-layout="kaca"] .tv-row-time {
+	grid-area: time;
+	font-size: 4.2vh;
+	letter-spacing: -0.01em;
+	font-variant-numeric: tabular-nums;
+	color: var(--text);
+}
+.tv[data-layout="kaca"] .tv-row[data-state="passed"] > span:first-child,
+.tv[data-layout="kaca"] .tv-row[data-state="passed"] .tv-row-time {
+	color: var(--spent);
+}
+.tv[data-layout="kaca"] .tv-row[data-state="next"] {
+	border-radius: 1.2vh;
+	background: linear-gradient(90deg, rgb(230 199 143 / 0.18), transparent 82%);
+	box-shadow: -2.6vh 0 0 rgb(230 199 143 / 0.18);
+}
+.tv[data-layout="kaca"] .tv-row[data-state="next"] .tv-row-time {
+	color: var(--accent);
+	font-size: 4.8vh;
+}
+.tv[data-layout="kaca"] .tv-row[data-state="next"] .tv-row-status {
+	color: var(--accent);
+}
+.tv[data-layout="kaca"] .tv-row[data-advisory] > span:first-child {
+	font-size: 2.2vh;
+	color: var(--faint);
+}
+.tv[data-layout="kaca"] .tv-row[data-advisory] .tv-row-time {
+	font-size: 3.4vh;
+	color: var(--faint);
+}
+
+.tv[data-layout="kaca"] .tv-banner {
+	grid-column: 1 / -1;
+	height: auto;
+	min-height: 8vh;
+	padding: 1.2vh 0 1vh;
+	background: none;
+	border-top: 1px solid var(--line);
+	border-radius: 0;
+}
+.tv[data-layout="kaca"] .tv-banner-text {
+	font-size: 2.4vh;
+	line-height: 1.5;
+	color: var(--muted);
+}
+.tv[data-layout="kaca"] .tv-banner-foot {
+	gap: 2vh;
+	font-size: 1.8vh;
+	color: var(--faint);
+}
+.tv[data-layout="kaca"] .tv-banner-arabic {
+	margin-left: auto;
+	font-size: 2.4vh;
+	color: var(--accent);
+	opacity: 0.85;
+}
+.tv[data-layout="kaca"] .tv-prog {
+	height: auto;
+	min-height: 8vh;
+	margin: 0;
+	padding: 0.6vh 0;
+}
+.tv[data-layout="kaca"] .tv-prog.has-photo {
+	grid-template-columns: 8vh minmax(0, 1fr);
+}
+.tv[data-layout="kaca"] .tv-prog-photo {
+	width: 8vh;
+	height: 8vh;
+	border-radius: 0.6vh;
+}

@@ -3,7 +3,7 @@
 // It keeps the page shell, the hashed bundle files and the programme
 // photos; prayer data, the clock offset and the mosque's settings and
 // programmes live in the page's localStorage.
-const VERSION = "v1";
+const VERSION = "v2";
 const SHELL = `tv-shell-${VERSION}`;
 const ASSETS = `tv-assets-${VERSION}`;
 const PHOTOS = `tv-photos-${VERSION}`;

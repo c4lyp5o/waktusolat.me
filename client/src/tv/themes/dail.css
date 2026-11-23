@@ -1,0 +1,33 @@
+/* dail.css — the Dail tema on the TV (draft TV 07): paper white, black ink,
+   one blue. A daylight board. Palette only. */
+@import "@fontsource-variable/reem-kufi/wght.css";
+
+.tv[data-tema="dail"] {
+	--ground: #f6f6f3;
+	--line: #dfe2dd;
+	--surface: #ffffff;
+	--text: #0f1210;
+	--muted: #5f665f;
+	--faint: #6b726c;
+	--spent: #697069;
+	--accent: #2438c8;
+	--sun: #2438c8;
+	--sun-ring: transparent;
+	--arc: rgb(15 18 16 / 0.35);
+	--dial-rest: #e4e6e1;
+	--font: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	--font-num: "Bricolage Grotesque Variable", system-ui, sans-serif;
+}
+
+.tv[data-tema="dail"] .tv-title-name {
+	font-family: "Reem Kufi Variable", "Bricolage Grotesque Variable", sans-serif;
+	font-weight: 500;
+}
+/* A printed board: the masthead rule is ink, not a hairline. */
+.tv[data-tema="dail"] .tv-header {
+	padding-bottom: 1.8vh;
+	border-bottom: 1px solid var(--text);
+}
+.tv[data-tema="dail"] .tv-clock {
+	font-weight: 200;
+}

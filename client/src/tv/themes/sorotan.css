@@ -1,0 +1,26 @@
+/* sorotan.css — the Sorotan TV tema (draft TV 06): a black room with one warm
+   spotlight. Ink is warm white, the accent amber, the numbers Newsreader. */
+@import "@fontsource-variable/newsreader/wght.css";
+
+.tv[data-tema="sorotan"] {
+	--ground: #060606;
+	--line: rgb(243 239 230 / 0.12);
+	--surface: #0b0b0b;
+	--text: #f3efe6;
+	--muted: #a9a49a;
+	--faint: #8b857b;
+	--spent: #8f8a80;
+	--accent: #e8b366;
+	--sun: #e8b366;
+	--sun-ring: transparent;
+	--arc: rgb(243 239 230 / 0.3);
+	--font: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	--font-num: "Newsreader Variable", Georgia, serif;
+}
+
+/* The board is one lamp: everything thin, wide and quiet. */
+.tv[data-tema="sorotan"] .tv-clock {
+	font-family: var(--font-num);
+	font-weight: 300;
+	letter-spacing: 0.02em;
+}

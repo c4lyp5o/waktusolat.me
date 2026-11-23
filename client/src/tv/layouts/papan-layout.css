@@ -1,0 +1,175 @@
+/* papan-layout.css — the board: mosque masthead, one huge answer with the
+   name beside it, seven columns of times, the banner band. Scoped to
+   [data-layout="papan"] so the other layouts never see a rule.
+   Sizes in vh, like the chrome, so 720p and 4K scale alike. */
+
+.tv[data-layout="papan"] .tv-papan-view {
+	display: grid;
+	grid-template-rows: auto minmax(0, 1fr) auto auto;
+	gap: 2.6vh;
+	height: 100%;
+}
+
+/* Header: masthead left, clock and dates right. */
+.tv[data-layout="papan"] .tv-header {
+	grid-template-columns: minmax(0, 1fr) auto;
+	grid-template-areas:
+		"title clock"
+		"title dates";
+	align-items: center;
+	gap: 0 4vh;
+}
+.tv[data-layout="papan"] .tv-title {
+	grid-area: title;
+	gap: 1vh;
+}
+.tv[data-layout="papan"] .tv-title-name {
+	overflow: visible;
+	display: -webkit-box;
+	font-size: 5.4vh;
+	line-height: 1.08;
+	white-space: normal;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	text-overflow: clip;
+}
+.tv[data-layout="papan"] .tv-title-zone {
+	max-width: 100%;
+	margin-top: 0.8vh;
+	overflow: visible;
+	font-size: 2.2vh;
+	line-height: 1.35;
+	letter-spacing: 0.16em;
+	white-space: normal;
+	text-overflow: clip;
+	text-transform: uppercase;
+	opacity: 0.6;
+}
+.tv[data-layout="papan"] .tv-clock {
+	grid-area: clock;
+	font-size: 9.6vh;
+	line-height: 0.9;
+	text-align: right;
+}
+.tv[data-layout="papan"] .tv-dates {
+	grid-area: dates;
+	flex-direction: row;
+	justify-content: flex-end;
+	gap: 3vh;
+	font-size: 2.6vh;
+}
+
+/* The answer: the prayer on the left, the countdown on the right. The DOM is
+   Lead's (name, count, meta), placed by grid areas — so every state the Lead
+   knows (iqamah, after-isyak, estimate) works here unchanged. */
+.tv[data-layout="papan"] .tv-lead {
+	display: grid;
+	grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+	grid-template-areas:
+		"name count"
+		"name meta";
+	align-items: center;
+	gap: 0 6vh;
+	padding: 1vh 0;
+}
+.tv[data-layout="papan"] .tv-lead-name {
+	grid-area: name;
+	align-self: end;
+	font-size: 11vh;
+}
+.tv[data-layout="papan"] .tv-lead-count {
+	grid-area: count;
+	align-self: end;
+	font-size: 19vh;
+	line-height: 0.82;
+	letter-spacing: -0.05em;
+}
+.tv[data-layout="papan"] .tv-lead-meta {
+	grid-area: meta;
+	margin-top: 1.4vh;
+	font-size: 3.6vh;
+	line-height: 1.35;
+}
+
+/* The seven times as columns, the next one lit. */
+.tv[data-layout="papan"] .tv-list {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+	gap: 0;
+	border-top: 1px solid rgb(217 174 99 / 0.28);
+}
+.tv[data-layout="papan"] .tv-row {
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 0.7vh;
+	padding: 1.7vh 0.6vh 1.5vh;
+	border-radius: 0;
+	text-align: center;
+}
+.tv[data-layout="papan"] .tv-row + .tv-row {
+	border-left: 1px solid rgb(217 174 99 / 0.14);
+}
+.tv[data-layout="papan"] .tv-row > span:first-child {
+	font-size: 2.7vh;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+.tv[data-layout="papan"] .tv-row-jawi {
+	font-family: "Noto Naskh Arabic Variable", serif;
+	font-size: 2.7vh;
+	line-height: 1.35;
+	opacity: 0.65;
+}
+.tv[data-layout="papan"] .tv-row-time {
+	font-family: var(--font-num);
+	font-size: 7.2vh;
+	font-weight: 400;
+	letter-spacing: -0.02em;
+	line-height: 1.1;
+}
+.tv[data-layout="papan"] .tv-row[data-state="next"] .tv-row-time,
+.tv[data-layout="papan"] .tv-row[data-state="current"] .tv-row-time {
+	font-weight: 600;
+}
+.tv[data-layout="papan"] .tv-row[data-advisory] > span:first-child,
+.tv[data-layout="papan"] .tv-row[data-advisory] .tv-row-time {
+	font-size: 5.4vh;
+}
+
+/* The banner sits on the board's own line, not in a card. */
+.tv[data-layout="papan"] .tv-banner {
+	height: auto;
+	min-height: 13vh;
+	padding: 1.8vh 0;
+}
+.tv[data-layout="papan"] .tv-banner-foot {
+	gap: 2.4vh;
+	flex-wrap: wrap;
+}
+.tv[data-layout="papan"] .tv-banner-text {
+	font-size: 3.6vh;
+	line-height: 1.45;
+	color: var(--muted);
+}
+.tv[data-layout="papan"] .tv-banner-arabic {
+	margin-left: auto;
+	font-size: 3.8vh;
+	line-height: 1.4;
+	color: var(--accent);
+	opacity: 0.85;
+}
+.tv[data-layout="papan"] .tv-prog {
+	height: auto;
+	min-height: 13vh;
+	margin: 0;
+	padding: 1.2vh 0;
+}
+.tv[data-layout="papan"] .tv-prog.has-photo {
+	grid-template-columns: 13vh minmax(0, 1fr);
+}
+.tv[data-layout="papan"] .tv-prog-photo {
+	width: 13vh;
+	height: 13vh;
+	border-radius: 0.8vh;
+}

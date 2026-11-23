@@ -6,10 +6,21 @@
 // year (useYear) and the config: the URL's here, the mosque's on /m/:id.
 // Bricolage Grotesque is bundled site-wide in main.jsx.
 import "./tv.css";
+import "./layouts/ellipse.js";
+import "./layouts/dail-layout.js";
+import "./layouts/jalur-layout.js";
+import "./layouts/kaca-layout.js";
+import "./layouts/program-layout.js";
+import "./layouts/sorotan-layout.js";
+import "./layouts/senyap-layout.js";
+import "./layouts/malam-layout.js";
+import "./layouts/papan-layout.js";
+import "./layouts/potret.js";
 import "./themes/langit.css";
-import { domAnimation, LazyMotion, m } from "motion/react";
+import { AnimatePresence, domAnimation, LazyMotion, m } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
+import { DEFAULT_TEMA, temaById } from "../../../shared/temas.js";
 import { parseConfig } from "../lib/waktu/config.js";
 import { liveProgrammes } from "../lib/waktu/mosqueTv.js";
 import { dayFor, nextDay } from "../lib/waktu/rows.js";
@@ -18,11 +29,20 @@ import { skyPhase } from "../lib/waktu/sky.js";
 import Banner from "./Banner.jsx";
 import DayTrack from "./DayTrack.jsx";
 import Header from "./Header.jsx";
-import { useKiosk } from "./kiosk.js";
+import { cacheAssets, useKiosk } from "./kiosk.js";
 import Lead from "./Lead.jsx";
+import DailScreen from "./DailScreen.jsx";
+import JalurScreen from "./JalurScreen.jsx";
+import KacaScreen from "./KacaScreen.jsx";
+import MalamScreen from "./MalamScreen.jsx";
+import PapanScreen from "./PapanScreen.jsx";
+import PortraitScreen from "./PortraitScreen.jsx";
+import ProgramScreen from "./ProgramScreen.jsx";
 import PrayerList from "./PrayerList.jsx";
 import { Message, SolatNotice } from "./SolatNotice.jsx";
-import { useNow, usePortrait, useYear } from "./useTv.js";
+import SorotanScreen from "./SorotanScreen.jsx";
+import SenyapScreen from "./SenyapScreen.jsx";
+import { useNow, useSurface, useYear } from "./useTv.js";
 
 export default function TvApp() {
 	const zone = useParams().zone.toLowerCase();
@@ -45,7 +65,14 @@ function useTvMode() {
 // is a chunk of its own, loaded only by a screen that uses it.
 const THEMES = {
 	takwim: () => import("./themes/takwim.js"),
-	songket: () => import("./themes/songket.js"),
+	papan: () => import("./themes/papan.js"),
+	malam: () => import("./themes/malam.js"),
+	jalur: () => import("./themes/jalur.js"),
+	dail: () => import("./themes/dail.js"),
+	kaca: () => import("./themes/kaca.js"),
+	program: () => import("./themes/program.js"),
+	sorotan: () => import("./themes/sorotan.js"),
+	senyap: () => import("./themes/senyap.js"),
 };
 
 // The theme to paint: the chosen one once its chunk is in, Langit until then
@@ -80,14 +107,24 @@ export function TvMessage({ title, text, tema = "langit" }) {
 export function TvScreen({ zone, config, feed = null, notice = null }) {
 	const now = useNow(config.now);
 	const { days, meta, status } = useYear(zone, now);
-	const portrait = usePortrait();
+	const surface = useSurface();
 	const drift = useKiosk(now);
 	useTvMode();
 	const programmes = liveProgrammes(feed, days, now);
 
 	const found = dayFor(days, now);
 	// The theme (themes/*); Langit also follows the sky over the zone.
-	const tema = useTheme(config.tema ?? "langit");
+	const tema = useTheme(config.tema ?? DEFAULT_TEMA);
+	// The worker keeps the files this screen is actually using (S7): its CSS
+	// chunk and that tema's fonts. Re-run when a poll switches tema, so the
+	// new one is cached before the screen ever needs it offline.
+	useEffect(() => {
+		cacheAssets();
+	}, [tema]);
+	// Which layout this tema names for this screen (shared/temas.js): the
+	// landscape screen and the portrait panel are different compositions.
+	const temaCfg = temaById(tema);
+	const layout = surface === "tvPotret" ? temaCfg.tvPortrait.layout : temaCfg.tv.layout;
 	const sky = found ? skyPhase(now, found.day) : undefined;
 	let body;
 	let view = "message";
@@ -105,9 +142,126 @@ export function TvScreen({ zone, config, feed = null, notice = null }) {
 		const state = screenState(now, today, estimate ? null : nextDay(days, today), config);
 		const shown = estimate ? { ...state, estimate: true } : state;
 		view = state.kind === "solat" ? "solat" : "main";
+		const rows = listRows(now, today, state);
 		body =
 			state.kind === "solat" ? (
 				<SolatNotice label={state.label} />
+			) : surface === "tvPotret" ? (
+				<PortraitScreen
+					now={now}
+					zone={zone}
+					config={config}
+					meta={meta}
+					today={today}
+					state={shown}
+					rows={rows}
+					estimate={estimate}
+					programmes={programmes}
+					notice={notice}
+				/>
+			) : layout === "senyap" ? (
+				<SenyapScreen
+					now={now}
+					zone={zone}
+					config={config}
+					meta={meta}
+					today={today}
+					state={shown}
+					rows={rows}
+					estimate={estimate}
+					notice={notice}
+				/>
+			) : layout === "sorotan" ? (
+				<SorotanScreen
+					now={now}
+					zone={zone}
+					config={config}
+					meta={meta}
+					today={today}
+					state={shown}
+					rows={rows}
+					estimate={estimate}
+					notice={notice}
+				/>
+			) : layout === "program" ? (
+				<ProgramScreen
+					now={now}
+					zone={zone}
+					config={config}
+					meta={meta}
+					today={today}
+					state={shown}
+					rows={rows}
+					estimate={estimate}
+					programmes={programmes}
+					notice={notice}
+					besokSyuruk={nextDay(days, today)?.times?.syuruk ?? null}
+				/>
+			) : layout === "kaca" ? (
+				<KacaScreen
+					now={now}
+					zone={zone}
+					config={config}
+					meta={meta}
+					today={today}
+					state={shown}
+					rows={rows}
+					estimate={estimate}
+					programmes={programmes}
+					notice={notice}
+				/>
+			) : layout === "dail" ? (
+				<DailScreen
+					now={now}
+					zone={zone}
+					config={config}
+					meta={meta}
+					today={today}
+					state={shown}
+					rows={rows}
+					estimate={estimate}
+					programmes={programmes}
+					notice={notice}
+				/>
+			) : layout === "jalur" ? (
+				<JalurScreen
+					now={now}
+					zone={zone}
+					config={config}
+					meta={meta}
+					today={today}
+					state={shown}
+					rows={rows}
+					estimate={estimate}
+					programmes={programmes}
+					notice={notice}
+				/>
+			) : layout === "malam" ? (
+				<MalamScreen
+					now={now}
+					zone={zone}
+					config={config}
+					meta={meta}
+					today={today}
+					state={shown}
+					rows={rows}
+					estimate={estimate}
+					programmes={programmes}
+					notice={notice}
+				/>
+			) : layout === "papan" ? (
+				<PapanScreen
+					now={now}
+					zone={zone}
+					config={config}
+					meta={meta}
+					today={today}
+					state={shown}
+					rows={rows}
+					estimate={estimate}
+					programmes={programmes}
+					notice={notice}
+				/>
 			) : (
 				<>
 					<Header
@@ -120,7 +274,7 @@ export function TvScreen({ zone, config, feed = null, notice = null }) {
 					/>
 					<main className="tv-main">
 						<Lead now={now} state={shown} />
-						<PrayerList {...listRows(now, today, state)} estimate={estimate} />
+						<PrayerList {...rows} estimate={estimate} />
 					</main>
 					<DayTrack
 						now={now}
@@ -137,38 +291,25 @@ export function TvScreen({ zone, config, feed = null, notice = null }) {
 	// not the full motion bundle.
 	return (
 		<LazyMotion features={domAnimation} strict>
-			<div className="tv" data-tema={tema} data-sky={sky}>
+			<div className="tv" data-tema={tema} data-layout={layout} data-sky={sky}>
 				<div className="tv-drift" style={drift}>
-					{portrait ? (
-						<PortraitNotice zone={zone} />
-					) : (
-						// Crossfade between views (main <-> solat <-> messages).
+					{/* Crossfade between views (main <-> solat <-> messages). mode="wait"
+					    so the screen fades out before the next one fades in: the moment
+					    after iqamah should feel like a dimming, not a cut. */}
+					<AnimatePresence mode="wait">
 						<m.div
 							key={view}
-							className="tv-view"
+							className={`tv-view${surface === "tvPotret" ? " tv-potret-view" : layout === "papan" ? " tv-papan-view" : layout === "malam" ? " tv-malam-view" : layout === "jalur" ? " tv-jalur-view" : layout === "dail" ? " tv-dail-view" : layout === "kaca" ? " tv-kaca-view" : layout === "program" ? " tv-program-view" : layout === "sorotan" ? " tv-sorotan-view" : layout === "senyap" ? " tv-senyap-view" : ""}`}
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
-							transition={{ duration: 0.8 }}
+							exit={{ opacity: 0 }}
+							transition={{ duration: view === "solat" ? 1.2 : 0.9, ease: "easeInOut" }}
 						>
 							{body}
 						</m.div>
-					)}
+					</AnimatePresence>
 				</div>
 			</div>
 		</LazyMotion>
-	);
-}
-
-// Landscape only (spec). A phone opening the link, e.g. while setting up the
-// TV, gets a pointer to the phone page instead of a broken layout.
-function PortraitNotice({ zone }) {
-	return (
-		<section className="tv-full tv-portrait">
-			<h1 className="tv-full-title">Paparan ini untuk TV</h1>
-			<p className="tv-full-text">
-				Buka pautan ini pada TV dalam mod landskap, atau lihat{" "}
-				<a href={`/times/${zone}`}>waktu solat {zone.toUpperCase()}</a> di telefon.
-			</p>
-		</section>
 	);
 }

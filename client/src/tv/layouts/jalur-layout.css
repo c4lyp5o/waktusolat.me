@@ -1,0 +1,125 @@
+/* jalur-layout.css — draft TV 03: masthead, the answer across the middle, the
+   day as one band, the banner under it. Scoped to [data-layout="jalur"]. */
+
+.tv[data-layout="jalur"] .tv-jalur-view {
+	display: grid;
+	grid-template-rows: auto auto minmax(0, 1fr) auto;
+	gap: 2.4vh;
+	height: 100%;
+}
+
+.tv[data-layout="jalur"] .tv-header {
+	grid-template-columns: minmax(0, 1fr) auto;
+	grid-template-areas:
+		"title clock"
+		"title dates";
+	align-items: center;
+	gap: 0 4vh;
+}
+.tv[data-layout="jalur"] .tv-title {
+	grid-area: title;
+	gap: 0.9vh;
+}
+.tv[data-layout="jalur"] .tv-title-name {
+	overflow: visible;
+	font-size: 4.2vh;
+	line-height: 1.1;
+	white-space: normal;
+	text-overflow: clip;
+}
+.tv[data-layout="jalur"] .tv-title-zone {
+	font-size: 1.9vh;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+}
+.tv[data-layout="jalur"] .tv-clock {
+	grid-area: clock;
+	font-size: 8.4vh;
+	font-weight: 200;
+	line-height: 1;
+	text-align: right;
+}
+.tv[data-layout="jalur"] .tv-dates {
+	grid-area: dates;
+	flex-direction: row;
+	justify-content: flex-end;
+	gap: 2.6vh;
+	font-size: 2.1vh;
+}
+
+/* The answer: the prayer on the left, the countdown centre, azan/iqamah right
+   — Lead's own DOM, placed by grid areas so every state works unchanged. */
+.tv[data-layout="jalur"] .tv-lead {
+	display: grid;
+	grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
+	grid-template-areas: "name count meta";
+	align-items: center;
+	gap: 0 4vh;
+	padding: 1vh 0;
+}
+.tv[data-layout="jalur"] .tv-lead-name {
+	grid-area: name;
+	font-size: 2.4vh;
+	font-weight: 500;
+	letter-spacing: 0.3em;
+	text-transform: uppercase;
+	color: var(--accent);
+}
+.tv[data-layout="jalur"] .tv-lead-count {
+	grid-area: count;
+	justify-self: start;
+	font-size: 26vh;
+	line-height: 0.84;
+	letter-spacing: -0.06em;
+}
+.tv[data-layout="jalur"] .tv-lead-meta {
+	grid-area: meta;
+	font-size: 2.4vh;
+	line-height: 1.6;
+	text-align: right;
+	color: var(--muted);
+}
+
+/* The band sits on its own line; the banner keeps the foot. */
+.tv[data-layout="jalur"] .ribbon {
+	align-self: end;
+	padding-bottom: 1vh;
+}
+.tv[data-layout="jalur"] .tv-banner {
+	height: auto;
+	min-height: 9vh;
+	padding: 1.4vh 0 1.2vh;
+	border-top: 1px solid var(--line);
+	background: none;
+	border-radius: 0;
+}
+.tv[data-layout="jalur"] .tv-banner-text {
+	font-size: 2.6vh;
+	line-height: 1.5;
+	color: var(--muted);
+}
+.tv[data-layout="jalur"] .tv-banner-foot {
+	gap: 2vh;
+	font-size: 2vh;
+	color: var(--faint);
+}
+.tv[data-layout="jalur"] .tv-banner-arabic {
+	margin-left: auto;
+	font-size: 2.7vh;
+	color: var(--accent);
+	opacity: 0.8;
+}
+.tv[data-layout="jalur"] .tv-prog {
+	height: auto;
+	min-height: 9vh;
+	margin: 0;
+	padding: 0.8vh 0;
+}
+.tv[data-layout="jalur"] .tv-prog.has-photo {
+	grid-template-columns: 9vh minmax(0, 1fr);
+}
+.tv[data-layout="jalur"] .tv-prog-photo {
+	width: 9vh;
+	height: 9vh;
+	border-radius: 0.7vh;
+}
