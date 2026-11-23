@@ -17,3 +17,6 @@ storage/
 
 # personal Claude Code settings
 .claude/settings.local.json
+
+# design draft screenshots (36MB of PNGs, regenerate from the drafts)
+lab/shots/

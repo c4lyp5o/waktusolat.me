@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Draf 04 — Kad</title>
+<link rel="stylesheet" href="base.css">
+<style>
+:root{
+  --bg:#eef0ed; --ink:#13201b; --muted:#6d7872; --faint:#9ba49e;
+  --card:#ffffff; --green:#12382c; --greenink:#eaf3ee; --accent:#1f6f57;
+}
+body.v4{background:var(--bg);color:var(--ink);font-family:"Bricolage",sans-serif}
+.v4 .shell{padding-left:18px;padding-right:18px}
+.v4 header{padding:0 4px}
+.v4 .top{display:flex;justify-content:space-between;align-items:center}
+.v4 .zone{display:flex;flex-direction:column;gap:2px}
+.v4 .zone b{font-size:16px;font-weight:600;letter-spacing:-.015em}
+.v4 .zone span{font-size:11.5px;color:var(--muted)}
+.v4 .pill{width:36px;height:36px;border-radius:50%;background:var(--card);
+  display:grid;place-items:center;font-size:15px;color:var(--muted);
+  box-shadow:0 1px 2px rgba(19,32,27,.06)}
+.v4 .date{margin:16px 4px 0;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+
+.v4 .hero{margin-top:10px;background:var(--green);color:var(--greenink);border-radius:26px;
+  padding:20px 22px 18px;position:relative;overflow:hidden;
+  box-shadow:0 10px 24px -12px rgba(18,56,44,.55)}
+.v4 .hero::after{content:"";position:absolute;right:-60px;top:-80px;width:200px;height:200px;
+  border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.09),transparent 65%)}
+.v4 .hero .k{font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.65}
+.v4 .hero .row{display:flex;justify-content:space-between;align-items:flex-start;margin-top:10px}
+.v4 .hero h2{font-size:30px;font-weight:500;letter-spacing:-.02em;line-height:1}
+.v4 .hero h2 .jawi{display:block;font-size:14px;opacity:.6;margin-top:7px;font-weight:400}
+.v4 .hero .cd{font-size:40px;font-weight:300;letter-spacing:-.04em;line-height:1;
+  font-variant-numeric:tabular-nums}
+.v4 .hero .cd small{font-size:11px;font-weight:500;opacity:.6;letter-spacing:.02em;margin-left:3px}
+.v4 .hero .foot{display:flex;justify-content:space-between;align-items:baseline;
+  margin-top:18px;padding-top:12px;border-top:1px solid rgba(234,243,238,.18);
+  font-size:12px;opacity:.85}
+.v4 .hero .foot b{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;opacity:1}
+
+.v4 .grid{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.v4 .grid article{background:var(--card);border-radius:19px;padding:13px 15px 14px;
+  display:flex;flex-direction:column;gap:4px;box-shadow:0 1px 2px rgba(19,32,27,.05)}
+.v4 .grid .n{font-size:12.5px;font-weight:500;color:var(--ink);display:flex;justify-content:space-between;align-items:baseline}
+.v4 .grid .n .jawi{font-size:10px;color:var(--faint);font-weight:400}
+.v4 .grid .t{font-size:21px;font-weight:500;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+  margin-top:6px}
+.v4 .grid .s{font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--faint)}
+.v4 .grid .done .n,.v4 .grid .done .t{color:var(--faint);font-weight:400}
+.v4 .grid .adv .t{font-size:17px;color:var(--muted);font-weight:400}
+.v4 .grid .adv .s{color:#b9c0bb}
+
+.v4 nav{margin-top:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;
+  background:var(--card);border-radius:20px;padding:7px;box-shadow:0 1px 2px rgba(19,32,27,.06)}
+.v4 nav a{text-align:center;font-size:10.5px;font-weight:500;letter-spacing:.02em;color:var(--muted);
+  padding:9px 2px;border-radius:14px}
+.v4 nav a.on{background:var(--green);color:var(--greenink)}
+@media(min-width:760px){
+  .v4 .shell{max-width:860px;margin:0 auto;padding:44px 32px}
+  .v4 .hero{padding:30px 34px}
+  .v4 .hero h2{font-size:44px}
+  .v4 .hero .cd{font-size:60px}
+  .v4 .grid{grid-template-columns:repeat(3,1fr);gap:12px}
+  .v4 nav{max-width:520px;margin:32px auto 0}
+}
+</style></head>
+<body class="v4"><div class="shell">
+  <header>
+    <div class="top">
+      <div class="zone"><b>Shah Alam</b><span>Selangor · SGR01</span></div>
+      <span class="pill">⌖</span>
+    </div>
+    <p class="date" style="margin-left:0">Isnin, 23 November 2026 · 13 Jamadilakhir 1448</p>
+  </header>
+
+  <section class="hero">
+    <p class="k">Seterusnya</p>
+    <div class="row">
+      <h2>Maghrib<span class="jawi">مغرب</span></h2>
+      <p class="cd">2:08<small>jam</small></p>
+    </div>
+    <div class="foot"><span>Azan · Asar telah masuk</span><b>19:00</b></div>
+  </section>
+
+  <div class="grid">
+    <article class="done"><div class="n">Imsak <span class="jawi">إمساك</span></div><div class="t">05:40</div><div class="s">Lepas</div></article>
+    <article class="done"><div class="n">Subuh <span class="jawi">صبح</span></div><div class="t">05:50</div><div class="s">Lepas</div></article>
+    <article class="done"><div class="n">Syuruk <span class="jawi">شروق</span></div><div class="t">06:59</div><div class="s">Lepas</div></article>
+    <article class="done"><div class="n">Zohor <span class="jawi">ظهر</span></div><div class="t">13:02</div><div class="s">Lepas</div></article>
+    <article class="done"><div class="n">Asar <span class="jawi">عصر</span></div><div class="t">16:25</div><div class="s">Lepas</div></article>
+    <article><div class="n">Isyak <span class="jawi">عشاء</span></div><div class="t">20:13</div><div class="s">Malam ini</div></article>
+  </div>
+
+  <nav><a class="on" href="#">Waktu</a><a href="#">Quran</a><a href="#">Hadis</a><a href="#">Radio</a></nav>
+</div></body></html>

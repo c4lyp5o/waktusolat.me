@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<title>TV 03 — Jalur</title>
+<link rel="stylesheet" href="tv-base.css">
+<style>
+:root{--bg:#0e1211;--ink:#f1efe9;--dim:#a4ada7;--faint:#8a938d;--accent:#d9a35e;--line:rgba(255,255,255,.10)}
+.stage{background:#0e1211}
+.tv3{width:100%;height:100%;display:grid;grid-template-rows:auto 1fr auto;color:var(--ink);
+  font-family:"Bricolage",sans-serif;padding:46px 72px 0}
+.tv3 header{display:flex;justify-content:space-between;align-items:flex-start}
+.tv3 .m{font-family:"ReemKufi",sans-serif;font-size:42px}
+.tv3 .m span{display:block;font-family:"Bricolage",sans-serif;font-size:20px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);margin-top:8px}
+.tv3 .clock{font-size:84px;font-weight:200;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.tv3 .clock small{font-size:32px;color:var(--faint)}
+.tv3 .dates{display:flex;gap:20px;justify-content:flex-end;font-size:21px;color:var(--dim);margin-top:2px}
+.tv3 .dates b{color:var(--ink);font-weight:500}
+
+.tv3 .hero{display:flex;align-items:center;justify-content:space-between;gap:40px;padding:10px 0 0}
+.tv3 .lead{display:flex;flex-direction:column}
+.tv3 .k{font-size:24px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent)}
+.tv3 .prayer{font-size:74px;font-weight:600;letter-spacing:-.03em;margin-top:10px}
+.tv3 .prayer .jawi{font-size:44px;color:var(--dim);margin-left:16px;font-weight:400}
+.tv3 .cd{font-size:300px;font-weight:200;letter-spacing:-.06em;line-height:.86;
+  font-variant-numeric:tabular-nums;margin-left:-10px}
+.tv3 .cd .sec{font-size:.4em;color:var(--faint);letter-spacing:-.02em}
+.tv3 .side{text-align:right;display:flex;flex-direction:column;gap:6px;font-size:28px;color:var(--dim)}
+.tv3 .side b{display:block;font-family:"Newsreader",serif;font-size:44px;color:var(--ink);font-weight:400}
+.tv3 .side .hl b{color:var(--accent)}
+
+.tv3 .ribbon{padding:0 72px 54px;margin:0 -72px}
+.tv3 .bar{position:relative;height:88px;margin:0 72px;border-radius:44px;
+  background:linear-gradient(90deg,#0a1424 0%,#14243c 20%,#3d3a55 23.6%,#8c6067 24.5%,#d68d5c 26.6%,
+  #f2c78e 29.1%,#cfe5f0 32%,#a6d0e8 54.3%,#c6e1ee 64%,#e9cfa8 74%,#efa968 79.2%,#d0774f 81%,
+  #6a4650 82.6%,#24293f 84.2%,#0e1728 90%,#0a1424 100%)}
+.tv3 .hours{position:relative;height:34px;margin:10px 72px 0}
+.tv3 .hours span{position:absolute;transform:translateX(-50%);font-size:18px;letter-spacing:.08em;
+  color:var(--faint);font-variant-numeric:tabular-nums}
+.tv3 .labels{position:relative;height:132px;margin:14px 72px 0}
+.tv3 .labels div{position:absolute;transform:translateX(-50%);text-align:center;width:150px}
+.tv3 .labels div.two{top:52px}
+.tv3 .labels div::before{content:"";position:absolute;left:50%;top:-16px;width:2px;height:12px;background:var(--faint)}
+.tv3 .labels div.two::before{top:-68px}
+.tv3 .labels .n{font-size:24px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.tv3 .labels .t{font-size:34px;font-variant-numeric:tabular-nums;margin-top:3px;color:var(--ink)}
+.tv3 .labels .next .n{color:var(--accent)}
+.tv3 .labels .next .t{color:var(--accent);font-weight:600}
+.tv3 .labels .past .t{color:var(--faint)}
+.tv3 .labels .past .n{color:var(--faint)}
+.tv3 .now{position:absolute;top:-16px;bottom:0;left:70.3%;width:3px;background:var(--ink);z-index:3}
+.tv3 .now::before{content:"";position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+  width:22px;height:22px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 6px #0e1211}
+.tv3 .now span{position:absolute;top:-58px;left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;background:#0e1211;padding:0 8px}
+</style></head>
+<body>
+<div class="stage" data-w="1920" data-h="1080">
+ <div class="tv3">
+  <header>
+    <div class="m">MASJID AL-IKHLAS<span>Seksyen 19 · Shah Alam · SGR01</span></div>
+    <div>
+      <div class="clock num">16:52<small>41</small></div>
+      <div class="dates"><span><b>Isnin</b>, 23 November 2026</span><span><b>13</b> Jamadilakhir 1448</span></div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="lead">
+      <div class="k">Seterusnya</div>
+      <div class="prayer">Maghrib <span class="jawi">مغرب</span></div>
+    </div>
+    <div class="cd num">2:08<span class="sec">:14</span></div>
+    <div class="side">
+      <div>Azan<b>19:00</b></div>
+      <div class="hl">Iqamah<b>19:10</b></div>
+      <div>Asar<b>16:25</b></div>
+    </div>
+  </section>
+
+  <section class="ribbon">
+    <div class="bar"><span class="now"><span>16:52</span></span></div>
+    <div class="hours">
+      <span style="left:0%">00</span><span style="left:12.5%">03</span><span style="left:25%">06</span>
+      <span style="left:37.5%">09</span><span style="left:50%">12</span><span style="left:62.5%">15</span>
+      <span style="left:75%">18</span><span style="left:87.5%">21</span><span style="left:100%">24</span>
+    </div>
+    <div class="labels">
+      <div class="past" style="left:24.3%"><div class="n">Subuh</div><div class="t">05:50</div></div>
+      <div class="past" style="left:54.3%"><div class="n">Zohor</div><div class="t">13:02</div></div>
+      <div class="past" style="left:68.4%"><div class="n">Asar</div><div class="t">16:25</div></div>
+      <div class="next" style="left:79.2%"><div class="n">Maghrib</div><div class="t">19:00</div></div>
+      <div style="left:88.5%" class="two"><div class="n">Isyak</div><div class="t">20:13</div></div>
+    </div>
+  </section>
+ </div>
+</div>
+<script src="tv.js"></script>
+</body></html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<title>TV 07 — Dail TV</title>
+<link rel="stylesheet" href="tv-base.css">
+<style>
+:root{--bg:#f6f6f3;--ink:#0f1210;--muted:#767d78;--faint:#b4bab5;--line:#e5e7e3;--accent:#2743e8}
+.stage{background:var(--bg)}
+.tv7{width:100%;height:100%;display:grid;grid-template-columns:1fr 780px;grid-template-rows:auto 1fr auto;
+  column-gap:70px;color:var(--ink);font-family:"Bricolage",sans-serif;padding:50px 70px 40px}
+.tv7 header{grid-column:1/-1;display:flex;justify-content:space-between;align-items:flex-start;
+  border-bottom:1px solid var(--ink);padding-bottom:18px}
+.tv7 .m{font-family:"ReemKufi",sans-serif;font-size:44px}
+.tv7 .m span{display:block;font-family:"Bricolage",sans-serif;font-size:19px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);margin-top:8px}
+.tv7 .right{text-align:right}
+.tv7 .clock{font-size:84px;font-weight:200;letter-spacing:-.04em;font-variant-numeric:tabular-nums;line-height:1}
+.tv7 .clock small{font-size:28px;color:var(--muted)}
+.tv7 .dates{display:flex;gap:18px;justify-content:flex-end;font-size:20px;color:var(--muted);margin-top:4px}
+.tv7 .dates b{color:var(--ink);font-weight:500}
+
+.tv7 .dialwrap{display:flex;align-items:center;justify-content:center;position:relative}
+.tv7 .dial{position:relative;width:600px;height:600px}
+.tv7 .ring{position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from -90deg,var(--accent) 0 17.4%,#e4e6e1 17.4% 100%);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 16px),#000 calc(100% - 15px));
+  mask:radial-gradient(farthest-side,transparent calc(100% - 16px),#000 calc(100% - 15px))}
+.tv7 .hub{position:absolute;inset:36px;border-radius:50%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center}
+.tv7 .hub .k{font-size:22px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+.tv7 .hub .nm{font-size:66px;font-weight:600;letter-spacing:-.02em;margin-top:12px}
+.tv7 .hub .nm .jawi{display:block;font-size:38px;color:var(--faint);font-weight:400;margin-top:4px}
+.tv7 .hub .cd{font-size:104px;font-weight:200;letter-spacing:-.05em;font-variant-numeric:tabular-nums;margin-top:18px}
+.tv7 .hub .az{font-size:22px;color:var(--muted);margin-top:10px;letter-spacing:.04em}
+.tv7 .hub .az b{color:var(--ink);font-weight:600}
+.tv7 .mark{position:absolute;font-size:17px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+.tv7 .list{margin-top:26px;border-top:1px solid var(--ink)}
+.tv7 .rows div{display:grid;grid-template-columns:1fr auto 150px;align-items:baseline;gap:24px;
+  padding:14px 4px;border-bottom:1px solid var(--line)}
+.tv7 .rows .n{font-size:30px;font-weight:500}
+.tv7 .rows .n .jawi{font-size:22px;color:var(--faint);margin-left:12px;font-weight:400}
+.tv7 .rows .t{font-size:56px;font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+.tv7 .rows .s{font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);text-align:right}
+.tv7 .rows .past .n,.tv7 .rows .past .t{color:var(--faint);font-weight:400}
+.tv7 .rows .adv .n{font-size:24px;color:var(--muted)}
+.tv7 .rows .adv .t{font-size:40px;color:var(--muted)}
+.tv7 .rows .next .n,.tv7 .rows .next .t{color:var(--accent);font-weight:600}
+.tv7 .rows .next .s{color:var(--accent);opacity:.8}
+.tv7 footer{grid-column:1/-1;display:flex;justify-content:space-between;color:var(--faint);
+  font-size:16px;letter-spacing:.14em;text-transform:uppercase;padding-top:12px}
+</style></head>
+<body>
+<div class="stage" data-w="1920" data-h="1080">
+ <div class="tv7">
+  <header>
+    <div class="m">MASJID AL-IKHLAS<span>Seksyen 19 · Shah Alam · SGR01</span></div>
+    <div class="right">
+      <div class="clock num">16:52<small>41</small></div>
+      <div class="dates"><span><b>Isnin</b> 23 Nov 2026</span><span><b>13</b> Jamadilakhir 1448</span></div>
+    </div>
+  </header>
+
+  <div class="dialwrap">
+    <div class="dial">
+      <div class="ring"></div>
+      <div class="hub">
+        <div class="k">Seterusnya</div>
+        <div class="nm">Maghrib<span class="jawi">مغرب</span></div>
+        <div class="cd num">2:08:14</div>
+        <div class="az">Azan <b>19:00</b> · Iqamah <b>19:10</b></div>
+      </div>
+      <span class="mark" style="left:-8px;top:50%;transform:translate(-100%,-50%)">Asar 16:25</span>
+      <span class="mark" style="right:-8px;top:50%;transform:translate(100%,-50%);text-align:right">Isyak 20:13</span>
+    </div>
+  </div>
+
+  <div class="list">
+    <div class="rows">
+      <div class="past"><span class="n">Imsak <span class="jawi">إمساك</span></span><span class="t">05:40</span><span class="s">Lepas</span></div>
+      <div class="past"><span class="n">Subuh <span class="jawi">صبح</span></span><span class="t">05:50</span><span class="s">Lepas</span></div>
+      <div class="past"><span class="n">Syuruk <span class="jawi">شروق</span></span><span class="t">06:59</span><span class="s">Lepas</span></div>
+      <div class="past"><span class="n">Zohor <span class="jawi">ظهر</span></span><span class="t">13:02</span><span class="s">Lepas</span></div>
+      <div class="past"><span class="n">Asar <span class="jawi">عصر</span></span><span class="t">16:25</span><span class="s">Lepas</span></div>
+      <div class="next"><span class="n">Maghrib <span class="jawi">مغرب</span></span><span class="t">19:00</span><span class="s">Seterusnya</span></div>
+      <div><span class="n">Isyak <span class="jawi">عشاء</span></span><span class="t">20:13</span><span class="s">Malam</span></div>
+    </div>
+  </div>
+
+  <footer><span>JAKIM · Waktu Malaysia</span><span>16:52:41</span></footer>
+ </div>
+</div>
+<script src="tv.js"></script>
+</body></html>

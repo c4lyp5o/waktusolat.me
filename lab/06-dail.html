@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Draf 06 — Dail</title>
+<link rel="stylesheet" href="base.css">
+<style>
+:root{
+  --bg:#ffffff; --ink:#0e1210; --muted:#767d78; --faint:#b6bcb7;
+  --line:#e9ebe8; --accent:#2743e8;
+}
+body.v6{background:var(--bg);color:var(--ink);font-family:"Bricolage",sans-serif}
+.v6 .shell{padding-left:24px;padding-right:24px}
+.v6 header{display:flex;justify-content:space-between;align-items:flex-start}
+.v6 .zone b{font-size:15px;font-weight:600;letter-spacing:-.01em;display:block}
+.v6 .zone span{font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.v6 .chg{font-size:11px;color:var(--accent);font-weight:500;letter-spacing:.02em;padding-top:2px}
+
+.v6 .dial{position:relative;width:min(70vw,262px);aspect-ratio:1;margin:20px auto 0}
+.v6 .ring{position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from -90deg,var(--accent) 0 17.4%,#eceeeb 17.4% 100%);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 9px),#000 calc(100% - 8px));
+  mask:radial-gradient(farthest-side,transparent calc(100% - 9px),#000 calc(100% - 8px))}
+.v6 .hub{position:absolute;inset:15px;border-radius:50%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;gap:2px}
+.v6 .hub .k{font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.v6 .hub .nm{font-size:17px;font-weight:600;letter-spacing:.02em;margin-top:4px}
+.v6 .hub .nm .jawi{display:block;font-size:13px;color:var(--faint);font-weight:400;margin-top:3px}
+.v6 .hub .cd{font-size:38px;font-weight:300;letter-spacing:-.04em;line-height:1.05;
+  font-variant-numeric:tabular-nums;margin-top:9px}
+.v6 .hub .az{font-size:11px;color:var(--muted);margin-top:7px;font-variant-numeric:tabular-nums}
+.v6 .hub .az b{color:var(--ink);font-weight:600}
+.v6 .marks span{position:absolute;font-size:9px;color:var(--faint);letter-spacing:.06em;
+  text-transform:uppercase;white-space:nowrap}
+.v6 .marks .l{left:-4px;top:50%;transform:translate(-100%,-50%)}
+.v6 .marks .r{right:-4px;top:50%;transform:translate(100%,-50%);text-align:right}
+
+.v6 .today{margin-top:16px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+  display:flex;justify-content:space-between;padding-bottom:7px;border-bottom:1px solid var(--ink)}
+.v6 .times li{display:grid;grid-template-columns:1fr auto auto;align-items:baseline;gap:14px;
+  padding:7px 0;border-bottom:1px solid var(--line)}
+.v6 .times .n{font-size:14px;font-weight:500}
+.v6 .times .n .jawi{font-size:11px;color:var(--faint);margin-left:8px;font-weight:400}
+.v6 .times .d{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.v6 .times .t{font-size:17px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.v6 .times li.past .n,.v6 .times li.past .t{color:var(--faint);font-weight:400}
+.v6 .times li.next .n,.v6 .times li.next .t{color:var(--accent);font-weight:600}
+.v6 .times li.next .d{color:var(--accent);opacity:.75}
+.v6 footer{margin-top:auto;padding-top:14px;display:flex;justify-content:space-between;
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+@media(min-width:760px){
+  .v6 .shell{max-width:900px;margin:0 auto;padding:48px 40px;display:grid;
+    grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto;column-gap:56px}
+  .v6 header{grid-column:1/-1}
+  .v6 .dial{width:340px;margin-top:34px}
+  .v6 .today{margin-top:34px}
+  .v6 footer{grid-column:1/-1}
+}
+</style></head>
+<body class="v6"><div class="shell">
+  <header>
+    <div class="zone"><b>Shah Alam</b><span>Selangor · SGR01</span></div>
+    <span class="chg">Tukar zon</span>
+  </header>
+
+  <div class="dial">
+    <div class="ring"></div>
+    <div class="hub">
+      <span class="k">Seterusnya</span>
+      <span class="nm">Maghrib<span class="jawi">مغرب</span></span>
+      <span class="cd">2:08:14</span>
+      <span class="az">Azan <b>19:00</b> · Asar lepas</span>
+    </div>
+    <div class="marks"><span class="l">Asar 16:25</span><span class="r">Isyak 20:13</span></div>
+  </div>
+
+  <p class="today"><span>Isnin, 23 Nov 2026</span><span>13 Jamadilakhir 1448</span></p>
+  <ol class="times">
+    <li class="past"><span class="n">Imsak <span class="jawi">إمساك</span></span><span class="d">Lepas</span><span class="t">05:40</span></li>
+    <li class="past"><span class="n">Subuh <span class="jawi">صبح</span></span><span class="d">Lepas</span><span class="t">05:50</span></li>
+    <li class="past"><span class="n">Syuruk <span class="jawi">شروق</span></span><span class="d">Lepas</span><span class="t">06:59</span></li>
+    <li class="past"><span class="n">Zohor <span class="jawi">ظهر</span></span><span class="d">Lepas</span><span class="t">13:02</span></li>
+    <li class="past"><span class="n">Asar <span class="jawi">عصر</span></span><span class="d">Lepas</span><span class="t">16:25</span></li>
+    <li class="next"><span class="n">Maghrib <span class="jawi">مغرب</span></span><span class="d">Seterusnya</span><span class="t">19:00</span></li>
+    <li><span class="n">Isyak <span class="jawi">عشاء</span></span><span class="d">Malam</span><span class="t">20:13</span></li>
+  </ol>
+  <footer><span>JAKIM · Waktu Malaysia</span><span>16:52</span></footer>
+</div></body></html>
