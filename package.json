@@ -1,6 +1,6 @@
 {
 	"name": "waktusolat.me",
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"description": "waktusolat.me frontend and backend",
 	"type": "module",
 	"main": "server.js",

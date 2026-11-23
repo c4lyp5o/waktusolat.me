@@ -42,7 +42,7 @@ if (process.env.MOSQUE) {
 		["mosque-evening", `${m}?now=${THU}T18:30:00`],
 	);
 }
-const TEMAS = (process.env.TEMA ?? "langit,takwim,songket").split(",");
+const TEMAS = (process.env.TEMA ?? "langit,takwim,papan").split(",");
 // A zone path in each theme; a mosque's screen uses the mosque's own theme.
 const shots = STATES.flatMap(([name, path]) =>
 	path.startsWith("/tv/")
