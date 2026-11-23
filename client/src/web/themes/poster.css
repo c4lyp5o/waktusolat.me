@@ -1,0 +1,280 @@
+/* poster.css — the site palette and page for Poster (web draft 08): a kraft
+   sheet printed in two inks, black and one red. Fixed light. Every rule is
+   black; the red is the printer's accent on the kicker only. */
+html[data-tema="poster"],
+html[data-tema="poster"] .sheet {
+	--sheet: #ece5d6;
+	--ground: #ece5d6;
+	--surface: #ece5d6;
+	--raised: #e2d9c7;
+	--line: rgb(20 19 16 / 0.22);
+	--ink: #141310;
+	--muted: #5c5548;
+	--faint: #6b6355;
+	--spent: #6b6355;
+	--accent: #ad3320;
+	--accent-fill: #141310;
+	--on-accent: #ece5d6;
+	--danger: #9c2a18;
+	--font-serif: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	color-scheme: light;
+}
+
+html[data-tema="poster"] body,
+html[data-tema="poster"] .poster {
+	background: var(--sheet);
+}
+
+/* ---- masthead: two rules, heavy then hair ------------------------------ */
+html[data-tema="poster"] .poster-mast {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	font-size: 10px;
+	font-weight: 500;
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+	color: var(--ink);
+}
+
+html[data-tema="poster"] .poster-mast b {
+	font-weight: 700;
+}
+
+html[data-tema="poster"] .poster-rule {
+	height: 4px;
+	margin-top: 8px;
+	background: var(--ink);
+}
+
+html[data-tema="poster"] .poster-rule-thin {
+	height: 1px;
+	margin-top: 3px;
+}
+
+/* The two controls, printed as labels rather than pills: a poster has no
+   buttons, but a reader still needs the way out. */
+html[data-tema="poster"] .poster-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+	margin-top: 2px;
+}
+
+html[data-tema="poster"] .poster-actions > button,
+html[data-tema="poster"] .poster-actions > a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	padding: 0 4px;
+	border: 0;
+	border-radius: 0;
+	background: none;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--ink);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+}
+
+html[data-tema="poster"] .poster-actions > button:hover,
+html[data-tema="poster"] .poster-actions > a:hover {
+	background: none;
+	color: var(--accent);
+}
+
+/* ---- the answer, as a poster set it ------------------------------------ */
+html[data-tema="poster"] .poster-hero {
+	margin-top: 20px;
+}
+
+html[data-tema="poster"] .poster-kicker {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--accent);
+}
+
+html[data-tema="poster"] .poster-kicker i {
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: var(--accent);
+}
+
+html[data-tema="poster"] .poster-name {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 10px;
+	margin-top: 6px;
+}
+
+html[data-tema="poster"] .poster-name h1 {
+	font-size: clamp(44px, 12.5vw, 56px);
+	font-weight: 700;
+	line-height: 0.9;
+	letter-spacing: -0.045em;
+	color: var(--ink);
+}
+
+html[data-tema="poster"] .poster-jawi {
+	font-family: "Noto Naskh Arabic Variable", serif;
+	font-size: clamp(26px, 8vw, 34px);
+	line-height: 1;
+	opacity: 0.9;
+	color: var(--ink);
+}
+
+html[data-tema="poster"] .poster-big {
+	margin-top: 16px;
+	margin-left: -4px;
+	font-size: clamp(92px, 27vw, 124px);
+	font-weight: 800;
+	line-height: 0.82;
+	letter-spacing: -0.06em;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink);
+}
+
+html[data-tema="poster"] .poster-sub {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-top: 22px;
+	padding-top: 11px;
+	border-top: 1px solid var(--ink);
+	font-size: 12px;
+	color: var(--ink);
+}
+
+html[data-tema="poster"] .poster-cd {
+	font-size: 14px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+html[data-tema="poster"] .poster-cd span {
+	font-weight: 400;
+	color: var(--muted);
+}
+
+/* ---- the list: one rule per line, the next one knocked out -------------- */
+html[data-tema="poster"] .poster-list {
+	margin-top: 24px;
+	padding: 0;
+	border-top: 3px solid var(--ink);
+	list-style: none;
+}
+
+html[data-tema="poster"] .poster-list li {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 10px 0;
+	border-bottom: 1px solid rgb(20 19 16 / 0.22);
+	font-size: 15px;
+	color: var(--ink);
+}
+
+html[data-tema="poster"] .poster-n {
+	font-weight: 500;
+	letter-spacing: -0.01em;
+}
+
+html[data-tema="poster"] .poster-t {
+	font-size: 18px;
+	font-weight: 600;
+	letter-spacing: -0.02em;
+	font-variant-numeric: tabular-nums;
+}
+
+html[data-tema="poster"] .poster-list li[data-state="passed"] {
+	color: var(--spent);
+}
+
+html[data-tema="poster"] .poster-list li[data-state="passed"] .poster-t {
+	font-weight: 400;
+}
+
+html[data-tema="poster"] .poster-list li[data-advisory] .poster-n,
+html[data-tema="poster"] .poster-list li[data-advisory] .poster-t {
+	font-size: 12px;
+	font-weight: 400;
+	color: var(--muted);
+}
+
+/* Reverse: ink block, paper ink, and the red only as a mark beside it. */
+html[data-tema="poster"] .poster-list li[data-state="next"],
+html[data-tema="poster"] .poster-list li[data-state="current"] {
+	margin: 0 -7px;
+	padding-right: 7px;
+	padding-left: 7px;
+	border-bottom-color: var(--ink);
+	background: var(--ink);
+	color: var(--sheet);
+}
+
+html[data-tema="poster"] .poster-list li[data-state="next"] .poster-n,
+html[data-tema="poster"] .poster-list li[data-state="current"] .poster-n {
+	font-weight: 500;
+	color: var(--sheet);
+}
+
+html[data-tema="poster"] .poster-list li[data-state="next"] .poster-t,
+html[data-tema="poster"] .poster-list li[data-state="current"] .poster-t {
+	font-weight: 700;
+	color: var(--sheet);
+}
+
+/* The fill: the poster's last line carries the Hijri date and the source. */
+html[data-tema="poster"] .poster-fill {
+	margin-top: 14px;
+	padding-top: 14px;
+	border-bottom: 0;
+	font-size: 9.5px;
+	font-weight: 500;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+html[data-tema="poster"] .poster-foot {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-top: 26px;
+	padding-top: 8px;
+	border-top: 4px solid var(--ink);
+	font-size: 9.5px;
+	font-weight: 500;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+html[data-tema="poster"] .poster-foot b {
+	font-weight: 700;
+	color: var(--ink);
+}
+
+@media (min-width: 760px) {
+	html[data-tema="poster"] .poster-big {
+		font-size: 150px;
+	}
+	html[data-tema="poster"] .poster-name h1 {
+		font-size: 72px;
+	}
+}

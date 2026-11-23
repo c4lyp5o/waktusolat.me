@@ -58,7 +58,7 @@ describe("settings and cache", () => {
 			tema: "langit",
 			now: null,
 		});
-		expect(mosqueConfig({ ...m, tema: "songket" }).tema).toBe("songket");
+		expect(mosqueConfig({ ...m, tema: "takwim" }).tema).toBe("takwim");
 		expect(mosqueConfig({ ...m, tema: "neon" }).tema).toBe("langit");
 	});
 

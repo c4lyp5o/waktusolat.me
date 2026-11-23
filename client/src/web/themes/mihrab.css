@@ -1,0 +1,285 @@
+@import "@fontsource-variable/newsreader/wght.css";
+
+/* mihrab.css — the site palette and page for Mihrab (web draft 05): a deep
+   green ground with a single gold arch. Fixed dark. The arch is the answer,
+   not decoration: the countdown lives inside it. */
+html[data-tema="mihrab"],
+html[data-tema="mihrab"] .sheet {
+	--sheet: #06201a;
+	--ground: #06201a;
+	--surface: #0b2a22;
+	--raised: #0d3229;
+	--line: rgb(207 169 99 / 0.22);
+	--ink: #f2e9d7;
+	--muted: #a3b1a4;
+	--faint: #8b9a8d;
+	--spent: #86958a;
+	--accent: #cfa963;
+	--accent-fill: #cfa963;
+	--on-accent: #06201a;
+	--danger: #ffb3a0;
+	--font-serif: "Newsreader Variable", Georgia, serif;
+	color-scheme: dark;
+}
+
+/* The light comes from the top of the arch. */
+html[data-tema="mihrab"] body {
+	background-color: var(--ground);
+	background-image: radial-gradient(
+		120% 60% at 50% -10%,
+		#0d3229 0%,
+		var(--ground) 55%,
+		#03120e 100%
+	);
+	background-attachment: fixed;
+}
+
+/* ---- masthead ----------------------------------------------------------- */
+html[data-tema="mihrab"] .mihrab-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 1rem;
+	font-size: 10px;
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+html[data-tema="mihrab"] .mihrab-head b {
+	font-weight: 500;
+	color: var(--accent);
+}
+
+html[data-tema="mihrab"] .mihrab-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+	margin-top: 4px;
+}
+
+html[data-tema="mihrab"] .mihrab-actions > button,
+html[data-tema="mihrab"] .mihrab-actions > a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	padding: 0 2px;
+	border: 0;
+	border-radius: 0;
+	background: none;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--faint);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+}
+
+html[data-tema="mihrab"] .mihrab-actions > button:hover,
+html[data-tema="mihrab"] .mihrab-actions > a:hover {
+	background: none;
+	color: var(--accent);
+}
+
+html[data-tema="mihrab"] .mihrab-date {
+	margin-top: 22px;
+	text-align: center;
+	font-family: var(--font-serif);
+	font-size: 13px;
+	font-style: italic;
+	color: var(--muted);
+}
+
+/* ---- the arch ----------------------------------------------------------- */
+html[data-tema="mihrab"] .mihrab-arch {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: min(78vw, 300px);
+	height: clamp(250px, 42vh, 340px);
+	margin: 14px auto 0;
+	padding-top: 34px;
+	border: 1px solid var(--line);
+	border-bottom: 0;
+	border-radius: 999px 999px 0 0;
+	background:
+		repeating-linear-gradient(
+			45deg,
+			rgb(207 169 99 / 0.05) 0 1px,
+			transparent 1px 11px
+		),
+		radial-gradient(70% 55% at 50% 30%, rgb(207 169 99 / 0.1), transparent 70%);
+}
+
+html[data-tema="mihrab"] .mihrab-arch::before {
+	position: absolute;
+	inset: 9px 9px 0;
+	border: 1px solid rgb(207 169 99 / 0.14);
+	border-bottom: 0;
+	border-radius: 999px 999px 0 0;
+	content: "";
+}
+
+html[data-tema="mihrab"] .mihrab-jawi {
+	position: relative;
+	font-family: "Noto Naskh Arabic Variable", serif;
+	font-size: 30px;
+	line-height: 1;
+	color: var(--accent);
+}
+
+html[data-tema="mihrab"] .mihrab-nm {
+	position: relative;
+	margin-top: 12px;
+	font-size: 12px;
+	letter-spacing: 0.3em;
+	text-transform: uppercase;
+	color: var(--ink);
+}
+
+html[data-tema="mihrab"] .mihrab-cd {
+	position: relative;
+	margin-top: 10px;
+	font-family: var(--font-serif);
+	font-size: 46px;
+	font-weight: 300;
+	letter-spacing: -0.03em;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink);
+}
+
+html[data-tema="mihrab"] .mihrab-in {
+	position: relative;
+	font-size: 10.5px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+html[data-tema="mihrab"] .mihrab-in b {
+	font-weight: 500;
+	letter-spacing: 0.06em;
+	color: var(--accent);
+}
+
+/* ---- the divider: the floor of the arch -------------------------------- */
+html[data-tema="mihrab"] .mihrab-line {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-top: -1px;
+	color: var(--accent);
+	opacity: 0.9;
+}
+
+html[data-tema="mihrab"] .mihrab-line i {
+	flex: 1;
+	height: 1px;
+	background: var(--line);
+}
+
+html[data-tema="mihrab"] .mihrab-line span {
+	font-size: 10px;
+	letter-spacing: 0.28em;
+	text-transform: uppercase;
+}
+
+/* ---- the day ------------------------------------------------------------ */
+html[data-tema="mihrab"] .mihrab-times {
+	margin: 18px 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+html[data-tema="mihrab"] .mihrab-times li {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: baseline;
+	gap: 10px;
+	padding: 9px 2px;
+	border-bottom: 1px solid rgb(242 233 215 / 0.09);
+}
+
+html[data-tema="mihrab"] .mihrab-times .mihrab-n {
+	font-family: var(--font-serif);
+	font-size: 18px;
+	color: var(--ink);
+}
+
+html[data-tema="mihrab"] .mihrab-ar {
+	margin-left: 9px;
+	font-family: "Noto Naskh Arabic Variable", serif;
+	font-size: 12px;
+	color: var(--faint);
+}
+
+html[data-tema="mihrab"] .mihrab-times .mihrab-t {
+	font-family: var(--font-serif);
+	font-size: 19px;
+	letter-spacing: 0.02em;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink);
+}
+
+html[data-tema="mihrab"] .mihrab-times li[data-state="passed"] {
+	color: var(--spent);
+}
+
+html[data-tema="mihrab"] .mihrab-times li[data-state="passed"] .mihrab-n,
+html[data-tema="mihrab"] .mihrab-times li[data-state="passed"] .mihrab-t {
+	color: var(--spent);
+}
+
+html[data-tema="mihrab"] .mihrab-times li[data-advisory] .mihrab-n,
+html[data-tema="mihrab"] .mihrab-times li[data-advisory] .mihrab-t {
+	font-size: 14px;
+	color: var(--faint);
+}
+
+html[data-tema="mihrab"] .mihrab-times li[data-state="next"] .mihrab-n,
+html[data-tema="mihrab"] .mihrab-times li[data-state="current"] .mihrab-n {
+	font-size: 21px;
+	color: var(--accent);
+}
+
+html[data-tema="mihrab"] .mihrab-times li[data-state="next"] .mihrab-t,
+html[data-tema="mihrab"] .mihrab-times li[data-state="current"] .mihrab-t {
+	font-size: 22px;
+	color: var(--accent);
+}
+
+html[data-tema="mihrab"] .mihrab-foot {
+	padding-top: 14px;
+	text-align: center;
+	font-size: 9.5px;
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+	color: var(--faint);
+}
+
+@media (min-width: 760px) {
+	html[data-tema="mihrab"] .mihrab-arch {
+		width: 420px;
+		height: 380px;
+	}
+
+	html[data-tema="mihrab"] .mihrab-cd {
+		font-size: 64px;
+	}
+
+	html[data-tema="mihrab"] .mihrab-times {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		column-gap: 40px;
+		margin-top: 26px;
+	}
+
+	/* Isyak closes the day across the full width. */
+	html[data-tema="mihrab"] .mihrab-times li:last-child {
+		grid-column: 1 / -1;
+	}
+}

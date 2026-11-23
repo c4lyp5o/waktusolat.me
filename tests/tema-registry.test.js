@@ -2,6 +2,7 @@
 // The value is only useful if both sides agree, so this test pins the
 // registry shape; `parseConfig` honouring it is proven with the parser.
 import { describe, expect, test } from "bun:test";
+import { TEMAS as CLIENT_TEMAS, parseConfig } from "../client/src/lib/waktu/config.js";
 import { DEFAULT_TEMA, isTema, TEMA_IDS, TEMAS, WEB_TEMAS } from "../shared/temas.js";
 
 describe("tema registry", () => {
@@ -44,5 +45,23 @@ describe("tema registry", () => {
 			expect(t.swatch.ink).toMatch(/^#[0-9a-f]{6}$/i);
 			expect(t.swatch.accent).toMatch(/^#[0-9a-f]{6}$/i);
 		}
+	});
+});
+
+describe("parseConfig tema", () => {
+	test("accepts every registered id", () => {
+		for (const id of TEMA_IDS) {
+			const params = new URLSearchParams(`tema=${id}`);
+			expect(parseConfig(params, "production").tema).toBe(id);
+		}
+	});
+
+	test("an unknown or missing id falls back to the default", () => {
+		expect(parseConfig(new URLSearchParams("tema=nope"), "production").tema).toBe(DEFAULT_TEMA);
+		expect(parseConfig(new URLSearchParams(""), "production").tema).toBe(DEFAULT_TEMA);
+	});
+
+	test("the client reads the same registry, not a copy", () => {
+		expect(CLIENT_TEMAS).toBe(TEMA_IDS);
 	});
 });

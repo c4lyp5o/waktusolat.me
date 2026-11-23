@@ -1,0 +1,185 @@
+/* siang.css — the site palette for Siang (web draft 03): daylight paper,
+   near-black ink, one deep teal. `mode: fixed` (light). Also styles the siang
+   page composition, all under [data-tema="siang"] so nothing leaks. */
+html[data-tema="siang"],
+html[data-tema="siang"] .sheet {
+	--sheet: #fbfaf6;
+	--ground: #fbfaf6;
+	--surface: #ffffff;
+	--raised: #f1f0e9;
+	--line: #e2e3dc;
+	--ink: #12211c;
+	--muted: #5c6862;
+	--faint: #67716b;
+	--spent: #6a736e;
+	--accent: #0f6b5c;
+	--accent-fill: #0f6b5c;
+	--on-accent: #fbfaf6;
+	--danger: #a5342a;
+	--font-serif: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	color-scheme: light;
+}
+
+/* ---- the page ----------------------------------------------------------- */
+html[data-tema="siang"] .siang {
+	padding-top: 1.6rem;
+}
+
+html[data-tema="siang"] .siang-place {
+	font-size: 1.375rem;
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: -0.01em;
+	color: var(--ink);
+}
+
+html[data-tema="siang"] .siang-place-sub {
+	font-weight: 400;
+	color: var(--muted);
+}
+
+html[data-tema="siang"] .siang-date {
+	margin-top: 0.35rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--faint);
+}
+
+/* The band is the day's context, so it sits right under the date. */
+html[data-tema="siang"] .siang .ribbon {
+	margin: 2.2rem 0 0;
+}
+
+/* ---- the answer --------------------------------------------------------- */
+html[data-tema="siang"] .siang-lead {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 1rem 1.5rem;
+	padding: 2rem 0 1.6rem;
+	border-bottom: 1px solid var(--line);
+}
+
+html[data-tema="siang"] .siang-k {
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.22em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+html[data-tema="siang"] .siang-v {
+	margin-top: 0.5rem;
+	font-size: clamp(1.75rem, 5.5vw, 2.75rem);
+	font-weight: 500;
+	line-height: 1.05;
+	letter-spacing: -0.02em;
+	color: var(--ink);
+}
+
+html[data-tema="siang"] .siang-v em {
+	font-style: normal;
+	font-size: 0.62em;
+	font-weight: 400;
+	color: var(--muted);
+}
+
+/* 2j 08m — the digits are the number, the units are a whisper. */
+html[data-tema="siang"] .siang-cd {
+	display: flex;
+	align-items: baseline;
+	gap: 0.15em;
+	font-size: clamp(2rem, 6.5vw, 3rem);
+	font-weight: 300;
+	line-height: 1;
+	letter-spacing: -0.03em;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink);
+	white-space: nowrap;
+}
+
+html[data-tema="siang"] .siang-cd i {
+	font-style: italic;
+	font-size: 0.55em;
+	font-weight: 400;
+	letter-spacing: 0;
+	color: var(--muted);
+}
+
+/* ---- the seven times ---------------------------------------------------- */
+html[data-tema="siang"] .siang-times {
+	margin-top: 0.5rem;
+	padding: 0;
+	list-style: none;
+}
+
+html[data-tema="siang"] .siang-times li {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.85rem 0;
+	border-bottom: 1px solid var(--line);
+}
+
+html[data-tema="siang"] .siang-name {
+	display: flex;
+	align-items: baseline;
+	gap: 0.6rem;
+	font-size: 1.0625rem;
+	color: var(--ink);
+}
+
+html[data-tema="siang"] .siang-jawi {
+	font-family: "Noto Naskh Arabic Variable", serif;
+	font-size: 1rem;
+	color: var(--faint);
+}
+
+html[data-tema="siang"] .siang-time {
+	font-size: 1.375rem;
+	font-weight: 500;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink);
+}
+
+html[data-tema="siang"] .siang-times li[data-state="passed"] .siang-name,
+html[data-tema="siang"] .siang-times li[data-state="passed"] .siang-time,
+html[data-tema="siang"] .siang-times li[data-advisory] .siang-name,
+html[data-tema="siang"] .siang-times li[data-advisory] .siang-time {
+	color: var(--spent);
+	font-weight: 400;
+}
+
+html[data-tema="siang"] .siang-times li[data-state="next"] .siang-name,
+html[data-tema="siang"] .siang-times li[data-state="next"] .siang-time,
+html[data-tema="siang"] .siang-times li[data-state="current"] .siang-name,
+html[data-tema="siang"] .siang-times li[data-state="current"] .siang-time {
+	color: var(--accent);
+	font-weight: 600;
+}
+
+/* ---- foot --------------------------------------------------------------- */
+html[data-tema="siang"] .siang-foot {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 0.5rem 1.5rem;
+	margin-top: 2.5rem;
+	padding-top: 1.1rem;
+	border-top: 1px solid var(--line);
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--faint);
+}
+
+@media (max-width: 420px) {
+	html[data-tema="siang"] .siang-lead {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}

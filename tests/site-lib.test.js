@@ -1,6 +1,5 @@
-// Site revamp: zone search, remembered zone, theme resolution.
+// Site revamp: zone search, remembered zone.
 import { describe, expect, test } from "bun:test";
-import { resolveTheme } from "../client/src/lib/theme.js";
 import { loadZone, saveZone } from "../client/src/lib/zoneMemory.js";
 import { buildZoneIndex, searchZones } from "../client/src/lib/zoneSearch.js";
 import { ZONES } from "../controllers/zones.js";
@@ -74,15 +73,5 @@ describe("zone memory", () => {
 		};
 		expect(loadZone(blocked)).toBeNull();
 		expect(() => saveZone(blocked, "wly01")).not.toThrow();
-	});
-});
-
-describe("resolveTheme", () => {
-	test("the visitor's choice wins, else the system setting", () => {
-		expect(resolveTheme("light", true)).toBe("light");
-		expect(resolveTheme("dark", false)).toBe("dark");
-		expect(resolveTheme(null, true)).toBe("dark");
-		expect(resolveTheme(null, false)).toBe("light");
-		expect(resolveTheme("purple", true)).toBe("dark");
 	});
 });

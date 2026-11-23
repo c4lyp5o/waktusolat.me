@@ -1,0 +1,31 @@
+/* jalur.css — the site palette for Jalur (draft 03, "Siang"): paper white with
+   deep green ink and the day as a band across the page. `mode: fixed`. */
+html[data-tema="jalur"],
+html[data-tema="jalur"] .sheet {
+	--sheet: #fffdf8;
+	--ground: #fbfaf6;
+	--surface: #f4f2ea;
+	--raised: #eae7dd;
+	--line: #e2e3dc;
+	--ink: #12211c;
+	--muted: #55605a;
+	--faint: #5f6a63;
+	--spent: #66716a;
+	--accent: #0f6b5c;
+	--accent-fill: #0f6b5c;
+	--on-accent: #fbfaf6;
+	--danger: #a8231c;
+	--font-serif: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	color-scheme: light;
+}
+
+/* The band is the page's signature: give it air and a hairline under it. */
+html[data-tema="jalur"] .ribbon-web {
+	margin: 1.8rem 0 0.2rem;
+	padding-bottom: 0.6rem;
+	border-bottom: 1px solid var(--line);
+}
+html[data-tema="jalur"] .almanak-lead {
+	font-weight: 600;
+	letter-spacing: -0.02em;
+}

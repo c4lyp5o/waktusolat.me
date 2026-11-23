@@ -6,18 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Waktu Solat Untuk Malaysia Straight Dari JAKIM" />
     <title>Waktu Solat Malaysia</title>
-    <!-- Theme before first paint (no flash): the visitor's choice, else the
-         system setting. Same rule as src/lib/theme.js. -->
+    <!-- Palette before first paint (no flash). The ids are injected from
+         shared/temas.js by vite (see vite.config.js); the rule is the same as
+         src/lib/tema.js: URL, then remembered, then the first. No toggle: the
+         mode is the system setting. -->
+    <!--tema-ids-->
     <script>
       (() => {
-        let t = null;
+        const list = window.__TEMAS__ || [];
+        const ids = window.__WEB_TEMAS__ || list.map((t) => t.id);
+        let picked = null;
         try {
-          t = localStorage.getItem("waktu:theme");
+          picked = new URLSearchParams(location.search).get("tema");
         } catch {}
-        if (t !== "light" && t !== "dark") {
-          t = window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        if (!ids.includes(picked)) {
+          try {
+            picked = localStorage.getItem("waktu:tema");
+          } catch {}
         }
-        document.documentElement.dataset.theme = t;
+        if (!ids.includes(picked)) picked = ids[0];
+        const tema = list.find((t) => t.id === picked);
+        const root = document.documentElement;
+        root.dataset.tema = picked;
+        // `mode: fixed` means one light: the system dark setting does not apply.
+        root.dataset.theme =
+          tema?.mode === "fixed"
+            ? "light"
+            : window.matchMedia?.("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
       })();
     </script>
   </head>

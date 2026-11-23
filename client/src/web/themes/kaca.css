@@ -1,0 +1,59 @@
+/* kaca.css — the site palette for Kaca (draft 09): a photograph behind glass.
+   Near-white ink, gold accents; the photograph comes from kaca.js as
+   --kaca-photo, so it travels as a hashed asset and works offline. */
+html[data-tema="kaca"],
+html[data-tema="kaca"] .sheet {
+	--sheet: #0a1411;
+	--ground: #050a08;
+	--surface: rgb(10 18 15 / 0.55);
+	--raised: rgb(246 243 236 / 0.1);
+	--line: rgb(246 243 236 / 0.16);
+	--ink: #f6f3ec;
+	--muted: rgb(246 243 236 / 0.78);
+	--faint: rgb(246 243 236 / 0.62);
+	--spent: rgb(246 243 236 / 0.52);
+	--accent: #e6c78f;
+	--accent-fill: #e6c78f;
+	--on-accent: #050a08;
+	--danger: #ff9c93;
+	--font-serif: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	color-scheme: dark;
+}
+
+/* The photograph is the page, on the zone page only: the navbar and every
+   other page keep their own ground. */
+html[data-tema="kaca"] .almanak {
+	position: relative;
+	isolation: isolate;
+}
+html[data-tema="kaca"] .almanak::before {
+	position: fixed;
+	inset: 0;
+	z-index: -2;
+	background: var(--kaca-photo) center / cover no-repeat;
+	content: "";
+	pointer-events: none;
+}
+html[data-tema="kaca"] .almanak::after {
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	background:
+		linear-gradient(180deg, rgb(4 10 8 / 0.74), rgb(4 10 8 / 0.5) 38%, rgb(4 10 8 / 0.88)),
+		linear-gradient(90deg, rgb(4 10 8 / 0.5), transparent 55%, rgb(4 10 8 / 0.55));
+	content: "";
+	pointer-events: none;
+}
+
+/* On glass the type is set light and wide, like the TV. */
+html[data-tema="kaca"] .almanak-title,
+html[data-tema="kaca"] .almanak-lead {
+	text-shadow: 0 1px 24px rgb(0 0 0 / 0.45);
+}
+html[data-tema="kaca"] .almanak-rule,
+html[data-tema="kaca"] .almanak-rule-double {
+	border-top-color: rgb(246 243 236 / 0.28);
+}
+html[data-tema="kaca"] .almanak .leader-row {
+	border-bottom-color: rgb(246 243 236 / 0.14);
+}

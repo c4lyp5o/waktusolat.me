@@ -4,11 +4,15 @@
 // sky. As a layout route it renders the matched page; Landing wraps its
 // zone picker in it directly.
 import { Outlet, useLocation } from "react-router";
+import { useTemaId } from "../lib/useTemaId.js";
 import useZoneSky, { skyZone } from "./useZoneSky.js";
 
 export default function SkySheet({ children }) {
 	const { pathname } = useLocation();
-	const sky = useZoneSky(skyZone(pathname));
+	// The sky is Langit's. A printed tema gets plain ground behind its sheet.
+	const tema = useTemaId();
+	const skyOver = useZoneSky(skyZone(pathname));
+	const sky = tema === "langit" ? skyOver : null;
 	return (
 		// Padding, not the sheet's margin: a margin would collapse through this
 		// wrapper and show the plain ground instead of the sky.
