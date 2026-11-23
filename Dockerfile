@@ -14,6 +14,8 @@ RUN bun install
 COPY client ./client
 # The client imports the server's zone registry (vite alias @zones).
 COPY controllers/zones.js ./controllers/zones.js
+# ...and the shared tema registry (shared/temas.js), used by both sides.
+COPY shared ./shared
 WORKDIR /app/client
 RUN bun install && \
     if [ "$NODE_ENV" = "staging" ]; then \
