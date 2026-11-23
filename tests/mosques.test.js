@@ -5,6 +5,7 @@ import { Database } from "bun:sqlite";
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { CLIENT_IP_HEADER } from "../utils/clientIp.js";
 import { RateLimiter } from "../utils/rateLimit.js";
+import { TEMA_IDS } from "../shared/temas.js";
 import { call, dbPath } from "./app.js";
 
 // After app.js, which points DB_PATH at a temp file before any DB opens.
@@ -73,15 +74,25 @@ describe("create and read", () => {
 	test("tema: chosen at creation or by edit; anything else is 400", async () => {
 		const { data } = await create({ name: "Surau An-Nur", zone: "sgr01", tema: "takwim" });
 		expect(data.mosque.tema).toBe("takwim");
-		const res = await patch(data.mosque.id, data.token, { tema: "songket" });
+		const res = await patch(data.mosque.id, data.token, { tema: "langit" });
 		expect(res.status).toBe(200);
-		expect((await res.json()).tema).toBe("songket");
-		for (const tema of ["dark", "SONGKET", "", null, 1]) {
+		expect((await res.json()).tema).toBe("langit");
+		for (const tema of ["dark", "SONGKET", "", null, 1, "papan "]) {
 			const bad = await patch(data.mosque.id, data.token, { tema });
 			expect(bad.status).toBe(400);
 			expect((await bad.json()).field).toBe("tema");
 		}
 		expect((await create({ name: "Masjid X", zone: "wly01", tema: "neon" })).res.status).toBe(400);
+	});
+
+	test("every registered tema is accepted, so the registry cannot drift", async () => {
+		for (const tema of TEMA_IDS) {
+			const made = await create({ name: `Masjid ${tema}`, zone: "sgr01", tema });
+			expect(made.res.status).toBe(201);
+			expect(made.data.mosque.tema).toBe(tema);
+			const read = await call(`/mosques/${made.data.mosque.id}`);
+			expect((await read.json()).tema).toBe(tema);
+		}
 	});
 
 	test("unknown id is 404", async () => {
