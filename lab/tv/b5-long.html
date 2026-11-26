@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<title>TV 01 — Papan Warisan</title>
+<link rel="stylesheet" href="tv-base.css">
+<link rel="stylesheet" href="tv-banner.css">
+<style>
+:root{--bg:#081713;--bg2:#0c221b;--ivory:#f2ead8;--dim:#9fb3a6;--faint:#61776a;--gold:#cfa659;--line:rgba(207,166,89,.26)}
+.stage{background:radial-gradient(120% 90% at 50% 0%,var(--bg2),var(--bg) 70%)}
+.tv1{width:100%;height:100%;display:grid;grid-template-rows:auto 1fr auto auto;
+  padding:56px 80px 48px;color:var(--ivory);font-family:"Bricolage",sans-serif;
+  background-image:repeating-linear-gradient(90deg,rgba(207,166,89,.05) 0 1px,transparent 1px 240px)}
+.tv1 header{display:grid;grid-template-columns:1fr auto;align-items:start;
+  border-bottom:1px solid var(--line);padding-bottom:26px}
+.tv1 .masjid{font-family:"ReemKufi",sans-serif;font-size:54px;line-height:1;color:var(--gold);letter-spacing:.01em}
+.tv1 .sub{font-size:24px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-top:12px}
+.tv1 .right{text-align:right}
+.tv1 .clock{font-family:"Newsreader",serif;font-size:104px;font-weight:300;line-height:.9;
+  letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.tv1 .clock small{font-size:40px;color:var(--dim);letter-spacing:0}
+.tv1 .dates{display:flex;gap:22px;justify-content:flex-end;font-size:24px;color:var(--dim);margin-top:10px}
+.tv1 .dates b{color:var(--ivory);font-weight:400}
+
+.tv1 .hero{display:flex;align-items:center;justify-content:center;gap:60px;position:relative;padding:14px 0}
+.tv1 .hero::before,.tv1 .hero::after{content:"";position:absolute;left:50%;transform:translateX(-50%);
+  width:420px;height:1px;background:var(--line)}
+.tv1 .hero::before{top:0}.tv1 .hero::after{bottom:0}
+.tv1 .l{display:flex;flex-direction:column;align-items:center}
+.tv1 .k{font-size:26px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold)}
+.tv1 .prayer{font-family:"ReemKufi",sans-serif;font-size:126px;line-height:1;margin-top:14px;color:var(--ivory)}
+.tv1 .jawi{font-size:58px;color:var(--gold);opacity:.85;line-height:1;margin-top:2px}
+.tv1 .cd{display:flex;align-items:flex-start;gap:12px;margin-top:-6px}
+.tv1 .cd .big{font-family:"Newsreader",serif;font-size:206px;font-weight:300;line-height:.82;
+  letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.tv1 .cd .big .s{font-size:.42em;color:var(--dim);letter-spacing:-.02em}
+.tv1 .meta{display:flex;gap:46px;font-size:28px;color:var(--dim);margin-top:16px;letter-spacing:.04em}
+.tv1 .meta b{color:var(--ivory);font-weight:500}
+
+.tv1 .times{display:grid;grid-template-columns:repeat(7,1fr);border-top:1px solid var(--line)}
+.tv1 .times div{padding:16px 10px 0;text-align:center;border-right:1px solid rgba(207,166,89,.13)}
+.tv1 .times div:last-child{border-right:0}
+.tv1 .times .n{font-size:28px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.tv1 .times .j{font-size:22px;color:var(--faint);margin-top:3px;height:30px}
+.tv1 .times .t{font-family:"Newsreader",serif;font-size:68px;font-weight:400;line-height:1;
+  font-variant-numeric:tabular-nums;margin-top:8px}
+.tv1 .times .past .t{color:var(--faint)}
+.tv1 .times .past .n{color:var(--faint)}
+.tv1 .times .next{background:linear-gradient(180deg,rgba(207,166,89,.16),rgba(207,166,89,0))}
+.tv1 .times .next .n,.tv1 .times .next .t{color:var(--gold)}
+.tv1 .times .next .j{color:var(--gold);opacity:.6}
+.tv1 .times .adv .n{font-size:22px;color:var(--faint)}
+.tv1 .times .adv .t{font-size:64px;color:var(--faint)}
+</style></head>
+<body>
+<div class="stage" data-w="1920" data-h="1080">
+ <div class="tv1">
+  <header>
+    <div>
+      <div class="masjid">MASJID AL-IKHLAS</div>
+      <div class="sub">Seksyen 19, Shah Alam · SGR01</div>
+    </div>
+    <div class="right">
+      <div class="clock">16:52<small>:41</small></div>
+      <div class="dates"><span><b>Isnin</b>, 23 November 2026</span><span><b>13</b> Jamadilakhir 1448</span></div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="l">
+      <div class="k">Seterusnya</div>
+      <div class="prayer">MAGHRIB</div>
+      <div class="jawi">مغرب</div>
+    </div>
+    <div class="l">
+      <div class="cd"><span class="big num">2:08<span class="s">:14</span></span></div>
+      <div class="meta"><span>Azan <b>19:00</b></span><span>Iqamah <b>19:10</b></span></div>
+    </div>
+  </section>
+
+  <div class="times">
+    <div class="past adv"><div class="n">Imsak</div><div class="jawi j">إمساك</div><div class="t">05:40</div></div>
+    <div class="past"><div class="n">Subuh</div><div class="jawi j">صبح</div><div class="t">05:50</div></div>
+    <div class="past adv"><div class="n">Syuruk</div><div class="jawi j">شروق</div><div class="t">06:59</div></div>
+    <div class="past"><div class="n">Zohor</div><div class="jawi j">ظهر</div><div class="t">13:02</div></div>
+    <div class="past"><div class="n">Asar</div><div class="jawi j">عصر</div><div class="t">16:25</div></div>
+    <div class="next"><div class="n">Maghrib</div><div class="jawi j">مغرب</div><div class="t">19:00</div></div>
+    <div><div class="n">Isyak</div><div class="jawi j">عشاء</div><div class="t">20:13</div></div>
+  </div>
+
+  <section class="band">
+    <p class="say">(yaitu) orang-orang yang beriman dan hati mereka menjadi tenteram dengan mengingat Allah. Ingatlah, hanya dengan mengingat Allah hati menjadi tenteram</p>
+    <div class="who">
+      <span class="ref">Ar-Ra'd · 28</span>
+    </div>
+  </section>
+ </div>
+</div>
+<script src="tv.js"></script>
+</body></html>

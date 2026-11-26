@@ -1,0 +1,35 @@
+/* takwim.css — the site palette for Takwim (S5b): the printed almanac.
+ *
+ * The TV Takwim is black paper with one red; the website is the same almanac
+ * in daylight — cream paper, black ink, the same red. `mode: fixed`, so the
+ * system dark setting does not repaint it: print has one colour.
+ */
+@import "@fontsource-variable/newsreader/wght.css";
+
+html[data-tema="takwim"],
+html[data-tema="takwim"] .sheet {
+	--sheet: #f8f4ea;
+	--ground: #efe9dc;
+	--surface: #fffdf7;
+	--raised: #e9e2d2;
+	--line: #d7cdb9;
+	--ink: #17130e;
+	--muted: #4a443a;
+	--faint: #635b4d;
+	--spent: #6f6759;
+	--accent: #a8231c;
+	--accent-fill: #a8231c;
+	--on-accent: #fff8f2;
+	--danger: #a8231c;
+	--font-serif: "Newsreader Variable", Georgia, serif;
+	color-scheme: light;
+}
+
+/* Headlines in the almanac's own serif. */
+html[data-tema="takwim"] .almanak-title,
+html[data-tema="takwim"] .almanak-lead,
+html[data-tema="takwim"] .almanak-count {
+	font-family: var(--font-serif);
+	font-weight: 400;
+	letter-spacing: -0.015em;
+}

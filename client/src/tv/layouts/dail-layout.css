@@ -1,0 +1,169 @@
+/* dail-layout.css — draft TV 07: the ring on the left, the seven times on the
+   right, one rule under the masthead and one above the foot. Scoped to
+   [data-layout="dail"]. */
+
+.tv[data-layout="dail"] .tv-dail-view {
+	display: grid;
+	grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+	grid-template-rows: auto minmax(0, 1fr) auto;
+	gap: 0 5vh;
+	height: 100%;
+}
+
+.tv[data-layout="dail"] .tv-header {
+	grid-column: 1 / -1;
+	grid-template-columns: minmax(0, 1fr) auto;
+	grid-template-areas:
+		"title clock"
+		"title dates";
+	align-items: center;
+	gap: 0 4vh;
+}
+.tv[data-layout="dail"] .tv-title {
+	grid-area: title;
+	gap: 0.9vh;
+}
+.tv[data-layout="dail"] .tv-title-name {
+	overflow: visible;
+	font-size: 4.4vh;
+	line-height: 1.1;
+	white-space: normal;
+	text-overflow: clip;
+}
+.tv[data-layout="dail"] .tv-title-zone {
+	font-size: 1.9vh;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+}
+.tv[data-layout="dail"] .tv-clock {
+	grid-area: clock;
+	font-size: 8.4vh;
+	line-height: 1;
+	text-align: right;
+}
+.tv[data-layout="dail"] .tv-dates {
+	grid-area: dates;
+	flex-direction: row;
+	justify-content: flex-end;
+	gap: 2.6vh;
+	font-size: 2vh;
+}
+
+/* The ring holds the answer; the list is the day in print beside it. */
+.tv[data-layout="dail"] .dial {
+	align-self: center;
+	justify-self: center;
+}
+
+.tv[data-layout="dail"] .tv-list {
+	align-self: center;
+	border-top: 1px solid var(--text);
+}
+.tv[data-layout="dail"] .tv-row {
+	display: grid;
+	grid-template-areas:
+		"name status time"
+		"jawi status time";
+	grid-template-columns: minmax(0, 1fr) 13vh auto;
+	align-items: baseline;
+	gap: 0.3vh 2.4vh;
+	padding: 1.35vh 0.4vh;
+	background: none;
+	border-bottom: 1px solid var(--line);
+	border-radius: 0;
+	box-shadow: none;
+}
+.tv[data-layout="dail"] .tv-row > span:first-child {
+	grid-area: name;
+	font-size: 2.9vh;
+	font-weight: 500;
+	letter-spacing: 0;
+	color: var(--text);
+}
+.tv[data-layout="dail"] .tv-row-jawi {
+	grid-area: jawi;
+	font-family: "Noto Naskh Arabic Variable", serif;
+	font-size: 2.1vh;
+	line-height: 1.2;
+	color: var(--faint);
+}
+.tv[data-layout="dail"] .tv-row-status {
+	grid-area: status;
+	justify-self: end;
+	font-size: 1.5vh;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--faint);
+}
+.tv[data-layout="dail"] .tv-row-time {
+	grid-area: time;
+	font-size: 5vh;
+	line-height: 1;
+	letter-spacing: -0.02em;
+	font-variant-numeric: tabular-nums;
+	color: var(--text);
+}
+.tv[data-layout="dail"] .tv-row[data-state="passed"] > span:first-child,
+.tv[data-layout="dail"] .tv-row[data-state="passed"] .tv-row-time {
+	color: var(--spent);
+	font-weight: 400;
+}
+.tv[data-layout="dail"] .tv-row[data-state="next"] > span:first-child,
+.tv[data-layout="dail"] .tv-row[data-state="next"] .tv-row-time,
+.tv[data-layout="dail"] .tv-row[data-state="current"] > span:first-child,
+.tv[data-layout="dail"] .tv-row[data-state="current"] .tv-row-time {
+	color: var(--accent);
+	font-weight: 600;
+}
+.tv[data-layout="dail"] .tv-row[data-state="next"] .tv-row-status,
+.tv[data-layout="dail"] .tv-row[data-state="current"] .tv-row-status {
+	color: var(--accent);
+}
+.tv[data-layout="dail"] .tv-row[data-advisory] > span:first-child {
+	font-size: 2.4vh;
+	color: var(--muted);
+}
+.tv[data-layout="dail"] .tv-row[data-advisory] .tv-row-time {
+	font-size: 3.6vh;
+	color: var(--muted);
+}
+
+.tv[data-layout="dail"] .tv-banner {
+	grid-column: 1 / -1;
+	height: auto;
+	min-height: 9vh;
+	padding: 1.2vh 0 0;
+	border-top: 1px solid var(--text);
+	background: none;
+	border-radius: 0;
+}
+.tv[data-layout="dail"] .tv-banner-text {
+	font-size: 2.5vh;
+	line-height: 1.5;
+	color: var(--muted);
+}
+.tv[data-layout="dail"] .tv-banner-foot {
+	gap: 2vh;
+	font-size: 1.9vh;
+	color: var(--faint);
+}
+.tv[data-layout="dail"] .tv-banner-arabic {
+	margin-left: auto;
+	font-size: 2.6vh;
+	color: var(--accent);
+	opacity: 0.85;
+}
+.tv[data-layout="dail"] .tv-prog {
+	height: auto;
+	min-height: 9vh;
+	margin: 0;
+	padding: 0.8vh 0;
+}
+.tv[data-layout="dail"] .tv-prog.has-photo {
+	grid-template-columns: 9vh minmax(0, 1fr);
+}
+.tv[data-layout="dail"] .tv-prog-photo {
+	width: 9vh;
+	height: 9vh;
+	border-radius: 0.6vh;
+}

@@ -1,0 +1,154 @@
+/* dial.css — the day ring, both sizes. The arc is a conic gradient masked to a
+   stroke, so it scales with the box; --dial-pct is the only input. */
+
+.dial {
+	--dial-stroke: 9px;
+	--dial-size: 262px;
+	position: relative;
+	width: var(--dial-size);
+	max-width: 100%;
+	aspect-ratio: 1;
+	margin: 1.4rem auto 0;
+}
+
+.dial-ring {
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	background: conic-gradient(
+		from -90deg,
+		var(--accent) 0 var(--dial-pct),
+		var(--dial-rest, #e4e6e1) var(--dial-pct) 100%
+	);
+	-webkit-mask: radial-gradient(
+		farthest-side,
+		transparent calc(100% - var(--dial-stroke)),
+		#000 calc(100% - var(--dial-stroke) + 1px)
+	);
+	mask: radial-gradient(
+		farthest-side,
+		transparent calc(100% - var(--dial-stroke)),
+		#000 calc(100% - var(--dial-stroke) + 1px)
+	);
+}
+
+.dial-hub {
+	position: absolute;
+	inset: 15px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 2px;
+	text-align: center;
+}
+
+.dial-k {
+	color: var(--muted);
+	font-size: 9.5px;
+	letter-spacing: 0.22em;
+	text-transform: uppercase;
+}
+
+.dial-name {
+	margin-top: 4px;
+	font-size: 17px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+}
+
+.dial-jawi {
+	display: block;
+	margin-top: 3px;
+	color: var(--faint);
+	font-family: var(--font-jawi);
+	font-size: 13px;
+	font-weight: 400;
+}
+
+.dial-count {
+	margin-top: 9px;
+	font-size: 38px;
+	font-variant-numeric: tabular-nums;
+	font-weight: 300;
+	letter-spacing: -0.04em;
+	line-height: 1.05;
+}
+
+.dial-meta {
+	margin-top: 7px;
+	color: var(--muted);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+}
+
+.dial-mark {
+	position: absolute;
+	top: 50%;
+	color: var(--faint);
+	font-size: 9px;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	transform: translateY(-50%);
+}
+
+.dial-mark-left {
+	left: -4px;
+	transform: translate(-100%, -50%);
+}
+
+.dial-mark-right {
+	right: -4px;
+	text-align: right;
+	transform: translate(100%, -50%);
+}
+
+/* On a phone the dial fills the width, so the shoulder marks would sit off
+   the page: the list underneath already carries those two times. */
+@media (max-width: 640px) {
+	.dial-mark {
+		display: none;
+	}
+}
+
+/* ---- the board ---------------------------------------------------------- */
+.dial-tv {
+	--dial-size: 52vh;
+	--dial-stroke: 1.6vh;
+	margin: 0;
+}
+
+.dial-tv .dial-hub {
+	inset: 3.4vh;
+}
+
+.dial-tv .dial-k {
+	font-size: 1.9vh;
+	letter-spacing: 0.3em;
+}
+
+.dial-tv .dial-name {
+	margin-top: 1vh;
+	font-size: 5.6vh;
+}
+
+.dial-tv .dial-jawi {
+	margin-top: 0.4vh;
+	font-size: 3.2vh;
+}
+
+.dial-tv .dial-count {
+	margin-top: 1.6vh;
+	font-size: 9.4vh;
+}
+
+.dial-tv .dial-meta {
+	margin-top: 1vh;
+	font-size: 1.9vh;
+}
+
+.dial-tv .dial-mark {
+	font-size: 1.5vh;
+	letter-spacing: 0.14em;
+}

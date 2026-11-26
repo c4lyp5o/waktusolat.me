@@ -1,0 +1,33 @@
+/* senyap.css — the Senyap TV tema (draft TV 10): the quietest board we have.
+   No rules, no boxes, no glow — just ink on near-black, with one amber moment.
+   The floor is lifted to AA: "quiet" must still be readable across a hall. */
+@import "@fontsource-variable/reem-kufi/wght.css";
+@import "@fontsource-variable/newsreader/wght.css";
+
+.tv[data-tema="senyap"] {
+	--ground: #0a0a0b;
+	--line: rgb(233 231 226 / 0.1);
+	--surface: #0d0d0e;
+	--text: #e9e7e2;
+	--muted: #a3a29d;
+	--faint: #8a8a86;
+	--spent: #7d7c78;
+	--accent: #d8a964;
+	--sun: #d8a964;
+	--sun-ring: transparent;
+	--arc: rgb(233 231 226 / 0.3);
+	--font: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	--font-num: "Bricolage Grotesque Variable", system-ui, sans-serif;
+}
+
+/* The masthead is the only warm, human note in the top half. */
+.tv[data-tema="senyap"] .tv-title-name {
+	font-family: "Reem Kufi Variable", "Bricolage Grotesque Variable", sans-serif;
+	font-weight: 400;
+	letter-spacing: 0.02em;
+	text-transform: none;
+}
+.tv[data-tema="senyap"] .tv-clock {
+	font-weight: 300;
+	letter-spacing: 0.02em;
+}

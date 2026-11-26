@@ -9,6 +9,44 @@ import { mytIsoDate } from "../lib/waktu/mytime.js";
 const RELOAD_KEY = "waktu:tv-reloaded";
 const RELOAD_CHECK_MS = 60 * 1000;
 
+// Every same-origin bundle file this page has fetched so far: the JS chunk,
+// both stylesheets, and the tema's font files (which only load once a glyph is
+// actually drawn, so this is read after document.fonts.ready).
+export function assetUrls(entries = performance.getEntriesByType("resource")) {
+	const urls = new Set();
+	for (const e of entries) {
+		try {
+			const u = new URL(e.name, location.href);
+			if (u.origin !== location.origin) continue;
+			if (!u.pathname.startsWith("/assets/")) continue;
+			urls.add(u.pathname);
+		} catch {
+			// A malformed entry is not worth a throw.
+		}
+	}
+	return [...urls];
+}
+
+// Hands the worker the files this screen is actually using, so a Papan mosque
+// boots green offline — not on Langit's white — and a tema switched later is
+// cached too. Called on registration and again whenever the tema changes.
+export async function cacheAssets() {
+	if (!import.meta.env.PROD || !("serviceWorker" in navigator)) return;
+	try {
+		const reg = await navigator.serviceWorker.getRegistration();
+		if (!reg?.active) return;
+		// A font file is only fetched when a glyph needs it: wait for the ones
+		// this screen draws, but never block the TV on a slow font.
+		await Promise.race([
+			document.fonts?.ready ?? Promise.resolve(),
+			new Promise((r) => setTimeout(r, 4000)),
+		]);
+		reg.active.postMessage({ type: "cache", urls: assetUrls() });
+	} catch {
+		// Offline-first is best effort; the screen does not care.
+	}
+}
+
 // Scoped to the TV pages only (the worker also leaves the mosque editor
 // pages under /m/ alone). Production only: in dev it would serve stale
 // modules.
@@ -18,15 +56,7 @@ export function registerTvWorker() {
 		// Scoped to the TV's own tree: /tv/ for a zone, /m/ for a mosque.
 		.register("/tv-sw.js", { scope: window.location.pathname.startsWith("/m/") ? "/m/" : "/tv/" })
 		.then(() => navigator.serviceWorker.ready)
-		.then((reg) => {
-			// The first page load happened before the worker took over, so hand
-			// it the files already fetched.
-			const urls = performance
-				.getEntriesByType("resource")
-				.map((e) => new URL(e.name).pathname)
-				.filter((p) => p.startsWith("/assets/"));
-			reg.active?.postMessage({ type: "cache", urls });
-		})
+		.then(cacheAssets)
 		.catch(() => {});
 }
 

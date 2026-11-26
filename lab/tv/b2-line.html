@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<title>TV 06 — Sorotan</title>
+<link rel="stylesheet" href="tv-base.css">
+<link rel="stylesheet" href="tv-banner.css">
+<style>
+:root{--ink:#f3efe6;--dim:#8f8a80;--faint:#605c55;--amber:#e8b366}
+.stage{background:#060606}
+.tv6{width:100%;height:100%;display:grid;grid-template-rows:auto 1fr auto auto;color:var(--ink);
+  font-family:"Bricolage",sans-serif;padding:56px 84px 46px;position:relative}
+.tv6 .spot{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:1500px;height:1000px;
+  background:radial-gradient(ellipse at center,rgba(232,179,102,.13),rgba(232,179,102,.03) 45%,transparent 68%);
+  pointer-events:none}
+.tv6 header{display:flex;justify-content:space-between;align-items:baseline;position:relative;z-index:1;
+  font-size:20px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+.tv6 header b{color:var(--ink);font-weight:500;letter-spacing:.16em}
+.tv6 .mid{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;z-index:1;padding-bottom:20px}
+.tv6 .k{font-size:24px;letter-spacing:.36em;text-transform:uppercase;color:var(--amber)}
+.tv6 .nm{font-size:96px;letter-spacing:-.04em;font-weight:500;margin-top:20px;display:flex;align-items:baseline;gap:24px}
+.tv6 .nm .jawi{font-size:52px;color:var(--dim);font-weight:400}
+.tv6 .cd{font-size:400px;font-weight:200;letter-spacing:-.07em;line-height:.84;
+  font-variant-numeric:tabular-nums;margin-top:8px;margin-left:-20px;
+  background:linear-gradient(180deg,#fff6e6,#e8b366 78%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tv6 .meta{display:flex;gap:60px;font-size:27px;color:var(--dim);margin-top:14px;letter-spacing:.06em}
+.tv6 .meta b{color:var(--ink);font-weight:500}
+.tv6 .times{display:grid;grid-template-columns:repeat(7,1fr);border-top:1px solid rgba(255,255,255,.1);
+  position:relative;z-index:1}
+.tv6 .times div{text-align:center;padding:22px 0 0;border-right:1px solid rgba(255,255,255,.06)}
+.tv6 .times div:last-child{border-right:0}
+.tv6 .times .n{font-size:22px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.tv6 .times .t{font-family:"Newsreader",serif;font-size:52px;font-variant-numeric:tabular-nums;margin-top:6px}
+.tv6 .times .past .t{color:#57534c}
+.tv6 .times .past .n{color:#47443e}
+.tv6 .times .next .n{color:var(--amber)}
+.tv6 .times .next .t{color:var(--amber);font-size:58px}
+.tv6 .times .adv .n{font-size:18px;color:#47443e}
+.tv6 .times .adv .t{font-size:40px;color:#57534c}
+.tv6 .quote{display:flex;align-items:baseline;justify-content:center;gap:26px;padding-top:20px;
+  border-top:1px solid rgba(255,255,255,.08);margin-top:18px}
+.tv6 .quote .say{font-size:30px;color:#9c968b;letter-spacing:.005em;max-width:1330px;text-wrap:balance}
+.tv6 .quote .ref{font-size:17px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);opacity:.7;white-space:nowrap}
+</style></head>
+<body>
+<div class="stage" data-w="1920" data-h="1080">
+ <div class="tv6">
+  <div class="spot"></div>
+  <header>
+    <span><b>Masjid Al-Ikhlas</b> · Seksyen 19, Shah Alam</span>
+    <span>Isnin 23 Nov 2026 · 13 Jamadilakhir 1448 · <b>16:52:41</b></span>
+  </header>
+
+  <section class="mid">
+    <div class="k">Maghrib dalam</div>
+    <div class="nm">MAGHRIB <span class="jawi">مغرب</span></div>
+    <div class="cd num">2:08</div>
+    <div class="meta"><span>Azan <b>19:00</b></span><span>Iqamah <b>19:10</b></span><span>Asar telah masuk</span></div>
+  </section>
+
+  <div class="times">
+    <div class="past adv"><div class="n">Imsak</div><div class="t">05:40</div></div>
+    <div class="past"><div class="n">Subuh</div><div class="t">05:50</div></div>
+    <div class="past adv"><div class="n">Syuruk</div><div class="t">06:59</div></div>
+    <div class="past"><div class="n">Zohor</div><div class="t">13:02</div></div>
+    <div class="past"><div class="n">Asar</div><div class="t">16:25</div></div>
+    <div class="next"><div class="n">Maghrib</div><div class="t">19:00</div></div>
+    <div><div class="n">Isyak</div><div class="t">20:13</div></div>
+  </div>
+
+  <div class="quote">
+    <p class="say">Bilal diperintahkan oleh Nabi saw. supaya azan dua-dua kali, dan qamat sekali</p>
+    <span class="ref">Sahih Muslim</span>
+  </div>
+ </div>
+</div>
+<script src="tv.js"></script>
+</body></html>

@@ -1,6 +1,6 @@
 {
 	"name": "waktusolat.me",
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"description": "waktusolat.me frontend and backend",
 	"type": "module",
 	"main": "server.js",
@@ -14,7 +14,8 @@
 		"build-client": "cd client && bun run build",
 		"dev": "conc \"bun run client\" \"bun run server\"",
 		"start": "bun server.js",
-		"test": "bun test"
+		"test": "bun test",
+		"lint": "biome ci ."
 	},
 	"repository": {
 		"type": "git",

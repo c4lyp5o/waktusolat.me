@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Draf 05 — Mihrab</title>
+<link rel="stylesheet" href="base.css">
+<style>
+:root{
+  --bg:#06201a; --bg2:#03120e; --ivory:#f2e9d7; --dim:#9aa79a; --faint:#6b7b6f;
+  --gold:#cfa963; --rule:rgba(207,169,99,.22);
+}
+body.v5{background:var(--bg);color:var(--ivory);font-family:"Plex",sans-serif;
+  background-image:radial-gradient(120% 60% at 50% -10%,#0d3229 0%,var(--bg) 55%,var(--bg2) 100%);
+  background-attachment:fixed}
+.v5 .shell{padding-left:24px;padding-right:24px}
+.v5 header{display:flex;justify-content:space-between;align-items:baseline;
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.v5 header b{color:var(--gold);font-weight:500}
+.v5 .date{text-align:center;margin-top:22px;font-family:"Newsreader",serif;font-style:italic;
+  font-size:13px;color:var(--dim)}
+
+.v5 .arch{position:relative;margin:14px auto 0;width:min(78vw,300px);height:clamp(250px,42vh,340px);
+  border:1px solid var(--rule);border-bottom:0;
+  border-radius:999px 999px 0 0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding-top:34px;
+  background:
+    repeating-linear-gradient(45deg,rgba(207,169,99,.05) 0 1px,transparent 1px 11px),
+    radial-gradient(70% 55% at 50% 30%,rgba(207,169,99,.10),transparent 70%)}
+.v5 .arch::before{content:"";position:absolute;inset:9px 9px 0;border:1px solid rgba(207,169,99,.14);
+  border-bottom:0;border-radius:999px 999px 0 0}
+.v5 .arch .jawi{font-size:30px;color:var(--gold);line-height:1}
+.v5 .arch .nm{font-size:12px;letter-spacing:.3em;text-transform:uppercase;margin-top:12px;color:var(--ivory)}
+.v5 .arch .cd{font-family:"Newsreader",serif;font-size:46px;font-weight:300;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;margin-top:10px}
+.v5 .arch .in{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.v5 .arch .in b{color:var(--gold);font-weight:500;letter-spacing:.06em}
+
+.v5 .line{display:flex;align-items:center;gap:12px;margin-top:-1px;color:var(--gold);opacity:.9}
+.v5 .line i{height:1px;flex:1;background:var(--rule)}
+.v5 .line span{font-size:10px;letter-spacing:.28em}
+
+.v5 .times{margin-top:18px}
+.v5 .times li{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:10px;
+  padding:8px 2px;border-bottom:1px solid rgba(242,233,215,.09)}
+.v5 .times .n{font-family:"Newsreader",serif;font-size:18px}
+.v5 .times .n .jawi{font-size:12px;color:var(--faint);margin-left:9px}
+.v5 .times .t{font-family:"Newsreader",serif;font-size:19px;font-variant-numeric:tabular-nums;
+  letter-spacing:.02em}
+.v5 .times li.past{color:#5d6b60}
+.v5 .times li.past .jawi{color:#4d5a50}
+.v5 .times li.adv .n,.v5 .times li.adv .t{font-size:14px;color:var(--faint)}
+.v5 .times li.next .n{color:var(--gold);font-size:21px}
+.v5 .times li.next .t{color:var(--gold);font-size:22px}
+.v5 footer{margin-top:auto;padding-top:14px;text-align:center;font-size:9.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--faint)}
+@media(min-width:760px){
+  .v5 .shell{max-width:760px;margin:0 auto;padding:40px}
+  .v5 .arch{width:420px;height:380px}
+  .v5 .arch .cd{font-size:64px}
+  .v5 .times{display:grid;grid-template-columns:1fr 1fr;column-gap:40px;margin-top:26px}
+  .v5 .times li:last-child{grid-column:1/-1}
+}
+</style></head>
+<body class="v5"><div class="shell">
+  <header><span><b>SGR01</b> · Selangor</span><span>Shah Alam</span></header>
+  <p class="date">Isnin, 23 November 2026 · 13 Jamadilakhir 1448</p>
+
+  <section class="arch">
+    <span class="jawi">مغرب</span>
+    <span class="nm">Maghrib</span>
+    <span class="cd">2:08:14</span>
+    <span class="in">Azan <b>19:00</b></span>
+  </section>
+  <div class="line"><i></i><span>Waktu hari ini</span><i></i></div>
+
+  <ol class="times">
+    <li class="past"><span class="n">Imsak <span class="jawi">إمساك</span></span><span class="t">05:40</span></li>
+    <li class="past"><span class="n">Subuh <span class="jawi">صبح</span></span><span class="t">05:50</span></li>
+    <li class="past"><span class="n">Syuruk <span class="jawi">شروق</span></span><span class="t">06:59</span></li>
+    <li class="past"><span class="n">Zohor <span class="jawi">ظهر</span></span><span class="t">13:02</span></li>
+    <li class="past"><span class="n">Asar <span class="jawi">عصر</span></span><span class="t">16:25</span></li>
+    <li class="next"><span class="n">Maghrib <span class="jawi">مغرب</span></span><span class="t">19:00</span></li>
+    <li><span class="n">Isyak <span class="jawi">عشاء</span></span><span class="t">20:13</span></li>
+  </ol>
+
+  <footer>JAKIM · Waktu Malaysia · 16:52</footer>
+</div></body></html>

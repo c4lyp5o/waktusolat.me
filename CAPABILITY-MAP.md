@@ -8,7 +8,7 @@ Free waktu solat dashboard for mosque TVs, with each mosque's own programmes sho
 | --- | --- |
 | How a TV enters dashboard mode | **Dedicated URL** bookmarked on the TV (`/tv/:zone`, later `/m/:id`). Aspect ratio never switches modes, so laptops and phones are unaffected. |
 | Who edits programmes | **Secret edit link**, no accounts. Creating a mosque returns a public TV link and a private edit link that carries a token. |
-| Orientation | **Landscape only** (16:9). Portrait is out of scope. |
+| Orientation | **Portrait counts as a surface.** A tall panel gets its own layout (`potret`); landscape is the default. Superseded 2026-11-23 by [`tema-bundles`](SPEC-tema-bundles.md). |
 | Stack additions | `three` (ambient background) and `motion` (transitions). Both are lazy-loaded on the TV routes only. |
 | Mosque URL | `/m/:id`: a short random id, so pages can't be guessed or enumerated. No slugs. |
 | Who can create a mosque | Anyone, rate-limited. Pages are unlisted. You can delete one with `ADMIN_API_KEY`. |
@@ -25,6 +25,7 @@ Free waktu solat dashboard for mosque TVs, with each mosque's own programmes sho
 | `programmes` | Backend: programme records per mosque (title, speaker, venue note, either a one-off date/time or weekly day + time, show-from/until window). Public "upcoming" feed, input validation, per-mosque limits. | `mosque-registry` |
 | `mosque-editor` | Phone-friendly edit page opened from the secret link: mosque settings, iqamah offsets, create/edit/delete programmes, share the TV link / QR code, rotate the token. | `mosque-registry`, `programmes` |
 | `tv-mosque-mode` | `/m/:id`: the `tv-display` screen plus mosque name, the mosque's iqamah offsets, and the programmes banner (rotating cards plus an optional short ticker). Polls for updates. | `tv-display`, `programmes` |
+| `tema-bundles` | One `tema` per mosque and per visitor, painting every surface: the site, the landscape TV and the tall panel. A single registry (`shared/temas.js`) of ids, palettes and one layout name per surface; Langit's sky page, the shared almanak page, the board layout and the potret layout; site picker and editor picker. | `tv-display`, `mosque-editor`, the site |
 
 Build order: **`tv-display`** → `mosque-registry` → `programmes` → `mosque-editor` and `tv-mosque-mode` (in parallel)
 

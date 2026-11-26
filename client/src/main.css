@@ -8,52 +8,17 @@
 	--font-jawi: "Noto Naskh Arabic Variable", serif;
 }
 
-/* ── Site palette (SPEC-site-revamp.md): the TV's language in light and
-   dark. Lamp amber marks now/next only; --accent is text-safe on its
-   ground, --accent-fill is the amber used for shapes (the sun, a dot). ── */
-:root,
-:root[data-theme="light"],
-.sheet {
-	--sheet: #fffaf3;
-	--ground: #faf6f0;
-	--surface: #ffffff;
-	--raised: #efe8de;
-	--line: #e4dccf;
-	--ink: #1d130b;
-	--muted: #4d4136;
-	--faint: #5f5246;
-	--spent: #6b5e52;
-	--accent: #8a4f00;
-	--accent-fill: #f2b33d;
-	--on-accent: #1d130b;
-	--danger: #b3261e; /* errors and destructive actions (mosque editor) */
-	color-scheme: light;
-}
-/* The sheet (ZoneTimes.jsx): the light/dark panel set on the sky. It
-   re-declares the mode's tokens (with :root above), so text inside reads on
-   the sheet whatever sky surrounds it. */
+/* ── Site palette lives in web/themes/<tema>.css, keyed by html[data-tema].
+   Langit's values are there verbatim (S1); every component below reads the
+   same token names it always has. ── */
+/* The sheet (ZoneTimes.jsx): the panel set on the sky. It re-declares the
+   mode's tokens (in the tema file), so text inside reads on the sheet
+   whatever sky surrounds it. */
 .sheet {
 	background-color: var(--sheet);
 	color: var(--ink);
 }
 
-:root[data-theme="dark"],
-:root[data-theme="dark"] .sheet {
-	--sheet: #141416;
-	--ground: #0b0b0d;
-	--surface: #151517;
-	--raised: #222226;
-	--line: #26262a;
-	--ink: #ffffff;
-	--muted: #b8b8bf;
-	--faint: #a0a0a8;
-	--spent: #8c8c94;
-	--accent: #f2b33d;
-	--accent-fill: #f2b33d;
-	--on-accent: #000000;
-	--danger: #ff8a80;
-	color-scheme: dark;
-}
 @theme inline {
 	--color-ground: var(--ground);
 	--color-surface: var(--surface);

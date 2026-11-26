@@ -1,0 +1,177 @@
+/* senyap-layout.css — draft TV 10: one column, nothing but type. The header
+   whispers, the countdown is the whole room, the times sit on a single rule at
+   the bottom. Scoped to [data-layout="senyap"]. */
+
+.tv[data-layout="senyap"] .tv-senyap-view {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding: 0 1vh;
+}
+
+/* ---- header ------------------------------------------------------------- */
+.tv[data-layout="senyap"] .tv-header {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 4vh;
+	padding-top: 2.6vh;
+}
+.tv[data-layout="senyap"] .tv-title {
+	flex-direction: row;
+	align-items: baseline;
+	gap: 1.6vh;
+	min-width: 0;
+}
+.tv[data-layout="senyap"] .tv-title-name {
+	overflow: hidden;
+	font-size: 3.1vh;
+	line-height: 1.1;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.tv[data-layout="senyap"] .tv-title-zone {
+	font-size: 1.6vh;
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+	color: var(--faint);
+	white-space: nowrap;
+}
+.tv[data-layout="senyap"] .tv-dates {
+	flex-direction: row;
+	gap: 1.4vh;
+	font-size: 1.7vh;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--muted);
+	white-space: nowrap;
+}
+.tv[data-layout="senyap"] .tv-clock {
+	font-size: 1.9vh;
+	letter-spacing: 0.1em;
+	color: var(--text);
+}
+.tv[data-layout="senyap"] .tv-clock-s {
+	font-size: 0.82em;
+	color: var(--faint);
+}
+
+/* ---- the room ----------------------------------------------------------- */
+.tv[data-layout="senyap"] .tv-senyap-mid {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 0;
+	text-align: center;
+}
+.tv[data-layout="senyap"] .tv-senyap-kicker {
+	font-size: 2.3vh;
+	letter-spacing: 0.4em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+.tv[data-layout="senyap"] .tv-senyap-cd {
+	/* 520px on the draft's stage; width-capped so H:MM:SS can never spill. */
+	margin-top: 1.4vh;
+	margin-left: -0.6vh;
+	font-family: var(--font-num);
+	font-size: min(40vh, 19vw);
+	font-weight: 200;
+	line-height: 0.78;
+	letter-spacing: -0.075em;
+	font-variant-numeric: tabular-nums;
+	color: var(--text);
+}
+.tv[data-layout="senyap"] .tv-senyap-meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: center;
+	gap: 0 2.6vh;
+	margin-top: 1.4vh;
+}
+.tv[data-layout="senyap"] .tv-senyap-name {
+	font-size: 4.2vh;
+	letter-spacing: 0.05em;
+	color: var(--text);
+}
+.tv[data-layout="senyap"] .tv-senyap-jawi {
+	font-family: "Noto Naskh Arabic Variable", serif;
+	font-size: 2.8vh;
+	color: var(--accent);
+	opacity: 0.9;
+}
+.tv[data-layout="senyap"] .tv-senyap-times {
+	font-size: 2.3vh;
+	letter-spacing: 0.04em;
+	color: var(--muted);
+}
+.tv[data-layout="senyap"] .tv-senyap-times b {
+	font-weight: 500;
+	font-variant-numeric: tabular-nums;
+	color: var(--text);
+}
+
+/* ---- the single rule, the seven times ---------------------------------- */
+.tv[data-layout="senyap"] .tv-senyap-strip {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1.6vh;
+	margin: 0;
+	padding: 2.2vh 0 0;
+	border-top: 1px solid var(--line);
+	list-style: none;
+}
+.tv[data-layout="senyap"] .tv-senyap-cell {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.4vh;
+}
+.tv[data-layout="senyap"] .tv-senyap-cell span {
+	font-size: 1.6vh;
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+	color: var(--faint);
+}
+.tv[data-layout="senyap"] .tv-senyap-cell b {
+	font-family: var(--font-num);
+	font-size: 6.4vh;
+	font-weight: 200;
+	line-height: 1;
+	letter-spacing: -0.03em;
+	font-variant-numeric: tabular-nums;
+	color: var(--muted);
+}
+.tv[data-layout="senyap"] .tv-senyap-cell[data-state="passed"] b {
+	color: var(--spent);
+}
+.tv[data-layout="senyap"] .tv-senyap-cell[data-state="passed"] span {
+	color: var(--spent);
+	opacity: 0.85;
+}
+.tv[data-layout="senyap"] .tv-senyap-cell[data-state="next"] span,
+.tv[data-layout="senyap"] .tv-senyap-cell[data-state="current"] span {
+	color: var(--accent);
+}
+.tv[data-layout="senyap"] .tv-senyap-cell[data-state="next"] b,
+.tv[data-layout="senyap"] .tv-senyap-cell[data-state="current"] b {
+	color: var(--accent);
+	font-weight: 300;
+}
+
+/* ---- foot --------------------------------------------------------------- */
+.tv[data-layout="senyap"] .tv-senyap-foot {
+	display: flex;
+	justify-content: space-between;
+	gap: 3vh;
+	padding: 1.8vh 0 2.6vh;
+	font-size: 1.4vh;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--spent);
+}

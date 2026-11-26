@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>waktusolat.me — design reset · 10 drafts</title>
+<link rel="stylesheet" href="base.css">
+<style>
+:root{--bg:#0d0f0e;--card:#151917;--line:#252b28;--ink:#eceae4;--dim:#8f978f;--gold:#d8b06a}
+body{background:var(--bg);color:var(--ink);font-family:"Bricolage",sans-serif}
+.wrap{max-width:1420px;margin:0 auto;padding:48px 32px 80px}
+header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;
+  border-bottom:1px solid var(--line);padding-bottom:22px}
+h1{font-family:"Newsreader",serif;font-weight:400;font-size:44px;letter-spacing:-.02em;line-height:1}
+h1 em{font-style:italic;color:var(--dim)}
+.top p{max-width:420px;font-size:13px;line-height:1.6;color:var(--dim);text-align:right}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:28px 22px;margin-top:32px}
+.card{display:flex;flex-direction:column;gap:10px}
+.frame{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);
+  background:#000;aspect-ratio:390/844;box-shadow:0 18px 40px -24px #000}
+.frame iframe{width:390px;height:844px;border:0;transform-origin:top left;
+  position:absolute;top:0;left:0}
+.card h2{font-size:14px;font-weight:600;letter-spacing:-.01em;display:flex;justify-content:space-between;gap:8px}
+.card h2 span{font-family:"PlexMono",monospace;font-size:10px;color:var(--gold);font-weight:400;letter-spacing:.06em}
+.card p{font-size:11.5px;line-height:1.5;color:var(--dim)}
+.card a:hover h2{color:var(--gold)}
+.note{margin-top:44px;border-top:1px solid var(--line);padding-top:18px;display:flex;
+  justify-content:space-between;gap:30px;font-size:11px;color:#6f776f}
+.note b{color:var(--dim);font-weight:500}
+@media(max-width:1180px){.grid{grid-template-columns:repeat(3,1fr)}header.top{flex-direction:column;align-items:flex-start}.top p{text-align:left}}
+@media(max-width:700px){.grid{grid-template-columns:1fr;gap:26px}.wrap{padding:28px 16px 60px}h1{font-size:32px}
+  .frame iframe{width:390px;height:844px}.card p{font-size:12.5px}}
+</style></head>
+<body><div class="wrap">
+<header class="top">
+  <h1>Design reset <em>— ten drafts</em></h1>
+  <p>One screen, ten directions: the zone prayer-times page for <b>SGR01 · Shah Alam</b>, real JAKIM data, Monday 23 Nov 2026, 16:52 (next Maghrib). Tap any card to open it full size.</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<div class="note">
+  <span><b>Shared brief</b> · zone + date, next prayer and countdown, all seven times with the current one marked, source line. Mobile 390×844 first, desktop checked.</span>
+  <span><b>Fonts</b> · all self-hostable (Newsreader, Bricolage, IBM Plex, Noto Naskh, Reem Kufi, Readex).</span>
+</div>
+</div>
+<script>
+const drafts=[
+ ["01-takwim.html","Takwim","A printed Malaysian almanac: paper, serif numerals, dotted leaders. Calm authority."],
+ ["02-malam.html","Malam","Night lamp. Near-black, one amber accent, the next prayer is the only lit thing."],
+ ["03-siang.html","Siang","The day as a ribbon of sky; prayers are ticks on it and 'now' is a needle."],
+ ["04-kad.html","Kad","App-like card stack. One hero card, the rest as glanceable tiles."],
+ ["05-mihrab.html","Mihrab","A single arch, deep green and gold. The countdown sits in the mihrab."],
+ ["06-dail.html","Dail","Instrument dial: a ring shows how far Asar→Maghrib has gone."],
+ ["07-jadual.html","Jadual","Timetable as data: mono, ruled, exact, with the week's Maghrib at a glance."],
+ ["08-poster.html","Poster","A Swiss prayer poster: one enormous time, thick rules, nothing decorative."],
+ ["09-foto.html","Foto","The Blue Mosque at night, frosted panel. The only photographic option."],
+ ["10-editorial.html","Editorial","Two columns: a typographic stage left, the full timetable right. Built for desktop."]
+];
+const grid=document.getElementById('grid');
+drafts.forEach(([file,name,desc],i)=>{
+  const n=String(i+1).padStart(2,'0');
+  const a=document.createElement('a');a.className='card';a.href=file;a.target='_blank';
+  a.innerHTML=`<div class="frame"><iframe src="${file}" loading="eager" scrolling="no" title="${name}"></iframe></div>
+  <h2>${name}<span>DRAF ${n}</span></h2><p>${desc}</p>`;
+  grid.appendChild(a);
+});
+// Scale each 390px frame to its column width.
+const fit=()=>document.querySelectorAll('.frame').forEach(f=>{
+  const s=f.clientWidth/390; const fr=f.querySelector('iframe');
+  fr.style.transform=`scale(${s})`; fr.style.height=(844)+'px';
+});
+addEventListener('resize',fit);fit();
+</script>
+</body></html>

@@ -1,0 +1,29 @@
+/* dail.css — the site palette for Dail (draft 06): white paper, black ink,
+   one blue, the day as a ring. `mode: fixed`. */
+html[data-tema="dail"],
+html[data-tema="dail"] .sheet {
+	--sheet: #ffffff;
+	--ground: #f6f6f3;
+	--surface: #ffffff;
+	--raised: #eceeeb;
+	--line: #e5e7e3;
+	--ink: #0e1210;
+	--muted: #565d57;
+	--faint: #5f665f;
+	--spent: #697069;
+	--accent: #2438c8;
+	--accent-fill: #2438c8;
+	--on-accent: #f6f6f3;
+	--danger: #b3261e;
+	--dial-rest: #e4e6e1;
+	--font-serif: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	color-scheme: light;
+}
+
+/* The ring is the page's spine: give it air, and let the list sit under it. */
+html[data-tema="dail"] .dial-web {
+	margin: 2rem auto 1.4rem;
+}
+html[data-tema="dail"] .almanak {
+	padding-top: 0.4rem;
+}

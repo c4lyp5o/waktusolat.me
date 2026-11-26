@@ -7,6 +7,7 @@
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 import initializeDatabase from "../db/db.js";
 import { isAdmin } from "../middlewares/auth.js";
+import { DEFAULT_TEMA, TEMA_IDS } from "../shared/temas.js";
 import { CLIENT_IP_HEADER } from "../utils/clientIp.js";
 import logger from "../utils/logger.js";
 import { RateLimiter } from "../utils/rateLimit.js";
@@ -17,10 +18,10 @@ const db = await initializeDatabase();
 // Bounds match tv-display's URL parameters (client/src/lib/waktu/config.js).
 const PRAYERS = ["subuh", "zohor", "asar", "maghrib", "isyak"];
 const MAX_NAME = 60;
-const DEFAULTS = { jumaat: 30, solat: 10, iqamah: 10, tema: "langit" };
+const DEFAULTS = { jumaat: 30, solat: 10, iqamah: 10, tema: DEFAULT_TEMA };
 const FIELDS = new Set(["name", "zone", "iqamah", "jumaat", "solat", "tema"]);
-// The TV's themes (client/src/lib/waktu/config.js TEMAS; SPEC-redesign.md).
-const TEMAS = ["langit", "takwim", "songket"];
+// The TV's themes: the same registry the client reads (shared/temas.js).
+const TEMAS = TEMA_IDS;
 
 // Creation limits: per client IP, and a daily backstop across all IPs.
 // Replaceable by tests.

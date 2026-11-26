@@ -1,0 +1,39 @@
+/* malam.css — the Malam tema on the TV (draft TV 02): near-black, warm amber,
+   one quiet list. Palette only; the composition is layouts/malam-layout.css. */
+@import "@fontsource-variable/reem-kufi/wght.css";
+
+.tv[data-tema="malam"] {
+	--ground: #08090b;
+	--line: rgb(236 234 231 / 0.1);
+	--surface: #101216;
+	--text: #ecebe7;
+	--muted: #8b919b;
+	--faint: #7b838d;
+	--spent: #7e8791;
+	--accent: #e0ab5f;
+	--sun: #e0ab5f;
+	--sun-ring: transparent;
+	--arc: rgb(236 234 231 / 0.32);
+	--font: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	--font-num: "Bricolage Grotesque Variable", system-ui, sans-serif;
+}
+
+/* The mosque's name in Reem Kufi, the numbers light and wide. */
+.tv[data-tema="malam"] .tv-title-name {
+	font-family: "Reem Kufi Variable", "Bricolage Grotesque Variable", sans-serif;
+	font-weight: 400;
+}
+.tv[data-tema="malam"] .tv-lead-count {
+	font-weight: 200;
+	letter-spacing: -0.055em;
+}
+/* A warm glow in the corner, as in the draft: light, never a gradient wash. */
+.tv[data-tema="malam"] .tv-drift::before {
+	position: absolute;
+	inset: -20% -10% auto auto;
+	width: 70vw;
+	height: 70vw;
+	background: radial-gradient(circle, rgb(224 171 95 / 0.1), transparent 62%);
+	content: "";
+	pointer-events: none;
+}

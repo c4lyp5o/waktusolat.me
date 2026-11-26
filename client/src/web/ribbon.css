@@ -1,0 +1,212 @@
+/* ribbon.css — the day band, both sizes. The gradient is the sky's own arc
+   (night, dawn, day, dusk, night) drawn as a strip; the marker is the clock.
+   Loaded once; the variants only change scale. */
+
+.ribbon {
+	--ribbon-gradient: linear-gradient(
+		90deg,
+		#0a1424 0%,
+		#14243c 20%,
+		#3d3a55 23.6%,
+		#8c6067 24.5%,
+		#d68d5c 26.6%,
+		#f2c78e 29.1%,
+		#cfe5f0 32%,
+		#a6d0e8 54.3%,
+		#c6e1ee 64%,
+		#e9cfa8 74%,
+		#efa968 79.2%,
+		#d0774f 81%,
+		#6a4650 82.6%,
+		#24293f 84.2%,
+		#0e1728 90%,
+		#0a1424 100%
+	);
+	position: relative;
+}
+
+.ribbon-track {
+	position: relative;
+}
+
+.ribbon-bar {
+	height: var(--ribbon-h, 52px);
+	border-radius: 999px;
+	background: var(--ribbon-gradient);
+	box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08);
+}
+
+/* The clock: a hairline with a dot, the time small above it. */
+.ribbon-now {
+	position: absolute;
+	top: calc(var(--ribbon-h, 52px) * -0.18);
+	bottom: calc(var(--ribbon-h, 52px) * -0.18);
+	width: 2px;
+	border-radius: 2px;
+	background: var(--ink);
+	transform: translateX(-50%);
+}
+
+.ribbon-now::before {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	background: var(--ink);
+	box-shadow: 0 0 0 3px var(--ground);
+	content: "";
+	transform: translate(-50%, -50%);
+}
+
+.ribbon-now-time {
+	position: absolute;
+	top: -1.55em;
+	left: 50%;
+	padding: 0 3px;
+	background: var(--ground);
+	font-size: 10px;
+	font-variant-numeric: tabular-nums;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	white-space: nowrap;
+	transform: translateX(-50%);
+}
+
+.ribbon-hours {
+	position: relative;
+	height: 1.4em;
+	margin: 0.55em 0 0;
+	list-style: none;
+}
+
+.ribbon-hours li {
+	position: absolute;
+	top: 0;
+	color: var(--faint);
+	font-size: 9.5px;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0.06em;
+	transform: translateX(-50%);
+}
+
+/* The five prayers: above and below the band, alternating. */
+.ribbon-marks {
+	position: relative;
+	margin-top: 0.9em;
+	list-style: none;
+}
+
+.ribbon-mark {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1px;
+	width: 8rem;
+	color: var(--muted);
+	font-size: 11px;
+	letter-spacing: 0.06em;
+	text-align: center;
+	text-transform: uppercase;
+	transform: translateX(-50%);
+}
+
+.ribbon-mark::before {
+	width: 1px;
+	height: 7px;
+	background: var(--faint);
+	content: "";
+}
+
+.ribbon-mark .ribbon-time {
+	color: var(--ink);
+	font-size: 13px;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0.01em;
+	text-transform: none;
+}
+
+.ribbon-mark .ribbon-jawi {
+	font-family: var(--font-jawi);
+	font-size: 11px;
+	line-height: 1;
+	color: var(--faint);
+	text-transform: none;
+}
+
+.ribbon-mark[data-state="past"] {
+	color: var(--faint);
+}
+.ribbon-mark[data-state="past"] .ribbon-time {
+	color: var(--faint);
+}
+
+/* ---- web ---------------------------------------------------------------- */
+.ribbon-web {
+	margin: 1.6rem 0 0.4rem;
+}
+.ribbon-web .ribbon-marks {
+	height: 10.6rem;
+}
+.ribbon-row0 {
+	top: 0;
+}
+.ribbon-row1 {
+	top: 3.6rem;
+}
+.ribbon-row2 {
+	top: 7.2rem;
+}
+
+/* ---- tv ----------------------------------------------------------------- */
+.ribbon-tv {
+	margin: 0;
+}
+.ribbon-tv .ribbon-bar {
+	--ribbon-h: 7vh;
+}
+.ribbon-tv .ribbon-hours li {
+	font-size: 1.5vh;
+}
+.ribbon-tv .ribbon-marks {
+	height: 27vh;
+}
+.ribbon-tv .ribbon-mark {
+	font-size: 2.2vh;
+}
+.ribbon-tv .ribbon-mark .ribbon-time {
+	font-size: 3.2vh;
+}
+.ribbon-tv .ribbon-mark .ribbon-jawi {
+	font-size: 2.2vh;
+}
+.ribbon-tv .ribbon-mark {
+	width: 17vh;
+}
+.ribbon-tv .ribbon-row0 {
+	top: 0.4vh;
+}
+.ribbon-tv .ribbon-row1 {
+	top: 9.4vh;
+}
+.ribbon-tv .ribbon-row2 {
+	top: 18.4vh;
+}
+.ribbon-tv .ribbon-now-time {
+	font-size: 1.5vh;
+}
+
+@media (max-width: 640px) {
+	.ribbon-web .ribbon-mark {
+		width: 4.4rem;
+		font-size: 9.5px;
+	}
+	.ribbon-web .ribbon-mark .ribbon-time {
+		font-size: 11px;
+	}
+	.ribbon-web .ribbon-mark .ribbon-jawi {
+		display: none;
+	}
+}

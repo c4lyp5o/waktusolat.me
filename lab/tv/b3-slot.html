@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<title>TV 08 — Papan Program</title>
+<link rel="stylesheet" href="tv-base.css">
+<link rel="stylesheet" href="tv-banner.css">
+<style>
+:root{--bg:#0a1420;--bg2:#0e1b2a;--ink:#eef2f6;--dim:#93a3b3;--faint:#5f7182;
+  --gold:#d9b26b;--line:rgba(217,178,107,.20);--blue:#7fb2dd}
+.stage{background:linear-gradient(160deg,var(--bg2),var(--bg) 60%)}
+.tv8{width:100%;height:100%;display:grid;grid-template-columns:1fr 760px;grid-template-rows:auto 1fr auto;
+  column-gap:56px;color:var(--ink);font-family:"Bricolage",sans-serif;padding:50px 64px 40px}
+.tv8 header{grid-column:1/-1;display:flex;justify-content:space-between;align-items:flex-start;
+  border-bottom:1px solid var(--line);padding-bottom:22px}
+.tv8 .m{font-family:"ReemKufi",sans-serif;font-size:44px;color:var(--gold)}
+.tv8 .m span{display:block;font-family:"Bricolage",sans-serif;font-size:19px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);margin-top:8px}
+.tv8 .right{text-align:right}
+.tv8 .clock{font-size:84px;font-weight:200;letter-spacing:-.04em;font-variant-numeric:tabular-nums;line-height:1}
+.tv8 .clock small{font-size:28px;color:var(--faint)}
+.tv8 .dates{display:flex;gap:18px;justify-content:flex-end;font-size:20px;color:var(--dim);margin-top:4px}
+.tv8 .dates b{color:var(--ink);font-weight:500}
+
+.tv8 .left{display:flex;flex-direction:column}
+.tv8 .k{font-size:22px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
+.tv8 .next{display:flex;align-items:baseline;gap:26px;margin-top:12px}
+.tv8 .next .p{font-size:84px;font-weight:600;letter-spacing:-.03em}
+.tv8 .next .j{font-size:44px;color:var(--dim)}
+.tv8 .next .a{font-size:26px;color:var(--dim);margin-left:auto;text-align:right}
+.tv8 .next .a b{display:block;font-size:40px;color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums}
+.tv8 .cd{font-size:230px;font-weight:200;letter-spacing:-.06em;line-height:.9;font-variant-numeric:tabular-nums;
+  margin-top:6px;margin-left:-8px}
+.tv8 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:auto}
+.tv8 .grid div{padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.02)}
+.tv8 .grid .n{font-size:20px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.tv8 .grid .t{font-size:42px;font-variant-numeric:tabular-nums;margin-top:6px;letter-spacing:-.02em}
+.tv8 .grid .past{opacity:.42}
+.tv8 .grid .adv{opacity:.55}
+.tv8 .grid .next{border-color:var(--gold);background:rgba(217,178,107,.12)}
+.tv8 .grid .next .n,.tv8 .grid .next .t{color:var(--gold)}
+
+.tv8 .prog{display:flex;flex-direction:column;border-left:1px solid var(--line);padding-left:44px}
+.tv8 .ph{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:14px;
+  border-bottom:1px solid var(--line)}
+.tv8 .ph b{font-size:22px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:500}
+.tv8 .ph span{font-size:17px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.tv8 .item{padding:20px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.tv8 .item .when{display:flex;gap:12px;align-items:baseline;font-size:18px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint)}
+.tv8 .item .when b{color:var(--blue);font-weight:500}
+.tv8 .item .what{font-size:32px;margin-top:8px;letter-spacing:-.01em}
+.tv8 .item .who{font-size:19px;color:var(--dim);margin-top:4px}
+.tv8 .note{margin-top:auto;padding-top:18px;font-size:17px;color:var(--faint);line-height:1.5}
+.tv8 .slot{margin-top:auto;border-top:1px solid var(--line);padding-top:20px}
+.tv8 .slot .lab{font-size:15px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);opacity:.75}
+.tv8 .slot .say{font-family:"Newsreader",serif;font-size:34px;line-height:1.35;color:var(--ink);margin-top:10px;
+  text-wrap:balance}
+.tv8 .slot .ar{font-family:"Naskh",serif;font-size:34px;color:var(--gold);direction:rtl;margin-top:12px}
+.tv8 .slot .ref{font-size:16px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-top:8px}
+.tv8 footer{grid-column:1/-1;display:flex;justify-content:space-between;font-size:15px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint);border-top:1px solid var(--line);padding-top:12px}
+</style></head>
+<body>
+<div class="stage" data-w="1920" data-h="1080">
+ <div class="tv8">
+  <header>
+    <div class="m">MASJID AL-IKHLAS<span>Seksyen 19 · Shah Alam · SGR01</span></div>
+    <div class="right">
+      <div class="clock num">16:52<small>41</small></div>
+      <div class="dates"><span><b>Isnin</b> 23 Nov 2026</span><span><b>13</b> Jamadilakhir 1448</span></div>
+    </div>
+  </header>
+
+  <section class="left">
+    <div class="k">Seterusnya</div>
+    <div class="next">
+      <span class="p">Maghrib</span><span class="jawi j">مغرب</span>
+      <span class="a">Azan <b>19:00</b></span>
+      <span class="a">Iqamah <b>19:10</b></span>
+    </div>
+    <div class="cd num">2:08:14</div>
+    <div class="grid">
+      <div class="past adv"><div class="n">Imsak</div><div class="t">05:40</div></div>
+      <div class="past"><div class="n">Subuh</div><div class="t">05:50</div></div>
+      <div class="past adv"><div class="n">Syuruk</div><div class="t">06:59</div></div>
+      <div class="past"><div class="n">Zohor</div><div class="t">13:02</div></div>
+      <div class="past"><div class="n">Asar</div><div class="t">16:25</div></div>
+      <div class="next"><div class="n">Maghrib</div><div class="t">19:00</div></div>
+      <div><div class="n">Isyak</div><div class="t">20:13</div></div>
+      <div><div class="n">Syuruk esok</div><div class="t">06:59</div></div>
+    </div>
+  </section>
+
+  <aside class="prog">
+    <div class="ph"><b>Program minggu ini</b><span>Dewan solat utama</span></div>
+    <div class="item">
+      <div class="when"><b>Malam ini</b><span>Selepas Maghrib · 19:15</span></div>
+      <div class="what">Kulliah Tafsir Al-Quran</div>
+      <div class="who">Ustaz Ahmad Firdaus · Surah Al-Kahfi</div>
+    </div>
+    <div class="item">
+      <div class="when"><b>Selasa</b><span>Selepas Subuh · 06:15</span></div>
+      <div class="what">Kuliah Subuh: Adab Sesama Jiran</div>
+      <div class="who">Ustaz Mohd Hazri</div>
+    </div>
+    <div class="item">
+      <div class="when"><b>Jumaat</b><span>12:45 · Khutbah</span></div>
+      <div class="what">Khutbah Jumaat</div>
+      <div class="who">Imam Masjid Al-Ikhlas</div>
+    </div>
+    <div class="slot">
+      <div class="lab">Hadis · giliran bersama program</div>
+      <p class="say">Bilal diperintahkan oleh Nabi saw. supaya azan dua-dua kali, dan qamat sekali</p>
+      <div class="ref">Sahih Muslim</div>
+    </div>
+  </aside>
+
+  <footer><span>JAKIM · Waktu Malaysia</span><span>16:52:41 · Masjid Al-Ikhlas</span></footer>
+ </div>
+</div>
+<script src="tv.js"></script>
+</body></html>

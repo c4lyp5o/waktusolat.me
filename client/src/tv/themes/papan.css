@@ -1,0 +1,52 @@
+/* papan.css — green and gold, the prayer board a Malaysian mosque already
+   knows (draft TV01). Palette only: the composition lives in
+   layouts/papan.css, exactly as in the other temas. */
+@import "@fontsource-variable/reem-kufi/wght.css";
+
+.tv[data-tema="papan"] {
+	--ground: #081713;
+	--surface: rgb(217 174 99 / 0.1);
+	--text: #f5efdf;
+	--muted: #a8b7ab;
+	--faint: #8a9a8e;
+	--spent: #7d8e83;
+	--accent: #d9ae63;
+	--sun: #d9ae63;
+	--sun-ring: transparent;
+	--arc: rgb(245 239 223 / 0.4);
+	--font: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	--font-num: "Newsreader Variable", Georgia, serif;
+}
+
+/* The mosque's name is the board's masthead: gold, in Reem Kufi. */
+.tv[data-tema="papan"] .tv-title-name {
+	color: var(--accent);
+	font-family: "Reem Kufi Variable", "Bricolage Grotesque Variable", sans-serif;
+	font-weight: 500;
+	letter-spacing: 0.01em;
+}
+.tv[data-tema="papan"] .tv-header {
+	padding-bottom: 2vh;
+	border-bottom: 1px solid rgb(217 174 99 / 0.35);
+}
+/* The next prayer is gold; the one that has passed is dim, not invisible. */
+.tv[data-tema="papan"] .tv-lead-prayer {
+	color: var(--accent);
+	font-family: "Reem Kufi Variable", "Bricolage Grotesque Variable", sans-serif;
+	font-weight: 500;
+}
+.tv[data-tema="papan"] .tv-lead-count {
+	font-weight: 300;
+}
+.tv[data-tema="papan"] .tv-row[data-state="next"] .tv-row-time {
+	color: var(--accent);
+}
+.tv[data-tema="papan"] .tv-row[data-state="next"] {
+	background: linear-gradient(180deg, rgb(217 174 99 / 0.18), rgb(217 174 99 / 0));
+	box-shadow: inset 0 2px 0 var(--accent);
+}
+.tv[data-tema="papan"] .tv-banner {
+	background: transparent;
+	border-top: 1px solid rgb(217 174 99 / 0.35);
+	border-radius: 0;
+}

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Draf 07 — Jadual</title>
+<link rel="stylesheet" href="base.css">
+<style>
+:root{
+  --bg:#f5f5f1; --ink:#101110; --muted:#6f736e; --faint:#a7aba5;
+  --rule:#16181a; --hair:#d8dad4; --accent:#b12a20;
+}
+body.v7{background:var(--bg);color:var(--ink);font-family:"PlexMono",monospace}
+.v7 .shell{padding-left:18px;padding-right:18px}
+.v7 header{display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:3px solid var(--rule);padding-bottom:9px}
+.v7 .code{font-size:29px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.v7 .code small{display:block;font-size:9.5px;font-weight:400;letter-spacing:.14em;
+  color:var(--muted);margin-top:6px;text-transform:uppercase}
+.v7 .stamp{text-align:right;font-size:9.5px;line-height:1.7;color:var(--muted);letter-spacing:.04em}
+.v7 .stamp b{color:var(--ink);font-weight:500}
+
+.v7 .band{display:flex;justify-content:space-between;align-items:baseline;
+  padding:11px 0 10px;border-bottom:1px solid var(--hair);font-size:10px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--muted)}
+.v7 .band b{color:var(--ink);font-weight:500}
+
+.v7 table{width:100%;border-collapse:collapse;margin-top:2px}
+.v7 th{font-size:8.5px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--faint);text-align:left;padding:7px 0 5px;border-bottom:1px solid var(--hair)}
+.v7 th.r,.v7 td.r{text-align:right}
+.v7 td{padding:6px 0;border-bottom:1px solid var(--hair);font-size:14px;letter-spacing:-.01em}
+.v7 td.w{font-size:17px;font-weight:500;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.v7 td.ar{font-family:"Naskh",serif;direction:rtl;font-size:15px;color:var(--muted);text-align:right;padding-right:2px}
+.v7 tr.past td{color:#a2a69f}
+.v7 tr.past td.ar{color:#b9bdb6}
+.v7 tr.adv td{font-size:12px;color:var(--muted)}
+.v7 tr.adv td.w{font-size:14px;font-weight:400}
+.v7 tr.next td{background:var(--ink);color:var(--bg)}
+.v7 tr.next td.w{font-weight:600}
+.v7 tr.next td.ar{color:#c8ccc6}
+.v7 tr.next td:first-child{padding-left:8px}
+.v7 tr.next td:last-child{padding-right:8px}
+
+.v7 .gap{margin-top:12px;display:flex;justify-content:space-between;align-items:baseline;
+  font-size:10px;letter-spacing:.03em;color:var(--muted);text-transform:uppercase}
+.v7 .gap b{font-size:13px;color:var(--accent);font-weight:500;letter-spacing:0}
+.v7 .week{margin-top:9px;display:grid;grid-template-columns:repeat(7,1fr);
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.v7 .week div{padding:7px 0;text-align:center;font-size:9px;line-height:1.7;color:var(--muted);
+  border-right:1px solid var(--hair)}
+.v7 .week div:last-child{border-right:0}
+.v7 .week div b{display:block;font-size:9.5px;color:var(--ink);font-weight:500}
+.v7 .week div.on{background:var(--ink);color:#b9bdb6}
+.v7 .week div.on b{color:var(--bg)}
+.v7 footer{margin-top:auto;padding-top:12px;display:flex;justify-content:space-between;
+  font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+@media(min-width:760px){
+  .v7 .shell{max-width:820px;margin:0 auto;padding:44px 40px}
+  .v7 td{padding:8px 0;font-size:15px}
+  .v7 td.w{font-size:20px}
+  .v7 .week div{font-size:10px}
+}
+</style></head>
+<body class="v7"><div class="shell">
+  <header>
+    <div class="code">SGR01<small>Petaling · Shah Alam</small></div>
+    <div class="stamp"><b>16:52:41</b><br>Isnin 23.11.2026<br>13 Jamadilakhir 1448</div>
+  </header>
+
+  <p class="band"><span>Seterusnya <b>MAGHRIB</b></span><span>dalam <b>02:08:14</b></span></p>
+
+  <table>
+    <thead><tr><th>Waktu</th><th class="r">Jawi</th><th class="r">Mula</th></tr></thead>
+    <tbody>
+      <tr class="past"><td>Imsak</td><td class="ar">إمساك</td><td class="w r">05:40</td></tr>
+      <tr class="past"><td>Subuh</td><td class="ar">صبح</td><td class="w r">05:50</td></tr>
+      <tr class="past"><td>Syuruk</td><td class="ar">شروق</td><td class="w r">06:59</td></tr>
+      <tr class="past"><td>Zohor</td><td class="ar">ظهر</td><td class="w r">13:02</td></tr>
+      <tr class="past"><td>Asar</td><td class="ar">عصر</td><td class="w r">16:25</td></tr>
+      <tr class="next"><td>Maghrib</td><td class="ar">مغرب</td><td class="w r">19:00</td></tr>
+      <tr><td>Isyak</td><td class="ar">عشاء</td><td class="w r">20:13</td></tr>
+    </tbody>
+  </table>
+
+  <div class="gap"><span>Asar → Maghrib &nbsp;·&nbsp; 2j 35m</span><span>Imsak esok <b>05:40</b></span></div>
+
+  <div class="week">
+    <div class="on"><b>Isn</b>23<br>19:00</div>
+    <div><b>Sel</b>24<br>19:00</div>
+    <div><b>Rab</b>25<br>19:00</div>
+    <div><b>Kha</b>26<br>18:59</div>
+    <div><b>Jum</b>27<br>18:59</div>
+    <div><b>Sab</b>28<br>18:59</div>
+    <div><b>Aha</b>29<br>18:59</div>
+  </div>
+
+  <footer><span>Sumber: JAKIM e-Solat</span><span>Waktu Malaysia</span></footer>
+</div></body></html>

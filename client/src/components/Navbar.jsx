@@ -1,8 +1,9 @@
-// Navbar.jsx — wordmark, plain links (active by brightness), theme toggle.
+// Navbar.jsx — wordmark, plain links (active by brightness).
 // On phones the destinations move to a bottom bar, within thumb reach.
 // The top band is painted in the sky over the visitor's zone (useZoneSky).
+import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router";
-import ThemeToggle from "./ThemeToggle.jsx";
+import { currentTema, TEMA_EVENT } from "../lib/tema.js";
 import useZoneSky, { skyZone } from "./useZoneSky.js";
 
 const LINKS = [
@@ -34,7 +35,16 @@ export default function Navbar() {
 	const { pathname } = useLocation();
 	const active = (l) => (l.match ? l.match(pathname) : pathname === l.to);
 	const tone = (l) => (active(l) ? "text-ink font-semibold" : "text-faint hover:text-ink");
-	const sky = useZoneSky(skyZone(pathname));
+	// The sky band belongs to Langit. Takwim and Papan paint the bar in their
+	// own paper/board colour, so a printed page is printed from the top.
+	const [tema, setTema] = useState(currentTema);
+	useEffect(() => {
+		const on = (e) => setTema(e.detail?.id ?? currentTema());
+		window.addEventListener(TEMA_EVENT, on);
+		return () => window.removeEventListener(TEMA_EVENT, on);
+	}, []);
+	const skyOver = useZoneSky(skyZone(pathname));
+	const sky = tema === "langit" ? skyOver : null;
 
 	return (
 		<>
@@ -69,7 +79,6 @@ export default function Navbar() {
 					>
 						Tentang
 					</NavLink>
-					<ThemeToggle />
 				</nav>
 			</header>
 

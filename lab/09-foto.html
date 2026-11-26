@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Draf 09 — Foto</title>
+<link rel="stylesheet" href="base.css">
+<style>
+:root{
+  --ink:#f5f3ee; --dim:rgba(245,243,238,.68); --faint:rgba(245,243,238,.44);
+  --glass:rgba(12,20,17,.38); --line:rgba(245,243,238,.16); --gold:#e4c48b;
+}
+body.v9{background:#050b09;color:var(--ink);font-family:"Bricolage",sans-serif;position:relative}
+.v9 .bg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
+.v9 .veil{position:fixed;inset:0;
+  background:linear-gradient(180deg,rgba(4,9,7,.62) 0%,rgba(4,9,7,.18) 26%,rgba(4,9,7,.45) 48%,rgba(4,9,7,.88) 66%,#050b09 88%)}
+.v9 .shell{position:relative;z-index:1;padding-left:22px;padding-right:22px;
+  padding-bottom:max(26px,env(safe-area-inset-bottom))}
+.v9 header{display:flex;justify-content:space-between;align-items:flex-start}
+.v9 .chip{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(10,18,15,.35);backdrop-filter:blur(10px);
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.v9 .chip i{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.v9 .chg{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);padding-top:8px}
+
+.v9 .hero{margin-top:auto;padding-bottom:22px}
+.v9 .place{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.v9 .place b{color:var(--dim);font-weight:500;letter-spacing:.06em}
+.v9 .nm{display:flex;align-items:baseline;gap:12px;margin-top:9px}
+.v9 .nm h1{font-family:"Newsreader",serif;font-size:46px;font-weight:400;letter-spacing:-.02em;line-height:.95}
+.v9 .nm .jawi{font-size:24px;color:var(--gold);opacity:.9}
+.v9 .cd{font-size:15px;color:var(--dim);margin-top:10px;font-variant-numeric:tabular-nums}
+.v9 .cd b{font-family:"Newsreader",serif;font-size:30px;font-weight:400;color:var(--ink);letter-spacing:-.02em}
+.v9 .cd span{opacity:.7}
+
+.v9 .panel{margin-top:16px;background:var(--glass);border:1px solid var(--line);border-radius:24px;
+  padding:6px 16px;backdrop-filter:blur(20px) saturate(1.15);-webkit-backdrop-filter:blur(20px) saturate(1.15)}
+.v9 .panel .h{display:flex;justify-content:space-between;font-size:9.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--faint);padding:11px 2px 9px;border-bottom:1px solid var(--line)}
+.v9 .times li{display:grid;grid-template-columns:1fr auto auto;align-items:baseline;gap:12px;
+  padding:8px 2px;border-bottom:1px solid rgba(245,243,238,.09)}
+.v9 .times li:last-child{border-bottom:0}
+.v9 .times .n{font-size:13.5px;font-weight:400;color:var(--ink)}
+.v9 .times .n .jawi{font-size:11px;color:var(--faint);margin-left:8px}
+.v9 .times .t{font-family:"Newsreader",serif;font-size:18px;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.v9 .times .s{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-align:right;min-width:46px}
+.v9 .times li.past{color:var(--faint)}
+.v9 .times li.past .n,.v9 .times li.past .t{color:var(--faint)}
+.v9 .times li.adv .n{font-size:12px;color:var(--faint)}
+.v9 .times li.adv .t{font-size:15px;color:var(--faint)}
+.v9 .times li.next{background:rgba(228,196,139,.12);border-radius:12px;padding-left:9px;padding-right:9px;
+  margin:0 -9px;border-bottom-color:transparent}
+.v9 .times li.next .n{color:var(--ink);font-weight:500}
+.v9 .times li.next .t{color:var(--gold);font-size:20px}
+.v9 .times li.next .s{color:var(--gold);opacity:.8}
+.v9 footer{display:flex;justify-content:space-between;align-items:baseline;padding-top:12px;
+  font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+@media(min-width:760px){
+  .v9 .shell{max-width:960px;margin:0 auto;padding:36px 40px}
+  .v9 .hero{padding-bottom:0;margin-top:auto}
+  .v9 .nm h1{font-size:64px}
+  .v9 .panel{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;column-gap:36px;padding:6px 22px}
+  .v9 .panel .h{grid-column:1/-1}
+  .v9 .times{display:contents}
+  .v9 .times li:nth-child(1),.v9 .times li:nth-child(2),.v9 .times li:nth-child(3),.v9 .times li:nth-child(4){grid-column:1}
+  .v9 .times li:nth-child(5),.v9 .times li:nth-child(6),.v9 .times li:nth-child(7){grid-column:2}
+}
+</style></head>
+<body class="v9">
+<img class="bg" src="img/selangor.webp" alt="">
+<div class="veil"></div>
+<div class="shell">
+  <header>
+    <span class="chip"><i></i> SGR01 · Selangor</span>
+    <span class="chg">Tukar zon</span>
+  </header>
+
+  <section class="hero">
+    <p class="place"><b>Shah Alam</b> · Petaling</p>
+    <div class="nm"><h1>Maghrib</h1><span class="jawi">مغرب</span></div>
+    <p class="cd"><b>2:08:14</b> <span>· azan 19:00 · Isnin, 23 Nov</span></p>
+  </section>
+
+  <section class="panel">
+    <div class="h"><span>Waktu hari ini</span><span>13 Jamadilakhir 1448</span></div>
+    <ol class="times">
+      <li class="past"><span class="n">Imsak <span class="jawi">إمساك</span></span><span class="t">05:40</span><span class="s">Lepas</span></li>
+      <li class="past"><span class="n">Subuh <span class="jawi">صبح</span></span><span class="t">05:50</span><span class="s">Lepas</span></li>
+      <li class="past"><span class="n">Syuruk <span class="jawi">شروق</span></span><span class="t">06:59</span><span class="s">Lepas</span></li>
+      <li class="past"><span class="n">Zohor <span class="jawi">ظهر</span></span><span class="t">13:02</span><span class="s">Lepas</span></li>
+      <li class="past"><span class="n">Asar <span class="jawi">عصر</span></span><span class="t">16:25</span><span class="s">Lepas</span></li>
+      <li class="next"><span class="n">Maghrib <span class="jawi">مغرب</span></span><span class="t">19:00</span><span class="s">Seterusnya</span></li>
+      <li><span class="n">Isyak <span class="jawi">عشاء</span></span><span class="t">20:13</span><span class="s">Malam</span></li>
+    </ol>
+  </section>
+  <footer><span>JAKIM · Waktu Malaysia</span><span>16:52</span></footer>
+</div>
+</body></html>

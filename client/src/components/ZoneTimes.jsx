@@ -1,49 +1,17 @@
-// ZoneTimes.jsx — a zone's prayer times: the site's main job.
-//
-// The TV's tested logic (lib/waktu) at phone and desktop size, in Langit
-// (SPEC-redesign.md): the page is the sky over the zone right now, the sun's
-// arc is the hero with "how long until the next prayer" inside it, and
-// today's times sit on the sheet below (the next one filled with the sky),
-// then the week or month as a table. No iqamah here: that is a mosque
-// setting, so the countdown always targets the azan.
-import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import useSWR from "swr";
 import { mosqueFor } from "../lib/mosques.js";
-import { DEFAULTS } from "../lib/waktu/config.js";
 import { ARC_TOP, arcPoints, dayTrack, SHAPES, STARS } from "../lib/waktu/daytrack.js";
 import { areaName, formatCountdown, formatDate, formatTime } from "../lib/waktu/format.js";
 import { mytIsoDate } from "../lib/waktu/mytime.js";
 import { ADVISORY, ORDER, prayerJawi, prayerLabel } from "../lib/waktu/names.js";
 import { dayFor, nextDay } from "../lib/waktu/rows.js";
 import { listRows, screenState } from "../lib/waktu/schedule.js";
-import { siteNow } from "../lib/waktu/siteNow.js";
+import { SITE_CONFIG, useSiteNow } from "../lib/waktu/siteClock.js";
 import { skyPhase } from "../lib/waktu/sky.js";
 import { zoneInfo } from "../lib/zones.js";
+import TimesTable from "./TimesTable.jsx";
 import { fetchDays } from "./useZoneSky.js";
-
-const SITE_CONFIG = {
-	...DEFAULTS,
-	iqamah: { subuh: 0, zohor: 0, asar: 0, maghrib: 0, isyak: 0 },
-	jumaat: 0,
-	solat: 0,
-};
-
-// Ticks on each whole second.
-function useNow() {
-	const [now, setNow] = useState(siteNow);
-	useEffect(() => {
-		let timer;
-		const tick = () => {
-			const t = siteNow();
-			setNow(t);
-			timer = setTimeout(tick, 1000 - (t % 1000) + 5);
-		};
-		tick();
-		return () => clearTimeout(timer);
-	}, []);
-	return now;
-}
 
 const LEAD = {
 	countdown: (label) => label,
@@ -254,82 +222,9 @@ function StateMosque({ negeri }) {
 	);
 }
 
-const TABLE_KEYS = ["subuh", "syuruk", "zohor", "asar", "maghrib", "isyak"];
-
-function TimesTable({ zone, todayIso }) {
-	const [period, setPeriod] = useState("week");
-	const { data: days, error } = useSWR(`/api/v1/waktusolat/${period}/${zone}`, fetchDays);
-	return (
-		<section aria-labelledby="table-title" className="mt-14">
-			<div className="flex flex-wrap items-center justify-between gap-3">
-				<h2 id="table-title" className="text-xl font-semibold">
-					{period === "week" ? "Minggu ini" : "Bulan ini"}
-				</h2>
-				<fieldset className="m-0 flex rounded-full border-0 bg-raised p-1">
-					<legend className="sr-only">Tempoh</legend>
-					{[
-						["week", "Minggu"],
-						["month", "Bulan"],
-					].map(([p, label]) => (
-						<button
-							key={p}
-							type="button"
-							onClick={() => setPeriod(p)}
-							aria-pressed={period === p}
-							className={`rounded-full px-4 py-1.5 text-[15px] ${
-								period === p ? "bg-surface font-semibold text-ink" : "text-faint hover:text-ink"
-							}`}
-						>
-							{label}
-						</button>
-					))}
-				</fieldset>
-			</div>
-			{error ? (
-				<p className="mt-4 text-muted">Jadual tidak dapat dimuatkan. Cuba sebentar lagi.</p>
-			) : (
-				<div className="mt-4 overflow-x-auto">
-					<table className="w-full min-w-[34rem] text-[15px] tabular-nums">
-						<thead>
-							<tr className="text-left text-sm text-faint">
-								<th className="py-2 pr-3 font-normal">Tarikh</th>
-								{TABLE_KEYS.map((k) => (
-									<th key={k} className="py-2 pl-3 text-right font-normal">
-										{prayerLabel(k, 0)}
-									</th>
-								))}
-							</tr>
-						</thead>
-						<tbody>
-							{(days ?? []).map((d) => {
-								const isToday = d.isoDate === todayIso;
-								return (
-									<tr
-										key={d.isoDate}
-										className={`border-t border-line ${isToday ? "font-semibold text-ink" : "text-muted"}`}
-									>
-										<td className="py-2.5 pr-3 whitespace-nowrap">
-											{formatDate(d.times.zohor).replace(/ \d{4}$/, "")}
-										</td>
-										{TABLE_KEYS.map((k) => (
-											<td key={k} className="py-2.5 pl-3 text-right">
-												{formatTime(d.times[k])}
-											</td>
-										))}
-									</tr>
-								);
-							})}
-						</tbody>
-					</table>
-				</div>
-			)}
-		</section>
-	);
-}
-
-export default function ZoneTimes({ zone, changeZone }) {
+export default function ZoneTimes({ zone, changeZone, temaButton }) {
 	const info = zoneInfo(zone);
-	const now = useNow();
+	const now = useSiteNow();
 	const { data: days, error } = useSWR(info ? `/api/v1/waktusolat/week/${zone}` : null, fetchDays);
 
 	if (!info) {
@@ -375,6 +270,7 @@ export default function ZoneTimes({ zone, changeZone }) {
 						</>
 					)}
 				</p>
+				{temaButton}
 				{changeZone}
 			</div>
 			{/* Phone only: the date under both columns, so it stays one line. */}

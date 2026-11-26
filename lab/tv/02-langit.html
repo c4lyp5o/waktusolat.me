@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<title>TV 02 — Langit Malam</title>
+<link rel="stylesheet" href="tv-base.css">
+<style>
+:root{--bg:#070809;--ink:#eceae4;--dim:#8d949c;--faint:#5a6169;--amber:#e2b06a;--line:rgba(255,255,255,.08)}
+.stage{background:linear-gradient(180deg,#0a0c10,#050607 70%)}
+.tv2{width:100%;height:100%;display:grid;grid-template-columns:640px 1fr;grid-template-rows:auto 1fr auto;
+  color:var(--ink);font-family:"Bricolage",sans-serif;padding:52px 64px 44px;position:relative}
+.tv2 .glow{position:absolute;right:6%;top:8%;width:820px;height:820px;pointer-events:none;
+  background:radial-gradient(circle,rgba(226,176,106,.10),transparent 62%)}
+.tv2 header{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:1px solid var(--line);padding-bottom:22px;position:relative;z-index:1}
+.tv2 .m{font-family:"ReemKufi",sans-serif;font-size:40px;color:var(--ink)}
+.tv2 .m span{display:block;font-family:"Bricolage",sans-serif;font-size:20px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);margin-top:8px}
+.tv2 .clock{font-size:78px;font-weight:200;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.tv2 .clock small{font-size:30px;color:var(--faint);margin-left:4px}
+.tv2 .dates{display:flex;gap:20px;font-size:22px;color:var(--dim);margin-top:4px}
+.tv2 .dates b{font-weight:500;color:var(--ink)}
+
+.tv2 .list{display:flex;flex-direction:column;justify-content:center;gap:6px;position:relative;z-index:1}
+.tv2 .list div{display:grid;grid-template-columns:150px 1fr auto;align-items:center;gap:20px;
+  padding:12px 0;border-bottom:1px solid var(--line)}
+.tv2 .list .n{font-size:30px;font-weight:400;color:var(--dim);letter-spacing:.02em}
+.tv2 .list .n .jawi{font-size:22px;color:var(--faint);margin-left:10px}
+.tv2 .list .bar{height:1px;background:rgba(255,255,255,.06)}
+.tv2 .list .t{font-size:40px;font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:var(--ink)}
+.tv2 .list .past .n,.tv2 .list .past .t{color:#6c737b}
+.tv2 .list .adv .n{font-size:24px;color:var(--faint)}
+.tv2 .list .adv .t{font-size:32px;color:var(--faint)}
+.tv2 .list .next .n{color:var(--amber);font-weight:500}
+.tv2 .list .next .t{color:var(--amber);font-size:46px}
+.tv2 .list .next .bar{background:linear-gradient(90deg,var(--amber),transparent)}
+
+.tv2 .hero{display:flex;flex-direction:column;justify-content:center;position:relative;z-index:1;padding-left:40px}
+.tv2 .k{font-size:24px;letter-spacing:.32em;text-transform:uppercase;color:var(--amber)}
+.tv2 .cd{font-size:330px;font-weight:200;letter-spacing:-.055em;line-height:.9;
+  font-variant-numeric:tabular-nums;margin-top:18px;margin-left:-14px}
+.tv2 .p{display:flex;align-items:baseline;gap:20px;margin-top:6px}
+.tv2 .p b{font-size:64px;font-weight:400;letter-spacing:-.02em}
+.tv2 .p .jawi{font-size:38px;color:var(--amber);opacity:.8}
+.tv2 .p span{font-size:28px;color:var(--dim)}
+.tv2 footer{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;
+  padding-top:18px;border-top:1px solid var(--line);font-size:20px;color:var(--faint);
+  letter-spacing:.14em;text-transform:uppercase;position:relative;z-index:1}
+</style></head>
+<body>
+<div class="stage" data-w="1920" data-h="1080">
+ <div class="tv2">
+  <div class="glow"></div>
+  <header>
+    <div class="m">MASJID AL-IKHLAS<span>Seksyen 19 · Shah Alam · SGR01</span></div>
+    <div>
+      <div class="clock num">16:52<small>41</small></div>
+      <div class="dates"><span><b>Isnin</b> 23 Nov 2026</span><span><b>13</b> Jamadilakhir 1448</span></div>
+    </div>
+  </header>
+
+  <div class="list">
+    <div class="past adv"><span class="n">Imsak <span class="jawi">إمساك</span></span><span class="bar"></span><span class="t">05:40</span></div>
+    <div class="past"><span class="n">Subuh <span class="jawi">صبح</span></span><span class="bar"></span><span class="t">05:50</span></div>
+    <div class="past adv"><span class="n">Syuruk <span class="jawi">شروق</span></span><span class="bar"></span><span class="t">06:59</span></div>
+    <div class="past"><span class="n">Zohor <span class="jawi">ظهر</span></span><span class="bar"></span><span class="t">13:02</span></div>
+    <div class="past"><span class="n">Asar <span class="jawi">عصر</span></span><span class="bar"></span><span class="t">16:25</span></div>
+    <div class="next"><span class="n">Maghrib <span class="jawi">مغرب</span></span><span class="bar"></span><span class="t">19:00</span></div>
+    <div><span class="n">Isyak <span class="jawi">عشاء</span></span><span class="bar"></span><span class="t">20:13</span></div>
+  </div>
+
+  <div class="hero">
+    <div class="k">Maghrib dalam</div>
+    <div class="cd num">2:08:14</div>
+    <div class="p"><span class="jawi">مغرب</span><span>· azan 19:00 · iqamah 19:10</span></div>
+  </div>
+
+  <footer><span>JAKIM · Waktu Malaysia</span><span>Asar telah masuk</span></footer>
+ </div>
+</div>
+<script src="tv.js"></script>
+</body></html>

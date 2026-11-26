@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Draf 01 — Takwim</title>
+<link rel="stylesheet" href="base.css">
+<style>
+:root{
+  --paper:#f4efe4; --ink:#1b1815; --muted:#6d6355; --rule:#d6cbb6;
+  --accent:#9a2c1f; --sheet:#efe7d7;
+}
+body.v1{background:var(--paper);color:var(--ink);font-family:"Plex",sans-serif}
+.v1 .shell{padding-left:24px;padding-right:24px}
+.v1 header{padding-top:6px}
+.v1 .eyebrow{display:flex;justify-content:space-between;align-items:baseline;
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.v1 .eyebrow b{font-weight:600;letter-spacing:.1em;color:var(--ink)}
+.v1 h1{font-family:"Newsreader",serif;font-weight:500;font-size:31px;line-height:1.05;
+  letter-spacing:-.015em;margin-top:15px}
+.v1 h1 em{font-style:normal;font-weight:300;color:var(--muted)}
+.v1 .dateline{font-family:"Newsreader",serif;font-style:italic;font-size:14.5px;
+  color:var(--muted);margin-top:6px}
+.v1 .next{margin-top:26px;border-top:3px solid var(--ink);border-bottom:1px solid var(--rule);
+  padding:14px 0 16px;display:grid;grid-template-columns:1fr auto;align-items:end;gap:6px 10px}
+.v1 .k{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.v1 .nm{font-family:"Newsreader",serif;font-weight:500;font-size:38px;line-height:1;margin-top:7px;
+  display:flex;align-items:baseline;gap:10px}
+.v1 .nm .jawi{font-size:21px;color:var(--muted)}
+.v1 .cd{text-align:right;font-family:"Newsreader",serif;font-size:34px;line-height:1;
+  font-variant-numeric:tabular-nums;letter-spacing:-.02em;white-space:nowrap}
+.v1 .cd i{font-style:italic;font-size:13px;color:var(--muted);letter-spacing:0;margin:0 2px 0 1px}
+.v1 .azan{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;
+  border-top:1px dotted var(--rule);padding-top:9px;margin-top:6px;font-size:13px;color:var(--muted)}
+.v1 .azan b{font-family:"Newsreader",serif;font-weight:600;font-size:19px;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.v1 .times{margin-top:8px}
+.v1 .times li{display:flex;align-items:baseline;gap:9px;padding:9px 0;
+  border-bottom:1px solid var(--rule)}
+.v1 .times li:last-child{border-bottom:0}
+.v1 .times .lbl{font-family:"Newsreader",serif;font-size:21px;font-weight:400;min-width:92px}
+.v1 .times .ar{font-size:14px;color:var(--muted);min-width:38px}
+.v1 .times .lead{flex:1;border-bottom:1px dotted #cfc4b0;transform:translateY(-4px)}
+.v1 .times .t{font-family:"Newsreader",serif;font-size:23px;font-weight:500;
+  font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.v1 .times li.past{color:#a2978a}
+.v1 .times li.past .ar{color:#a2978a}
+.v1 .times li.adv .lbl{font-style:italic;font-size:18px;color:var(--muted)}
+.v1 .times li.adv .t{font-size:19px;color:var(--muted)}
+.v1 .times li.now{background:linear-gradient(90deg,rgba(154,44,31,.09),transparent 78%);
+  border-bottom-color:var(--accent);padding-left:10px;margin-left:-10px}
+.v1 .times li.now .lbl{font-weight:600;color:var(--accent)}
+.v1 .times li.now .ar{color:var(--accent);opacity:.75}
+.v1 .times li.now .t{color:var(--accent);font-weight:600;font-size:25px}
+.v1 .times li.now .lead{border-bottom-color:#c99a92}
+.v1 footer{margin-top:auto;padding-top:18px;display:flex;justify-content:space-between;
+  font-size:10.5px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.v1 footer b{color:var(--ink);font-weight:600}
+@media(min-width:760px){
+  .v1 .shell{max-width:720px;margin:0 auto;padding-top:44px}
+  .v1 h1{font-size:44px}
+  .v1 .times{display:grid;grid-template-columns:1fr 1fr;column-gap:48px}
+  .v1 .times li:nth-child(7){grid-column:1/-1}
+  .v1 .next{margin-top:34px}
+  .v1 .nm{font-size:52px}
+  .v1 .cd{font-size:46px}
+}
+</style></head>
+<body class="v1"><div class="shell">
+  <header>
+    <div class="eyebrow"><span><b>SGR01</b> · Selangor</span><span>Tukar zon →</span></div>
+    <h1>Shah Alam <em>&amp; Petaling</em></h1>
+    <p class="dateline">Isnin, 23 November 2026 · 13 Jamadilakhir 1448</p>
+  </header>
+
+  <section class="next">
+    <div><span class="k">Seterusnya</span>
+      <div class="nm">Maghrib <span class="jawi">مغرب</span></div></div>
+    <div class="cd">2<i>jam</i>08<i>minit</i></div>
+    <div class="azan"><span>Azan berkumandang</span><b>19:00</b></div>
+  </section>
+
+  <ol class="times">
+    <li><span class="lbl">Imsak</span><span class="jawi ar">إمساك</span><span class="lead"></span><span class="t">05:40</span></li>
+    <li class="past"><span class="lbl">Subuh</span><span class="jawi ar">صبح</span><span class="lead"></span><span class="t">05:50</span></li>
+    <li class="past"><span class="lbl">Syuruk</span><span class="jawi ar">شروق</span><span class="lead"></span><span class="t">06:59</span></li>
+    <li class="past"><span class="lbl">Zohor</span><span class="jawi ar">ظهر</span><span class="lead"></span><span class="t">13:02</span></li>
+    <li class="past"><span class="lbl">Asar</span><span class="jawi ar">عصر</span><span class="lead"></span><span class="t">16:25</span></li>
+    <li class="now"><span class="lbl">Maghrib</span><span class="jawi ar">مغرب</span><span class="lead"></span><span class="t">19:00</span></li>
+    <li><span class="lbl">Isyak</span><span class="jawi ar">عشاء</span><span class="lead"></span><span class="t">20:13</span></li>
+  </ol>
+
+  <footer><span><b>JAKIM</b> · Waktu Malaysia</span><span>16:52</span></footer>
+</div></body></html>

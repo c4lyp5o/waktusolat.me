@@ -4,19 +4,30 @@ import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router";
 import tvDisplay from "../assets/tv-display.webp";
 import SkySheet from "../components/SkySheet.jsx";
+import ZoneAlmanak from "../components/ZoneAlmanak.jsx";
 import ZoneSearch from "../components/ZoneSearch.jsx";
 import ZoneTimes from "../components/ZoneTimes.jsx";
 import { safeStorage } from "../lib/storage.js";
+import { useTemaId } from "../lib/useTemaId.js";
 import { loadZone } from "../lib/zoneMemory.js";
 import { zoneIndex, zoneInfo } from "../lib/zones.js";
 import { changeZoneLink } from "./ZonePrayerTimes.jsx";
 
 export default function Landing() {
 	const [params] = useSearchParams();
+	const tema = useTemaId();
 	const remembered = useMemo(() => loadZone(safeStorage()), []);
 	const picking = params.has("pilih") || !remembered || !zoneInfo(remembered);
 
-	if (!picking) return <ZoneTimes zone={remembered} changeZone={changeZoneLink} />;
+	// A returning visitor lands on their zona's page, in their tema: the sky
+	// page for Langit, the almanak for Takwim and Papan.
+	if (!picking) {
+		return tema === "langit" ? (
+			<ZoneTimes zone={remembered} changeZone={changeZoneLink} />
+		) : (
+			<ZoneAlmanak zone={remembered} tema={tema} changeZone={changeZoneLink} />
+		);
+	}
 
 	return (
 		<SkySheet>

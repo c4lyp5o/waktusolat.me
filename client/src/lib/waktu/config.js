@@ -1,21 +1,24 @@
 // config.js — the TV display's settings, read from the URL query.
 //
-// /tv/wly01?iqamah=10,8,10,5,10&jumaat=30&solat=10&nama=Masjid%20Al-Ikhlas&tema=songket
+// /tv/wly01?iqamah=10,8,10,5,10&jumaat=30&solat=10&nama=Masjid%20Al-Ikhlas&tema=takwim
 // Every field is validated on its own; an invalid value falls back to that
 // field's default and is never shown. `now` (a fixed Malaysia wall time for
 // previews and screenshots) is honoured only outside production builds.
+
+import { DEFAULT_TEMA, TEMA_IDS } from "../../../../shared/temas.js";
 import { mytEpoch } from "./mytime.js";
 import { PRAYERS } from "./names.js";
 
-// The TV's themes (SPEC-redesign.md); the first is the default.
-export const TEMAS = Object.freeze(["langit", "takwim", "songket"]);
+// The TV's themes; the registry is shared with the server (shared/temas.js),
+// so a value the client accepts is one the API accepts too.
+export const TEMAS = TEMA_IDS;
 
 export const DEFAULTS = Object.freeze({
 	iqamah: Object.freeze({ subuh: 10, zohor: 10, asar: 10, maghrib: 10, isyak: 10 }),
 	jumaat: 30,
 	solat: 10,
 	nama: null,
-	tema: "langit",
+	tema: DEFAULT_TEMA,
 	now: null,
 });
 

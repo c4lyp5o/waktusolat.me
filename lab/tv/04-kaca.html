@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<title>TV 04 — Kaca</title>
+<link rel="stylesheet" href="tv-base.css">
+<style>
+:root{--ink:#f6f3ec;--dim:rgba(246,243,236,.72);--faint:rgba(246,243,236,.46);--gold:#e6c78f;--line:rgba(246,243,236,.16)}
+.stage{background:#050a08}
+.tv4{width:100%;height:100%;position:relative;color:var(--ink);font-family:"Bricolage",sans-serif;
+  padding:50px 66px 40px;display:grid;grid-template-columns:1fr 700px;grid-template-rows:auto 1fr auto;gap:26px 60px}
+.tv4 .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%}
+.tv4 .veil{position:absolute;inset:0;background:
+  linear-gradient(90deg,rgba(4,10,8,.86) 0%,rgba(4,10,8,.55) 45%,rgba(4,10,8,.30) 62%,rgba(4,10,8,.72) 100%),
+  linear-gradient(180deg,rgba(4,10,8,.55),rgba(4,10,8,.10) 40%,rgba(4,10,8,.80))}
+.tv4 header{grid-column:1/-1;display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1}
+.tv4 .m{font-family:"ReemKufi",sans-serif;font-size:46px}
+.tv4 .m span{display:block;font-family:"Bricolage",sans-serif;font-size:20px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);margin-top:8px}
+.tv4 .right{text-align:right}
+.tv4 .clock{font-size:86px;font-weight:200;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.tv4 .clock small{font-size:30px;color:var(--faint)}
+.tv4 .dates{display:flex;gap:18px;justify-content:flex-end;font-size:21px;color:var(--dim)}
+.tv4 .dates b{color:var(--ink);font-weight:500}
+
+.tv4 .hero{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:20px}
+.tv4 .k{font-size:24px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
+.tv4 .p{font-family:"Newsreader",serif;font-size:104px;font-weight:300;letter-spacing:-.03em;margin-top:12px}
+.tv4 .jawi{font-size:50px;color:var(--gold);margin-top:2px}
+.tv4 .cd{font-size:230px;font-weight:200;letter-spacing:-.055em;line-height:.9;
+  font-variant-numeric:tabular-nums;margin-top:16px;margin-left:-8px}
+.tv4 .meta{display:flex;gap:40px;font-size:26px;color:var(--dim);margin-top:8px}
+.tv4 .meta b{color:var(--ink);font-weight:500}
+
+.tv4 .panel{position:relative;z-index:1;align-self:end;background:rgba(10,18,15,.42);
+  border:1px solid var(--line);border-radius:28px;padding:22px 30px 18px;
+  backdrop-filter:blur(22px) saturate(1.1);-webkit-backdrop-filter:blur(22px) saturate(1.1)}
+.tv4 .ph{display:flex;justify-content:space-between;font-size:19px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--faint);padding-bottom:14px;border-bottom:1px solid var(--line)}
+.tv4 .rows div{display:grid;grid-template-columns:1fr auto auto;align-items:baseline;gap:22px;
+  padding:14px 0;border-bottom:1px solid rgba(246,243,236,.09)}
+.tv4 .rows div:last-child{border-bottom:0}
+.tv4 .rows .n{font-size:28px}
+.tv4 .rows .n .jawi{font-size:22px;color:var(--faint);margin-left:10px}
+.tv4 .rows .t{font-family:"Newsreader",serif;font-size:46px;font-variant-numeric:tabular-nums;font-weight:400}
+.tv4 .rows .s{font-size:16px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);min-width:96px;text-align:right}
+.tv4 .rows .past .n,.tv4 .rows .past .t{color:var(--faint)}
+.tv4 .rows .adv .n{font-size:23px;color:var(--faint)}
+.tv4 .rows .adv .t{font-size:36px;color:var(--faint)}
+.tv4 .rows .next{background:linear-gradient(90deg,rgba(230,199,143,.16),transparent 80%);
+  border-radius:12px;padding-left:12px;padding-right:12px;margin:0 -12px;border-bottom-color:transparent}
+.tv4 .rows .next .n{color:var(--ink);font-weight:500}
+.tv4 .rows .next .t{color:var(--gold);font-size:54px}
+.tv4 .rows .next .s{color:var(--gold);opacity:.85}
+.tv4 footer{grid-column:1/-1;position:relative;z-index:1;display:flex;justify-content:space-between;
+  font-size:18px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);padding-top:8px}
+</style></head>
+<body>
+<div class="stage" data-w="1920" data-h="1080">
+ <div class="tv4">
+  <img class="bg" src="../img/selangor.webp" alt="">
+  <div class="veil"></div>
+  <header>
+    <div class="m">MASJID AL-IKHLAS<span>Seksyen 19 · Shah Alam · SGR01</span></div>
+    <div class="right">
+      <div class="clock num">16:52<small>41</small></div>
+      <div class="dates"><span><b>Isnin</b> 23 Nov 2026</span><span><b>13</b> Jamadilakhir 1448</span></div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="k">Seterusnya</div>
+    <div class="p">Maghrib</div>
+    <div class="jawi">مغرب</div>
+    <div class="cd num">2:08:14</div>
+    <div class="meta"><span>Azan <b>19:00</b></span><span>Iqamah <b>19:10</b></span><span>Asar telah masuk</span></div>
+  </section>
+
+  <section class="panel">
+    <div class="ph"><span>Waktu hari ini</span><span>13 Jamadilakhir 1448</span></div>
+    <div class="rows">
+      <div class="past adv"><span class="n">Imsak</span><span class="t">05:40</span><span class="s">Lepas</span></div>
+      <div class="past"><span class="n">Subuh <span class="jawi">صبح</span></span><span class="t">05:50</span><span class="s">Lepas</span></div>
+      <div class="past adv"><span class="n">Syuruk</span><span class="t">06:59</span><span class="s">Lepas</span></div>
+      <div class="past"><span class="n">Zohor <span class="jawi">ظهر</span></span><span class="t">13:02</span><span class="s">Lepas</span></div>
+      <div class="past"><span class="n">Asar <span class="jawi">عصر</span></span><span class="t">16:25</span><span class="s">Lepas</span></div>
+      <div class="next"><span class="n">Maghrib <span class="jawi">مغرب</span></span><span class="t">19:00</span><span class="s">Seterusnya</span></div>
+      <div><span class="n">Isyak <span class="jawi">عشاء</span></span><span class="t">20:13</span><span class="s">Malam</span></div>
+    </div>
+  </section>
+
+  <footer><span>JAKIM · Waktu Malaysia</span><span>Masjid Al-Ikhlas · Seksyen 19</span></footer>
+ </div>
+</div>
+<script src="tv.js"></script>
+</body></html>

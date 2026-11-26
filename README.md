@@ -7,6 +7,8 @@
 In the name of Allah, the gracious, the merciful.
 This is waktusolat.me frontend and backend. Only serves prayer time for Malaysian districts. Currently not thinking of supporting other places.
 
+Working on it? [DEVELOPER.md](DEVELOPER.md) has the commands, the layout, the tests and the release flow. Agents get the same rules in [AGENTS.md](AGENTS.md).
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -57,6 +59,12 @@ Then open http://localhost:5000. The compose file publishes the port on `127.0.0
 
 Do **not** bind-mount `./db` or `./data` as a whole: they contain code (`db/db.js`, `data/getter.js`) and tracked Quran/hadith JSON.
 
+The container runs as **`bun` (uid 1000)**, not root. Host directories it writes to must be owned by 1000:1000, or the app starts but cannot open the visitor DB:
+
+```bash
+mkdir -p storage data/times && sudo chown -R 1000:1000 storage data/times
+```
+
 > **Upgrading from ≤ 2.1.0 compose:** the visitor DB moved from `./db/visitors.sqlite` to `./storage/visitors.sqlite`. Move it before starting the new container: `mkdir -p storage && mv db/visitors.sqlite storage/`.
 
 ### Production behind Traefik
@@ -83,18 +91,40 @@ Production runs the published image (`calypso666/waktusolat.me`) behind Traefik,
 
 Notes:
 - **Client IPs.** The app takes the client IP from the **last** `X-Forwarded-For` hop (the one Traefik appends), and only when the connection comes from a private/loopback address (Traefik on the docker network). A connection from a public address uses its own socket address and can't spoof the header. So don't publish the container port to the internet.
-- **Secrets.** Keep `ADMIN_API_KEY` in the server's environment, not in the image. CI writes `.env` into the build context (staging workflow), and anything in that file ends up in the published image.
+- **Secrets.** Keep `ADMIN_API_KEY` in the server's environment, not in the image. `.env` is in `.dockerignore`, so nothing in it can be baked into a published image; the staging build gets what it needs as a build argument, not as a file.
 - **Prayer data.** Zone files are fetched from JAKIM at runtime, never at build time. The server checks every 6 hours and refetches any zone whose data no longer covers today. JAKIM publishes one year at a time, so for a day or two around 1 January the last known day is served until the new year is published.
+
+## 🎨 Tema (the site's look)
+
+One tema per visitor, chosen from the **Tema** button on the zone page (or `?tema=<id>`) and remembered in `localStorage`:
+
+- **Langit** (default) — the page takes the colour of the sky over the zone; the only tema with the sky and the sun arc. Follows the system light/dark setting.
+- **Takwim** — the printed almanac: cream paper, black ink, one red. Fixed colours.
+- **Malam** — near-black with warm amber, the seven times as a quiet rail of dots. Fixed colours.
+- **Dail** — white paper, black ink, one blue: the day as a ring, the seven times printed beside it. Fixed colours.
+- **Kad** — cards on a quiet page: one deep-green hero for the next prayer, six white cards for the rest.
+- **Mihrab** — a deep green page with one gold arch holding the answer.
+- **Editorial** — a magazine spread: one warm paper page and one dark panel, Newsreader for the moment, a week strip of Maghrib times.
+- **Poster** — a kraft sheet in two inks: black rules, one red, the azan time set as the poster's headline.
+- **Siang** — the daylit page: cream paper, one teal, the day in words ("Maghrib · azan 19:00", "2j 08m") over its own band.
+- **Senyap** — the quietest board: no rules, no boxes, no glow, one number (TV only).
+- **Sorotan** — a black room, one warm spotlight on an enormous countdown, the times along the floor (TV only).
+- **Program** — the day's grid plus the week's programmes beside it; the board a masjid actually needs (TV only for now).
+- **Kaca** — a photograph behind glass: the zone page sits on a veiled photo, cream ink and gold. Fixed colours.
+- **Jalur** — the day as one band: paper-white page with the whole day drawn as a gradient ribbon and the prayers marked on it; the TV board is the same band in green-black and amber. Fixed colours.
+- **Papan** — the mosque board: deep green and gold, Reem Kufi. Fixed colours.
+
+Takwim, Malam, Jalur, Dail, Kaca and Papan share the almanak page; Siang, Poster, Editorial, Mihrab and Kad have their own (web layout registry: `shared/temas.js` → `webLayout` → `client/src/web/layouts`) (`/times/:zone` printed: masthead, one answer with its countdown, the seven times as dotted leaders, then the week or month); picking a tema swaps the page in place, no reload. A mosque's TV tema is chosen separately in the [mosque editor](#-mosque-endpoints), and each tema names its own TV layout (the TV landscape board or the tall-panel layout) — see `shared/temas.js` for the registry: one button, one palette, one layout per surface.
 
 ## 📺 Paparan TV (mosque TV display)
 
 A full-screen prayer-time display for a mosque or surau TV, free to use. Two ways to run it:
 
-- **Registered mosque (recommended):** register at `/m/baru` (no account). You get a short TV link, `https://waktusolat.me/m/<id>`, and a private edit link for a phone page (`/m/<id>/edit`). There you set the iqamah minutes, pick the screen's theme, and keep the mosque's programmes (kuliah, classes) with the ustaz's photo. The TV shows the mosque's name, uses its settings, and rotates the next 7 days' programmes with the ayat and hadith. Edits reach the TV within a minute without touching it, and it keeps working offline. A programme leaves the screen 2 hours after it starts.
+- **Registered mosque (recommended):** register at `/m/baru` (no account). You get a short TV link, `https://waktusolat.me/m/<id>`, and a private edit link for a phone page (`/m/<id>/edit`). There you set the iqamah minutes, pick the tema (each card shows both the landscape TV and the tall panel), and keep the mosque's programmes (kuliah, classes) with the ustaz's photo. The TV shows the mosque's name, uses its settings, and rotates the next 7 days' programmes with the ayat and hadith. Edits reach the TV within a minute without touching it, and it keeps working offline. A programme leaves the screen 2 hours after it starts.
 - **Zone only:** open `https://waktusolat.me/tv/<zone>` (zone codes below, e.g. `wly01`), with the settings in the URL:
 
 ```
-/tv/wly01?nama=Masjid%20Al-Ikhlas&iqamah=10,10,10,5,10&jumaat=30&solat=10&tema=songket
+/tv/wly01?nama=Masjid%20Al-Ikhlas&iqamah=10,10,10,5,10&jumaat=30&solat=10&tema=takwim
 ```
 
 | Parameter | Meaning | Default |
@@ -103,11 +133,11 @@ A full-screen prayer-time display for a mosque or surau TV, free to use. Two way
 | `iqamah` | Minutes from azan to iqamah, five numbers in the order Subuh, Zohor, Asar, Maghrib, Isyak | `10,10,10,10,10` |
 | `jumaat` | Minutes from the Zohor azan to iqamah on Fridays | `30` |
 | `solat` | Minutes the "solat in progress" screen stays up after iqamah | `10` |
-| `tema` | Theme: `langit` (the screen takes the colour of the sky over the zone), `takwim` (dark, one red, like a printed almanac) or `songket` (night green and gold) | `langit` |
+| `tema` | Tema: `langit` (the screen takes the colour of the sky over the zone, arc and all), `takwim` (dark, one red, like a printed almanac) or `papan` (green and gold, seven columns, one big number — the board) | `langit` |
 
-What it does: a large countdown to the next azan, then to iqamah, a dim screen during solat, all seven times with the next one lit, and a day track with the sun. Verses and hadith rotate along the bottom. It runs on the server-corrected time (a wrong TV clock or timezone does not matter), keeps the screen awake where the browser allows, shifts a few pixels over time against burn-in, and reloads itself once a day at 03:00 (only when the server answers). After one online load it also boots with the network off: prayer times are cached in the browser and a small service worker (`/tv-sw.js`, scope `/tv/` only) keeps the app files. Landscape only; a phone held upright gets a link to the normal page instead.
+What it does: a large countdown to the next azan, then to iqamah, a dim screen during solat, all seven times with the next one lit, and a day track with the sun. Verses and hadith rotate along the bottom. It runs on the server-corrected time (a wrong TV clock or timezone does not matter), keeps the screen awake where the browser allows, shifts a few pixels over time against burn-in, and reloads itself once a day at 03:00 (only when the server answers). After one online load it also boots with the network off: prayer times are cached in the browser and a small service worker (`/tv-sw.js`, scope `/tv/` only) keeps the app files. Both orientations: a landscape TV gets the screen with the day track, a tall panel gets a portrait layout with the countdown, the seven times and the banner stacked.
 
-Screenshots of every state in every theme: `node scripts/tv-shots.mjs` (needs `bun dev` running and `playwright-core`; `TEMA=songket` for one theme, `MOSQUE=<id>` for a registered mosque's screen). Colour contrast of the site's skies and the TV themes: `node scripts/contrast.mjs`.
+Screenshots of every state in every theme: `node scripts/tv-shots.mjs` (needs `bun dev` running and `playwright-core`; `TEMA=takwim` or `TEMA=papan` for one tema, `MOSQUE=<id>` for a registered mosque's screen). Colour contrast of the site's skies and the TV themes: `node scripts/contrast.mjs`.
 
 # 🔗 API Endpoints
 
@@ -140,7 +170,7 @@ Unknown zone or period → `400`. A zone with no data yet (e.g. right after a fr
 
 A mosque's TV settings, saved under a random id (no accounts; see `SPEC-mosque-registry.md`).
 
-POST /mosques : register a mosque. Body `{ "name", "zone", "iqamah"?, "jumaat"?, "solat"?, "tema"? }` (iqamah: all five prayers, 0-60 min each; jumaat 0-90; solat 1-60; tema `langit` (default), `takwim` or `songket`). Returns the settings, the TV path `/m/(id)`, and an edit token **shown only once**. Limited to 5 per IP per hour and 500 per day in total\
+POST /mosques : register a mosque. Body `{ "name", "zone", "iqamah"?, "jumaat"?, "solat"?, "tema"? }` (iqamah: all five prayers, 0-60 min each; jumaat 0-90; solat 1-60; tema `langit` (default), `takwim` or `papan`). Returns the settings, the TV path `/m/(id)`, and an edit token **shown only once**. Limited to 5 per IP per hour and 500 per day in total\
 GET /mosques/(id) : public settings (never the token). Sends an `ETag`; `If-None-Match` gets a `304`\
 PATCH /mosques/(id) : change any of the fields above. Needs `Authorization: Bearer (token)`\
 POST /mosques/(id)/token : replace a leaked token; the old one stops working. Needs the current token\

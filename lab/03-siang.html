@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Draf 03 — Siang</title>
+<link rel="stylesheet" href="base.css">
+<style>
+:root{
+  --bg:#fbfaf6; --ink:#12211c; --muted:#6a766f; --faint:#9aa39d;
+  --line:#e2e3dc; --accent:#0f6b5c;
+}
+body.v3{background:var(--bg);color:var(--ink);font-family:"Bricolage",sans-serif}
+.v3 .shell{padding-left:20px;padding-right:20px}
+.v3 header{display:flex;justify-content:space-between;align-items:baseline}
+.v3 .z{font-size:13px;font-weight:600;letter-spacing:-.01em}
+.v3 .z span{color:var(--muted);font-weight:400}
+.v3 .change{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);
+  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent);padding-bottom:2px}
+.v3 .date{margin-top:9px;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+
+.v3 .ribbon{margin-top:30px;position:relative}
+.v3 .bar{height:52px;border-radius:26px;position:relative;
+  background:linear-gradient(90deg,
+    #0a1424 0%, #14243c 20%, #3d3a55 23.6%, #8c6067 24.5%, #d68d5c 26.6%,
+    #f2c78e 29.1%, #cfe5f0 32%, #a6d0e8 54.3%, #c6e1ee 64%, #e9cfa8 74%,
+    #efa968 79.2%, #d0774f 81%, #6a4650 82.6%, #24293f 84.2%, #0e1728 90%, #0a1424 100%);
+  box-shadow:inset 0 0 0 1px rgba(18,33,28,.08)}
+.v3 .bar::after{content:"";position:absolute;inset:0;border-radius:26px;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.14) 0 1px,transparent 1px 8.333%);
+  mask:linear-gradient(#000,rgba(0,0,0,.15));opacity:.5}
+.v3 .now{position:absolute;top:-9px;bottom:-9px;left:70.3%;width:2px;background:var(--ink);
+  border-radius:2px;z-index:3}
+.v3 .now::before{content:"";position:absolute;top:-5px;left:50%;width:9px;height:9px;
+  transform:translateX(-50%);border-radius:50%;background:var(--ink);
+  box-shadow:0 0 0 3px var(--bg)}
+.v3 .now span{position:absolute;top:-27px;left:50%;transform:translateX(-50%);
+  font-size:10px;font-weight:600;letter-spacing:.04em;font-variant-numeric:tabular-nums;white-space:nowrap;
+  background:var(--bg);padding:0 3px}
+.v3 .labels{position:relative;height:34px;margin-top:16px}
+.v3 .labels span{position:absolute;transform:translateX(-50%);font-size:9.5px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.v3 .labels .u{top:0}
+.v3 .labels .d{top:17px}
+.v3 .labels b{display:block;text-align:center;color:var(--faint);font-size:8.5px;letter-spacing:.02em;font-weight:400;margin-top:1px}
+.v3 .labels span::before{content:"";position:absolute;top:-9px;left:50%;width:1px;height:7px;
+  background:var(--faint);transform:translateX(-50%)}
+.v3 .labels span.d::before{top:-26px}
+
+.v3 .lead{margin-top:14px;display:flex;align-items:baseline;justify-content:space-between;
+  border-bottom:1px solid var(--line);padding-bottom:16px}
+.v3 .lead .k{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+.v3 .lead .v{font-size:16px;font-weight:500;margin-top:6px}
+.v3 .lead .v em{font-style:normal;color:var(--muted);font-weight:400;font-size:13px}
+.v3 .lead .cd{font-size:30px;font-weight:300;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.v3 .lead .cd i{font-style:normal;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.02em}
+
+.v3 .times{margin-top:6px;display:grid;grid-template-columns:1fr 1fr;column-gap:14px}
+.v3 .times li{display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+  padding:9px 2px;border-bottom:1px solid var(--line)}
+.v3 .times .n{font-size:13.5px;font-weight:500}
+.v3 .times .n .jawi{font-size:10.5px;color:var(--faint);margin-left:6px;font-weight:400}
+.v3 .times .t{font-size:16px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.v3 .times li.past{color:var(--faint)}
+.v3 .times li.past .t{color:var(--faint)}
+.v3 .times li.adv .n{font-size:12px;font-weight:400;color:var(--muted)}
+.v3 .times li.adv .t{font-size:13.5px;color:var(--muted)}
+.v3 .times li.next{border-bottom-color:var(--ink)}
+.v3 .times li.next .n{font-weight:700}
+.v3 .times li.next .t{font-weight:700;color:var(--accent)}
+.v3 .times li:last-child{grid-column:1/-1}
+.v3 footer{margin-top:auto;padding-top:14px;display:flex;justify-content:space-between;
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+@media(min-width:760px){
+  .v3 .shell{max-width:820px;margin:0 auto;padding:48px 40px}
+  .v3 .bar{height:64px;border-radius:32px}
+  .v3 .lead .cd{font-size:44px}
+  .v3 .times{grid-template-columns:repeat(4,1fr);column-gap:22px}
+  .v3 .times li:last-child{grid-column:auto}
+}
+</style></head>
+<body class="v3"><div class="shell">
+  <header>
+    <span class="z">Shah Alam <span>· Selangor</span></span>
+    <span class="change">Tukar zon</span>
+  </header>
+  <p class="date">SGR01 · Isnin, 23 Nov 2026 · 13 Jamadilakhir 1448</p>
+
+  <section class="ribbon" aria-label="Garis masa hari ini">
+    <div class="bar"><span class="now"><span>16:52</span></span></div>
+    <div class="labels">
+      <span class="u" style="left:24.3%">Subuh<b>05:50</b></span>
+      <span class="d" style="left:54.3%">Zohor<b>13:02</b></span>
+      <span class="d" style="left:68.4%">Asar<b>16:25</b></span>
+      <span class="u" style="left:79.2%">Maghrib<b>19:00</b></span>
+    </div>
+  </section>
+
+  <section class="lead">
+    <div><p class="k">Seterusnya</p><p class="v">Maghrib <em>· azan 19:00</em></p></div>
+    <p class="cd">2<i>j</i> 08<i>m</i></p>
+  </section>
+
+  <ol class="times">
+    <li class="past"><span class="n">Imsak</span><span class="t">05:40</span></li>
+    <li class="past"><span class="n">Subuh</span><span class="t">05:50</span></li>
+    <li class="past"><span class="n">Syuruk</span><span class="t">06:59</span></li>
+    <li class="past"><span class="n">Zohor</span><span class="t">13:02</span></li>
+    <li class="past"><span class="n">Asar</span><span class="t">16:25</span></li>
+    <li class="next"><span class="n">Maghrib <span class="jawi">مغرب</span></span><span class="t">19:00</span></li>
+    <li><span class="n">Isyak <span class="jawi">عشاء</span></span><span class="t">20:13</span></li>
+  </ol>
+
+  <footer><span>JAKIM · Waktu Malaysia</span><span>13 Jamadilakhir</span></footer>
+</div></body></html>

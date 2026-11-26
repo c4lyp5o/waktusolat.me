@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<title>TV 05 — Takwim TV</title>
+<link rel="stylesheet" href="tv-base.css">
+<style>
+:root{--paper:#efe8d8;--ink:#1a1713;--muted:#6d6456;--faint:#a2988a;--rule:#cfc3ad;--red:#9c2c1e}
+.stage{background:var(--paper)}
+.tv5{width:100%;height:100%;display:grid;grid-template-columns:1fr 560px;grid-template-rows:auto 1fr auto;
+  column-gap:64px;color:var(--ink);font-family:"Plex",sans-serif;padding:48px 64px 40px;
+  background-image:radial-gradient(rgba(26,23,19,.035) 1px,transparent 1px);background-size:4px 4px}
+.tv5 header{grid-column:1/-1;display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:4px solid var(--ink);padding-bottom:16px}
+.tv5 .m{font-family:"Newsreader",serif;font-size:50px;font-weight:500;letter-spacing:-.015em}
+.tv5 .sub{font-size:19px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.tv5 .right{text-align:right}
+.tv5 .clock{font-family:"Newsreader",serif;font-size:88px;font-weight:300;font-variant-numeric:tabular-nums;
+  letter-spacing:-.03em;line-height:1}
+.tv5 .clock small{font-size:30px;color:var(--muted)}
+.tv5 .dates{display:flex;gap:20px;justify-content:flex-end;font-size:19px;color:var(--muted);margin-top:4px}
+.tv5 .dates b{color:var(--ink);font-weight:500}
+
+.tv5 .table{border-top:1px solid var(--rule);margin-top:6px}
+.tv5 .table .row{display:grid;grid-template-columns:250px 70px 1fr 190px;align-items:baseline;gap:14px;
+  padding:9px 0;border-bottom:1px solid var(--rule)}
+.tv5 .table .n{font-family:"Newsreader",serif;font-size:44px}
+.tv5 .table .j{font-size:24px;color:var(--muted);text-align:left}
+.tv5 .table .lead{border-bottom:1px dotted #b9ab93;transform:translateY(-8px)}
+.tv5 .table .t{font-family:"Newsreader",serif;font-size:64px;font-weight:500;text-align:right;
+  font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.tv5 .table .past{color:#9d9284}
+.tv5 .table .past .j{color:#b1a696}
+.tv5 .table .adv .n{font-style:italic;font-size:36px;color:var(--muted)}
+.tv5 .table .adv .t{font-size:50px;color:var(--muted)}
+.tv5 .table .next{background:var(--ink);color:var(--paper);margin:0 -18px;padding-left:18px;padding-right:18px;
+  border-bottom-color:var(--ink)}
+.tv5 .table .next .n{font-weight:600}
+.tv5 .table .next .j{color:#d8cdb9}
+.tv5 .table .next .t{color:#f4d9a8;font-weight:600}
+.tv5 .table .next .lead{border-bottom-color:#6b6255}
+
+.tv5 .panel{border-left:1px solid var(--rule);padding-left:44px;display:flex;flex-direction:column;justify-content:center}
+.tv5 .panel .k{font-size:19px;letter-spacing:.3em;text-transform:uppercase;color:var(--red);font-weight:600}
+.tv5 .panel .p{font-family:"Newsreader",serif;font-size:92px;font-weight:500;line-height:.95;
+  letter-spacing:-.025em;margin-top:14px}
+.tv5 .panel .j{font-size:42px;color:var(--muted);margin-top:4px}
+.tv5 .panel .cd{font-family:"Newsreader",serif;font-size:132px;font-weight:300;letter-spacing:-.04em;
+  font-variant-numeric:tabular-nums;line-height:1;margin-top:22px}
+.tv5 .panel .cd i{font-style:italic;font-size:30px;color:var(--muted);letter-spacing:0}
+.tv5 .panel .rows{margin-top:24px;border-top:1px solid var(--rule)}
+.tv5 .panel .rows div{display:flex;justify-content:space-between;align-items:baseline;
+  padding:12px 0;border-bottom:1px solid var(--rule);font-size:20px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted)}
+.tv5 .panel .rows b{font-family:"Newsreader",serif;font-size:32px;letter-spacing:0;text-transform:none;
+  color:var(--ink);font-weight:500}
+.tv5 footer{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;
+  border-top:1px solid var(--rule);margin-top:18px;padding-top:10px;font-size:15px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint)}
+</style></head>
+<body>
+<div class="stage" data-w="1920" data-h="1080">
+ <div class="tv5">
+  <header>
+    <div>
+      <div class="m">Masjid Al-Ikhlas</div>
+      <div class="sub">Seksyen 19, Shah Alam · Zon SGR01</div>
+    </div>
+    <div class="right">
+      <div class="clock num">16:52<small>:41</small></div>
+      <div class="dates"><span><b>Isnin</b>, 23 November 2026</span><span><b>13</b> Jamadilakhir 1448</span></div>
+    </div>
+  </header>
+
+  <div class="table">
+    <div class="row past adv"><div class="n">Imsak</div><div class="jawi j">إمساك</div><div class="lead"></div><div class="t">05:40</div></div>
+    <div class="row past"><div class="n">Subuh</div><div class="jawi j">صبح</div><div class="lead"></div><div class="t">05:50</div></div>
+    <div class="row past adv"><div class="n">Syuruk</div><div class="jawi j">شروق</div><div class="lead"></div><div class="t">06:59</div></div>
+    <div class="row past"><div class="n">Zohor</div><div class="jawi j">ظهر</div><div class="lead"></div><div class="t">13:02</div></div>
+    <div class="row past"><div class="n">Asar</div><div class="jawi j">عصر</div><div class="lead"></div><div class="t">16:25</div></div>
+    <div class="row next"><div class="n">Maghrib</div><div class="jawi j">مغرب</div><div class="lead"></div><div class="t">19:00</div></div>
+    <div class="row"><div class="n">Isyak</div><div class="jawi j">عشاء</div><div class="lead"></div><div class="t">20:13</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="k">Seterusnya</div>
+    <div class="p">Maghrib</div>
+    <div class="jawi j">مغرب</div>
+    <div class="cd">2<i> jam </i>08<i> minit</i></div>
+    <div class="rows">
+      <div><span>Azan</span><b>19:00</b></div>
+      <div><span>Iqamah</span><b>19:10</b></div>
+      <div><span>Subuh esok</span><b>05:50</b></div>
+    </div>
+  </div>
+
+  <footer><span>Waktu Solat · JAKIM e-Solat</span><span>Waktu Malaysia</span></footer>
+ </div>
+</div>
+<script src="tv.js"></script>
+</body></html>

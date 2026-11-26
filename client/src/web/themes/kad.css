@@ -1,0 +1,258 @@
+/* kad.css — the site palette and page for Kad (web draft 04): cards on a quiet
+   grey-green page, one deep-green hero. Fixed light. The page's own bottom nav
+   from the draft is deliberately not drawn — the site already has navigation,
+   and two navs on one screen is one too many. */
+html[data-tema="kad"],
+html[data-tema="kad"] .sheet {
+	--sheet: #eef0ed;
+	--ground: #eef0ed;
+	--surface: #ffffff;
+	--raised: #e6e9e5;
+	--line: rgb(19 32 27 / 0.1);
+	--ink: #13201b;
+	--muted: #5e6a64;
+	--faint: #626d68;
+	--spent: #626d68;
+	--accent: #1f6f57;
+	--accent-fill: #12382c;
+	--on-accent: #eaf3ee;
+	--danger: #9c2f22;
+	--font-serif: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	color-scheme: light;
+}
+
+/* ---- head --------------------------------------------------------------- */
+html[data-tema="kad"] .kad-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+html[data-tema="kad"] .kad-zone {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+
+html[data-tema="kad"] .kad-zone b {
+	font-size: 16px;
+	font-weight: 600;
+	letter-spacing: -0.015em;
+	color: var(--ink);
+}
+
+html[data-tema="kad"] .kad-zone span {
+	font-size: 11.5px;
+	color: var(--muted);
+}
+
+html[data-tema="kad"] .kad-actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+/* The site's controls arrive as pills; on this page they become round tokens. */
+html[data-tema="kad"] .kad-actions > button,
+html[data-tema="kad"] .kad-actions > a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 36px;
+	padding: 0 12px;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background: var(--surface);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	color: var(--muted);
+	box-shadow: 0 1px 2px rgb(19 32 27 / 0.06);
+}
+
+html[data-tema="kad"] .kad-actions > button:hover,
+html[data-tema="kad"] .kad-actions > a:hover {
+	background: var(--raised);
+	color: var(--ink);
+}
+
+html[data-tema="kad"] .kad-date {
+	margin: 16px 4px 0;
+	font-size: 11px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--faint);
+}
+
+/* ---- the hero card ------------------------------------------------------ */
+html[data-tema="kad"] .kad-hero {
+	position: relative;
+	overflow: hidden;
+	margin-top: 10px;
+	padding: 20px 22px 18px;
+	border-radius: 26px;
+	background: #12382c;
+	color: #eaf3ee;
+	box-shadow: 0 10px 24px -12px rgb(18 56 44 / 0.55);
+}
+
+html[data-tema="kad"] .kad-hero::after {
+	position: absolute;
+	top: -80px;
+	right: -60px;
+	width: 200px;
+	height: 200px;
+	border-radius: 50%;
+	background: radial-gradient(circle, rgb(255 255 255 / 0.09), transparent 65%);
+	content: "";
+	pointer-events: none;
+}
+
+html[data-tema="kad"] .kad-k {
+	font-size: 10px;
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+	opacity: 0.75;
+}
+
+html[data-tema="kad"] .kad-row {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-top: 10px;
+}
+
+html[data-tema="kad"] .kad-row h2 {
+	font-size: 30px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: -0.02em;
+}
+
+html[data-tema="kad"] .kad-jawi {
+	display: block;
+	margin-top: 7px;
+	font-family: "Noto Naskh Arabic Variable", serif;
+	font-size: 14px;
+	font-weight: 400;
+	opacity: 0.8;
+}
+
+html[data-tema="kad"] .kad-cd {
+	font-size: 40px;
+	font-weight: 300;
+	line-height: 1;
+	letter-spacing: -0.04em;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+html[data-tema="kad"] .kad-cd small {
+	margin-left: 5px;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	opacity: 0.8;
+}
+
+html[data-tema="kad"] .kad-foot {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-top: 18px;
+	padding-top: 12px;
+	border-top: 1px solid rgb(234 243 238 / 0.18);
+	font-size: 12px;
+}
+
+html[data-tema="kad"] .kad-foot b {
+	font-size: 15px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+
+/* ---- the six cards ------------------------------------------------------ */
+html[data-tema="kad"] .kad-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 9px;
+	margin-top: 12px;
+}
+
+html[data-tema="kad"] .kad-grid article {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 13px 15px 14px;
+	border-radius: 19px;
+	background: var(--surface);
+	box-shadow: 0 1px 2px rgb(19 32 27 / 0.05);
+}
+
+html[data-tema="kad"] .kad-n {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 8px;
+	font-size: 12.5px;
+	font-weight: 500;
+	color: var(--ink);
+}
+
+html[data-tema="kad"] .kad-ar {
+	font-family: "Noto Naskh Arabic Variable", serif;
+	font-size: 10px;
+	font-weight: 400;
+	color: var(--faint);
+}
+
+html[data-tema="kad"] .kad-t {
+	margin-top: 6px;
+	font-size: 21px;
+	font-weight: 500;
+	letter-spacing: -0.02em;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink);
+}
+
+html[data-tema="kad"] .kad-s {
+	font-size: 9.5px;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--faint);
+}
+
+html[data-tema="kad"] .kad-grid article[data-state="passed"] .kad-n,
+html[data-tema="kad"] .kad-grid article[data-state="passed"] .kad-t {
+	font-weight: 400;
+	color: var(--spent);
+}
+
+html[data-tema="kad"] .kad-grid article[data-advisory] .kad-t {
+	font-size: 17px;
+	font-weight: 400;
+	color: var(--muted);
+}
+
+@media (min-width: 760px) {
+	html[data-tema="kad"] .kad-hero {
+		padding: 30px 34px;
+	}
+
+	html[data-tema="kad"] .kad-row h2 {
+		font-size: 44px;
+	}
+
+	html[data-tema="kad"] .kad-cd {
+		font-size: 60px;
+	}
+
+	html[data-tema="kad"] .kad-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+	}
+}
