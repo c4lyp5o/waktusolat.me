@@ -35,9 +35,10 @@ FROM oven/bun:1.4.5-alpine
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
-# Install curl for health check
+# Only tzdata is added: the Alpine base already ships busybox wget, which is
+# all the healthcheck needs, so no HTTP client is baked in.
 RUN apk update --no-cache && \
-    apk add --no-cache curl tzdata
+    apk add --no-cache tzdata
 
 # Set timezone data
 ENV TZ=Asia/Kuala_Lumpur
@@ -62,8 +63,8 @@ RUN mkdir -p storage data/times db-data
 EXPOSE 5000
 
 # Add a health check to ensure the container is running properly
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:5000/api/v1/healthcheck || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --start-interval=2s --retries=3 \
+  CMD wget -qO- "http://127.0.0.1:5000/api/v1/healthcheck" >/dev/null || exit 1
 
 USER bun
 
