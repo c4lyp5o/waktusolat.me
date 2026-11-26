@@ -111,6 +111,6 @@ The shared block says `development` and `master`, with no `main`, `dev` or `stag
 
 `main` here is what the shared block calls `master`; there is no `master` branch. Don't create one.
 
-### Open deviation to resolve
+### Where plans live
 
-`tasks/` holds `todo.md`, `plan.md` and per-feature todo lists. The shared block says plans and TODO lists do not live in a repo. They are still tracked; moving them to the owner's vault is a decision for the owner, not for an agent to take mid-task.
+Plans, TODO lists and roadmaps are not kept in this repo (the shared block says so). They live with the owner, in the vault: `Projects/waktusolat.md`. The old `tasks/` folder was removed on 2026-11-26; its history is still in git if the detail is ever needed.
