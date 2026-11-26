@@ -91,7 +91,7 @@ Production runs the published image (`calypso666/waktusolat.me`) behind Traefik,
 
 Notes:
 - **Client IPs.** The app takes the client IP from the **last** `X-Forwarded-For` hop (the one Traefik appends), and only when the connection comes from a private/loopback address (Traefik on the docker network). A connection from a public address uses its own socket address and can't spoof the header. So don't publish the container port to the internet.
-- **Secrets.** Keep `ADMIN_API_KEY` in the server's environment, not in the image. CI writes `.env` into the build context (staging workflow), and anything in that file ends up in the published image.
+- **Secrets.** Keep `ADMIN_API_KEY` in the server's environment, not in the image. `.env` is in `.dockerignore`, so nothing in it can be baked into a published image; the staging build gets what it needs as a build argument, not as a file.
 - **Prayer data.** Zone files are fetched from JAKIM at runtime, never at build time. The server checks every 6 hours and refetches any zone whose data no longer covers today. JAKIM publishes one year at a time, so for a day or two around 1 January the last known day is served until the new year is published.
 
 ## 🎨 Tema (the site's look)

@@ -64,9 +64,10 @@ Commits follow [Conventional Commits](https://www.conventionalcommits.org) (`fix
 ## CI
 
 - `test.yml` — on every PR to `development`, `staging` or `main`: frozen-lockfile install (root and client), `bun run lint`, `bun run test`, client build. Then a second job builds the image, boots it, waits for healthy, asserts `id -u` is 1000 and that the app creates its database on a `1000:1000` bind mount.
-- `docker-publish-staging.yml` — on push to `staging`: builds and pushes `:staging`.
-- `docker-publish-production.yml` — on push to `main`: builds and pushes `:latest`, which is what the server runs.
+- `publish.yml` — on push to `development`, `staging`, `main` or a `vX.Y.Z` tag: runs `test.yml` first, then publishes `calypso666/waktusolat.me` — `development` gets `:development` and `:sha-<commit>` and does not deploy; `staging` gets `:staging` and `:sha-<commit>` and recreates the staging container; `main` gets `:latest`, `:<version>` and `:sha-<commit>` and recreates production; a tag must match `package.json`, publishes `:<version>` and writes a GitHub Release from the `CHANGELOG.md` section.
 - `codeql-analysis.yml` — the scheduled security scan.
+
+Both deployment services claim the same Traefik host rule, so only one can run at a time and a staging deploy **stops production** before starting staging. Giving staging its own hostname would remove that coupling; until then, deploy staging when a short outage is acceptable.
 
 Bun is pinned at **1.4.5** in both `Dockerfile` stages and in `test.yml`. Keep them in step.
 

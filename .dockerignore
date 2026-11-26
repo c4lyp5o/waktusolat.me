@@ -8,3 +8,4 @@ db/*.sqlite*
 data/times/
 public/
 tests/
+.env
