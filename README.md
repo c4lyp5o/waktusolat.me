@@ -7,6 +7,8 @@
 In the name of Allah, the gracious, the merciful.
 This is waktusolat.me frontend and backend. Only serves prayer time for Malaysian districts. Currently not thinking of supporting other places.
 
+Working on it? [DEVELOPER.md](DEVELOPER.md) has the commands, the layout, the tests and the release flow. Agents get the same rules in [AGENTS.md](AGENTS.md).
+
 ## 🚀 Quick Start
 
 ### Prerequisites
