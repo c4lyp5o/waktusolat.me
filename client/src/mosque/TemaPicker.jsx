@@ -163,7 +163,15 @@ function DailLandscape({ o }) {
 			<rect x="10" y="10" width="44" height="5" rx="2" fill={o.ink} opacity="0.9" />
 			<rect x="132" y="9" width="18" height="5" rx="2" fill={o.ink} opacity="0.7" />
 			{/* the ring, its arc at roughly half the day */}
-			<circle cx="44" cy="55" r="24" fill="none" stroke={o.ink} strokeOpacity="0.12" strokeWidth="5" />
+			<circle
+				cx="44"
+				cy="55"
+				r="24"
+				fill="none"
+				stroke={o.ink}
+				strokeOpacity="0.12"
+				strokeWidth="5"
+			/>
 			<circle
 				cx="44"
 				cy="55"
@@ -305,11 +313,28 @@ function ProgramLandscape({ o }) {
 				</g>
 			))}
 			{/* the week's programmes */}
-			<rect x="94" y="22" width="56" height="62" rx="2" fill={o.ink} fillOpacity="0.07" stroke={o.ink} strokeOpacity="0.2" />
+			<rect
+				x="94"
+				y="22"
+				width="56"
+				height="62"
+				rx="2"
+				fill={o.ink}
+				fillOpacity="0.07"
+				stroke={o.ink}
+				strokeOpacity="0.2"
+			/>
 			<rect x="98" y="27" width="26" height="3" rx="1.5" fill={o.accent} />
 			{[0, 1, 2].map((i) => (
 				<g key={i}>
-					<rect x="98" y={38 + i * 15} width="1.5" height="11" fill={o.accent} opacity={i === 0 ? 1 : 0.45} />
+					<rect
+						x="98"
+						y={38 + i * 15}
+						width="1.5"
+						height="11"
+						fill={o.accent}
+						opacity={i === 0 ? 1 : 0.45}
+					/>
 					<rect x="102" y={38 + i * 15} width="14" height="2" rx="1" fill={o.ink} opacity="0.5" />
 					<rect x="102" y={42 + i * 15} width="34" height="3" rx="1" fill={o.ink} opacity="0.85" />
 				</g>

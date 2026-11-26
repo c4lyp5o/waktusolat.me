@@ -9,8 +9,8 @@ import { Link } from "react-router";
 import { formatTime } from "../../lib/waktu/format.js";
 import { mytParts } from "../../lib/waktu/mytime.js";
 import { ORDER, prayerJawi, prayerLabel } from "../../lib/waktu/names.js";
-import { posterCountdown } from "./ZonePoster.jsx";
 import { useZoneSchedule } from "../useZoneSchedule.js";
+import { posterCountdown } from "./ZonePoster.jsx";
 
 const WEEKDAY = ["Aha", "Isn", "Sel", "Rab", "Kha", "Jum", "Sab"];
 

@@ -4,13 +4,13 @@ import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router";
 import tvDisplay from "../assets/tv-display.webp";
 import SkySheet from "../components/SkySheet.jsx";
+import ZoneAlmanak from "../components/ZoneAlmanak.jsx";
 import ZoneSearch from "../components/ZoneSearch.jsx";
 import ZoneTimes from "../components/ZoneTimes.jsx";
 import { safeStorage } from "../lib/storage.js";
 import { useTemaId } from "../lib/useTemaId.js";
 import { loadZone } from "../lib/zoneMemory.js";
 import { zoneIndex, zoneInfo } from "../lib/zones.js";
-import ZoneAlmanak from "../components/ZoneAlmanak.jsx";
 import { changeZoneLink } from "./ZonePrayerTimes.jsx";
 
 export default function Landing() {

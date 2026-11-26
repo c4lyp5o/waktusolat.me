@@ -62,7 +62,23 @@ describe("parseConfig", () => {
 	});
 
 	test("tema: one of the registered themes, anything else is langit", () => {
-		expect(TEMAS).toEqual(["langit", "takwim", "malam", "jalur", "dail", "kaca", "program", "sorotan", "senyap", "siang", "poster", "editorial", "mihrab", "kad", "papan"]);
+		expect(TEMAS).toEqual([
+			"langit",
+			"takwim",
+			"malam",
+			"jalur",
+			"dail",
+			"kaca",
+			"program",
+			"sorotan",
+			"senyap",
+			"siang",
+			"poster",
+			"editorial",
+			"mihrab",
+			"kad",
+			"papan",
+		]);
 		expect(parse("").tema).toBe("langit");
 		expect(parse("tema=takwim").tema).toBe("takwim");
 		for (const bad of ["tema=SONGKET", "tema=", "tema=dark", "tema=__proto__"]) {

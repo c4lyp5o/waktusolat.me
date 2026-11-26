@@ -73,8 +73,7 @@ export default function ProgramScreen({
 				</div>
 				{list.length === 0 ? (
 					<p className="tv-prog-empty">
-						Tiada program dijadualkan minggu ini. Sila hubungi pihak masjid untuk
-						maklumat lanjut.
+						Tiada program dijadualkan minggu ini. Sila hubungi pihak masjid untuk maklumat lanjut.
 					</p>
 				) : (
 					<ol>
@@ -83,15 +82,15 @@ export default function ProgramScreen({
 							const prog = p.programme ?? {};
 							return (
 								<li key={p.key} className="tv-prog-item">
-									<p
-										className="tv-prog-when"
-										aria-label={when.rest ? `${when.head} · ${when.rest}` : when.head}
-									>
-										<b>{when.head}</b>{when.rest && <span>{when.rest}</span>}
+									<p className="tv-prog-when">
+										<b>{when.head}</b>
+										{when.rest && <span>{when.rest}</span>}
 									</p>
 									<p className="tv-prog-title">{prog.title}</p>
 									{(prog.speaker || prog.note) && (
-										<p className="tv-prog-who">{[prog.speaker, prog.note].filter(Boolean).join(" · ")}</p>
+										<p className="tv-prog-who">
+											{[prog.speaker, prog.note].filter(Boolean).join(" · ")}
+										</p>
 									)}
 								</li>
 							);

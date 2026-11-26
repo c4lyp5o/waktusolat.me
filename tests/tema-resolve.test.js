@@ -35,7 +35,20 @@ describe("resolveTema", () => {
 	});
 
 	test("every tema with a site page is eligible, and only those", () => {
-		expect(WEB_TEMAS).toEqual(["langit", "takwim", "malam", "jalur", "dail", "kaca", "siang", "poster", "editorial", "mihrab", "kad", "papan"]);
+		expect(WEB_TEMAS).toEqual([
+			"langit",
+			"takwim",
+			"malam",
+			"jalur",
+			"dail",
+			"kaca",
+			"siang",
+			"poster",
+			"editorial",
+			"mihrab",
+			"kad",
+			"papan",
+		]);
 		for (const id of WEB_TEMAS) {
 			expect(resolveTema({ url: id })).toBe(id);
 			expect(resolveTema({ saved: id })).toBe(id);

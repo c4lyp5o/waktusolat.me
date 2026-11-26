@@ -27,21 +27,21 @@ import { dayFor, nextDay } from "../lib/waktu/rows.js";
 import { listRows, screenState } from "../lib/waktu/schedule.js";
 import { skyPhase } from "../lib/waktu/sky.js";
 import Banner from "./Banner.jsx";
+import DailScreen from "./DailScreen.jsx";
 import DayTrack from "./DayTrack.jsx";
 import Header from "./Header.jsx";
-import { cacheAssets, useKiosk } from "./kiosk.js";
-import Lead from "./Lead.jsx";
-import DailScreen from "./DailScreen.jsx";
 import JalurScreen from "./JalurScreen.jsx";
 import KacaScreen from "./KacaScreen.jsx";
+import { cacheAssets, useKiosk } from "./kiosk.js";
+import Lead from "./Lead.jsx";
 import MalamScreen from "./MalamScreen.jsx";
 import PapanScreen from "./PapanScreen.jsx";
 import PortraitScreen from "./PortraitScreen.jsx";
-import ProgramScreen from "./ProgramScreen.jsx";
 import PrayerList from "./PrayerList.jsx";
+import ProgramScreen from "./ProgramScreen.jsx";
+import SenyapScreen from "./SenyapScreen.jsx";
 import { Message, SolatNotice } from "./SolatNotice.jsx";
 import SorotanScreen from "./SorotanScreen.jsx";
-import SenyapScreen from "./SenyapScreen.jsx";
 import { useNow, useSurface, useYear } from "./useTv.js";
 
 export default function TvApp() {
@@ -118,6 +118,7 @@ export function TvScreen({ zone, config, feed = null, notice = null }) {
 	// The worker keeps the files this screen is actually using (S7): its CSS
 	// chunk and that tema's fonts. Re-run when a poll switches tema, so the
 	// new one is cached before the screen ever needs it offline.
+	// biome-ignore lint/correctness/useExhaustiveDependencies: tema drives what cacheAssets() caches; the callback reads the document, so the linter cannot see it
 	useEffect(() => {
 		cacheAssets();
 	}, [tema]);

@@ -41,12 +41,5 @@ export default function ZonePrayerTimes() {
 
 	// The tema names its page (sky, almanak, siang…); the pool owns the mapping.
 	const Page = webPageFor(webLayoutOf(tema));
-	return (
-		<Page
-			zone={zone}
-			tema={tema}
-			changeZone={changeZoneLink}
-			temaButton={menu}
-		/>
-	);
+	return <Page zone={zone} tema={tema} changeZone={changeZoneLink} temaButton={menu} />;
 }

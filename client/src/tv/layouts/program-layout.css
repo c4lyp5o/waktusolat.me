@@ -149,11 +149,13 @@
 	padding-bottom: 1.6vh;
 	border-bottom: 1px solid var(--line);
 }
+/* biome-ignore lint/style/noDescendingSpecificity: the earlier (0,4,1) rule targets b inside .tv-prog-cell, a different subtree — order is irrelevant */
 .tv[data-layout="program"] .tv-prog-sheet-head b {
 	font-size: 2.4vh;
 	font-weight: 500;
 	color: var(--accent);
 }
+/* biome-ignore lint/style/noDescendingSpecificity: same — .tv-prog-cell[data-state] span is a different subtree */
 .tv[data-layout="program"] .tv-prog-sheet-head span {
 	font-size: 1.7vh;
 	letter-spacing: 0.14em;
@@ -186,6 +188,7 @@
 	font-size: 1.8vh;
 	color: var(--faint);
 }
+/* biome-ignore lint/style/noDescendingSpecificity: .tv-prog-item b is a different subtree from .tv-prog-cell[data-state] b */
 .tv[data-layout="program"] .tv-prog-when b {
 	font-weight: 500;
 	letter-spacing: 0.06em;

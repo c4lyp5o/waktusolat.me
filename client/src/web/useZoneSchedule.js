@@ -5,19 +5,16 @@
 // days, today's window, and the rows. Fetching and deriving them here means a
 // new page layout is a composition, never a second copy of the schedule logic.
 import useSWR from "swr";
+import { fetchDays } from "../components/useZoneSky.js";
 import { dayFor, nextDay } from "../lib/waktu/rows.js";
 import { listRows, screenState } from "../lib/waktu/schedule.js";
 import { SITE_CONFIG, useSiteNow } from "../lib/waktu/siteClock.js";
 import { zoneInfo } from "../lib/zones.js";
-import { fetchDays } from "../components/useZoneSky.js";
 
 export function useZoneSchedule(zone) {
 	const info = zoneInfo(zone);
 	const now = useSiteNow();
-	const { data: days, error } = useSWR(
-		info ? `/api/v1/waktusolat/week/${zone}` : null,
-		fetchDays,
-	);
+	const { data: days, error } = useSWR(info ? `/api/v1/waktusolat/week/${zone}` : null, fetchDays);
 	const found = days?.length ? dayFor(days, now) : null;
 	const today = found?.day ?? null;
 	const estimate = Boolean(found?.estimate);

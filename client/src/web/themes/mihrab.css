@@ -107,11 +107,7 @@ html[data-tema="mihrab"] .mihrab-arch {
 	border-bottom: 0;
 	border-radius: 999px 999px 0 0;
 	background:
-		repeating-linear-gradient(
-			45deg,
-			rgb(207 169 99 / 0.05) 0 1px,
-			transparent 1px 11px
-		),
+		repeating-linear-gradient(45deg, rgb(207 169 99 / 0.05) 0 1px, transparent 1px 11px),
 		radial-gradient(70% 55% at 50% 30%, rgb(207 169 99 / 0.1), transparent 70%);
 }
 

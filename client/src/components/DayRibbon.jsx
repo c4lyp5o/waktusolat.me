@@ -5,8 +5,9 @@
 //
 // `variant` only changes the sizes and which side the labels sit on: the
 // geometry is the same maths (lib/waktu/ribbon.js).
-import { clockPercent, dayPercent, ribbonMarks } from "../lib/waktu/ribbon.js";
+
 import { formatTime } from "../lib/waktu/format.js";
+import { clockPercent, dayPercent, ribbonMarks } from "../lib/waktu/ribbon.js";
 
 export default function DayRibbon({ times, now, variant = "web" }) {
 	const marks = ribbonMarks(times, now);

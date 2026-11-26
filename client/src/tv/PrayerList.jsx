@@ -33,9 +33,7 @@ export default function PrayerList({
 								{prayerJawi(key, now)}
 							</span>
 						)}
-						{status && (
-							<span className="tv-row-status">{STATUS[rows[key]] ?? ""}</span>
-						)}
+						{status && <span className="tv-row-status">{STATUS[rows[key]] ?? ""}</span>}
 						<span className="tv-row-time">
 							{estimate ? "~" : ""}
 							{formatTime(t)}

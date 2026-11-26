@@ -51,11 +51,7 @@ export default function SenyapScreen({
 			</section>
 			<ol className="tv-senyap-strip" aria-label="Waktu solat hari ini">
 				{ORDER.map((key) => (
-					<li
-						key={key}
-						className="tv-senyap-cell"
-						data-state={marks[key]}
-					>
+					<li key={key} className="tv-senyap-cell" data-state={marks[key]}>
 						<span>{prayerLabel(key, times[key])}</span>
 						<b>
 							{approx}

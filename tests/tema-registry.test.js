@@ -34,7 +34,20 @@ describe("tema registry", () => {
 	test("every web tema is a tema, with a page for it", () => {
 		expect(WEB_TEMAS.length).toBeGreaterThan(0);
 		for (const id of WEB_TEMAS) expect(TEMA_IDS).toContain(id);
-		expect(WEB_TEMAS).toEqual(["langit", "takwim", "malam", "jalur", "dail", "kaca", "siang", "poster", "editorial", "mihrab", "kad", "papan"]);
+		expect(WEB_TEMAS).toEqual([
+			"langit",
+			"takwim",
+			"malam",
+			"jalur",
+			"dail",
+			"kaca",
+			"siang",
+			"poster",
+			"editorial",
+			"mihrab",
+			"kad",
+			"papan",
+		]);
 	});
 
 	test("every tema names a layout for each surface", () => {

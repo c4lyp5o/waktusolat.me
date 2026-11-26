@@ -4,9 +4,10 @@
 //
 // One component for the phone page and the board: `variant` changes the size
 // only; the maths is lib/waktu/ribbon.js, so the arc and the ribbon agree.
-import { dayPercent } from "../lib/waktu/ribbon.js";
+
 import { formatCountdown, formatTime } from "../lib/waktu/format.js";
 import { ORDER, prayerJawi } from "../lib/waktu/names.js";
+import { dayPercent } from "../lib/waktu/ribbon.js";
 
 function neighbour(times, now, direction) {
 	const keys = ORDER.filter((k) => times[k] !== undefined);
@@ -35,9 +36,7 @@ export default function DayDial({ times, now, state, variant = "web" }) {
 						{prayerJawi(state.prayer, state.azan)}
 					</span>
 				</span>
-				<span className="dial-count">
-					{formatCountdown(state.target - now)}
-				</span>
+				<span className="dial-count">{formatCountdown(state.target - now)}</span>
 				<span className="dial-meta">
 					Azan {state.estimate ? "~" : ""}
 					{formatTime(state.azan)}

@@ -31,7 +31,13 @@
    floor under the panel. It is heavy on purpose — legibility first. */
 .tv[data-layout="kaca"] .tv-veil {
 	background:
-		linear-gradient(90deg, rgb(4 10 8 / 0.9) 0%, rgb(4 10 8 / 0.62) 42%, rgb(4 10 8 / 0.38) 62%, rgb(4 10 8 / 0.82) 100%),
+		linear-gradient(
+			90deg,
+			rgb(4 10 8 / 0.9) 0%,
+			rgb(4 10 8 / 0.62) 42%,
+			rgb(4 10 8 / 0.38) 62%,
+			rgb(4 10 8 / 0.82) 100%
+		),
 		linear-gradient(180deg, rgb(4 10 8 / 0.62), rgb(4 10 8 / 0.18) 38%, rgb(4 10 8 / 0.86));
 }
 

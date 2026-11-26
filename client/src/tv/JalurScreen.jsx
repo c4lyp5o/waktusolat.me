@@ -1,8 +1,9 @@
 // JalurScreen.jsx — draft TV 03: the answer across the middle with the
 // countdown as the widest thing on the wall, the day as one band underneath.
 // Header, Lead and Banner are the shared components; the band is DayRibbon.
-import Banner from "./Banner.jsx";
+
 import DayRibbon from "../components/DayRibbon.jsx";
+import Banner from "./Banner.jsx";
 import Header from "./Header.jsx";
 import Lead from "./Lead.jsx";
 

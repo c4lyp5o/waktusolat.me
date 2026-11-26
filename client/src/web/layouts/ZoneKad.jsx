@@ -3,7 +3,7 @@
 // countdown, then every other prayer as a white card with its name, jawi, time
 // and state. The hero is one of the seven — never repeated in the grid.
 import { Link } from "react-router";
-import { formatCountdown, formatDate, formatTime } from "../../lib/waktu/format.js";
+import { formatDate, formatTime } from "../../lib/waktu/format.js";
 import { ORDER, prayerJawi, prayerLabel } from "../../lib/waktu/names.js";
 import { useZoneSchedule } from "../useZoneSchedule.js";
 
@@ -109,7 +109,7 @@ export default function ZoneKad({ zone, changeZone, temaButton }) {
 					<article
 						key={key}
 						data-state={list.rows[key]}
-						data-advisory={(key === "imsak" || key === "syuruk") || undefined}
+						data-advisory={key === "imsak" || key === "syuruk" || undefined}
 					>
 						<div className="kad-n">
 							{prayerLabel(key, list.times[key])}
@@ -121,9 +121,7 @@ export default function ZoneKad({ zone, changeZone, temaButton }) {
 							{shown.estimate ? "~" : ""}
 							{formatTime(list.times[key])}
 						</div>
-						<div className="kad-s">
-							{list.rows[key] === "passed" ? "Lepas" : "Akan datang"}
-						</div>
+						<div className="kad-s">{list.rows[key] === "passed" ? "Lepas" : "Akan datang"}</div>
 					</article>
 				))}
 			</div>

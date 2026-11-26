@@ -103,7 +103,9 @@ export default function ZoneMihrab({ zone, changeZone, temaButton }) {
 				))}
 			</ol>
 
-			<footer className="mihrab-foot">JAKIM · Waktu Malaysia · {formatTime(now).slice(0, 5)}</footer>
+			<footer className="mihrab-foot">
+				JAKIM · Waktu Malaysia · {formatTime(now).slice(0, 5)}
+			</footer>
 		</main>
 	);
 }

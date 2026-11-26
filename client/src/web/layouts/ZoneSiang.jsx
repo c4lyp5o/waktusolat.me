@@ -7,11 +7,11 @@
 // Same data, same schedule maths as the almanak page: useZoneSchedule.
 import { Link } from "react-router";
 import { temaById } from "../../../../shared/temas.js";
+import DayRibbon from "../../components/DayRibbon.jsx";
+import TimesTable from "../../components/TimesTable.jsx";
 import { formatDate, formatTime } from "../../lib/waktu/format.js";
 import { mytIsoDate } from "../../lib/waktu/mytime.js";
 import { ADVISORY, ORDER, prayerJawi, prayerLabel } from "../../lib/waktu/names.js";
-import DayRibbon from "../../components/DayRibbon.jsx";
-import TimesTable from "../../components/TimesTable.jsx";
 import { useZoneSchedule } from "../useZoneSchedule.js";
 
 // "2j 08m" — hours and minutes, the units set small. Under an hour it is
@@ -100,7 +100,10 @@ export default function ZoneSiang({ zone, changeZone, temaButton, tema = "siang"
 						<em> · azan {formatTime(shown.azan)}</em>
 					</p>
 				</div>
-				<p className="siang-cd" aria-label={`${parts.map((p) => p.n + " " + (p.u === "j" ? "jam" : "minit")).join(" ")} lagi`}>
+				<p className="siang-cd">
+					<span className="sr-only">
+						{parts.map((p) => `${p.n} ${p.u === "j" ? "jam" : "minit"}`).join(" ")} lagi
+					</span>
 					{parts.map((p, i) => (
 						<span key={p.u}>
 							{p.n}

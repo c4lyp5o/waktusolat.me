@@ -103,36 +103,36 @@ export default function ZoneAlmanak({ zone, changeZone, tema = "takwim", temaBut
 					aria-labelledby="almanak-lead"
 					className="grid gap-x-6 gap-y-2 py-7 md:grid-cols-[minmax(0,1fr)_auto] md:items-end md:py-9"
 				>
-				<div>
-					<p
-						id="almanak-lead"
-						className="text-[12px] font-semibold uppercase tracking-[0.24em] text-muted"
-					>
-						Seterusnya
-					</p>
-					<p className="almanak-lead mt-2 text-[clamp(2.4rem,8vw,4.4rem)] leading-[0.95]">
-						{(LEAD[state.kind] ?? LEAD.countdown)(state.label)}
-					</p>
-					<p className="mt-2 text-[15px] text-muted md:text-[16px]">
-						<span lang="ar" dir="rtl" className="font-jawi text-[1.05em]">
-							{prayerJawi(state.prayer, state.azan)}
-						</span>
-						{" · Azan "}
-						<span className="tabular-nums">
-							{state.estimate ? "~" : ""}
-							{formatTime(state.azan)}
-						</span>
-					</p>
-				</div>
-				<div className="md:text-right">
-					<p className="almanak-count text-[clamp(2.6rem,9vw,5.2rem)] leading-none tabular-nums">
-						{formatCountdown(state.target - now)}
-					</p>
-					{/* What the big number is: it sits beside "Seterusnya", not a clock. */}
-					<p className="mt-1.5 text-[12px] font-semibold uppercase tracking-[0.24em] text-muted">
-						lagi
-					</p>
-				</div>
+					<div>
+						<p
+							id="almanak-lead"
+							className="text-[12px] font-semibold uppercase tracking-[0.24em] text-muted"
+						>
+							Seterusnya
+						</p>
+						<p className="almanak-lead mt-2 text-[clamp(2.4rem,8vw,4.4rem)] leading-[0.95]">
+							{(LEAD[state.kind] ?? LEAD.countdown)(state.label)}
+						</p>
+						<p className="mt-2 text-[15px] text-muted md:text-[16px]">
+							<span lang="ar" dir="rtl" className="font-jawi text-[1.05em]">
+								{prayerJawi(state.prayer, state.azan)}
+							</span>
+							{" · Azan "}
+							<span className="tabular-nums">
+								{state.estimate ? "~" : ""}
+								{formatTime(state.azan)}
+							</span>
+						</p>
+					</div>
+					<div className="md:text-right">
+						<p className="almanak-count text-[clamp(2.6rem,9vw,5.2rem)] leading-none tabular-nums">
+							{formatCountdown(state.target - now)}
+						</p>
+						{/* What the big number is: it sits beside "Seterusnya", not a clock. */}
+						<p className="mt-1.5 text-[12px] font-semibold uppercase tracking-[0.24em] text-muted">
+							lagi
+						</p>
+					</div>
 				</section>
 			)}
 

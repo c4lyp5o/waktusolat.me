@@ -1,12 +1,7 @@
 // S7/Jalur: the day band's geometry. Pure, so the placement rule that keeps
 // Asar, Maghrib and Isyak from printing over each other is locked by a test.
 import { describe, expect, test } from "bun:test";
-import {
-	clockPercent,
-	dayPercent,
-	MIN_GAP,
-	ribbonMarks,
-} from "../client/src/lib/waktu/ribbon.js";
+import { clockPercent, dayPercent, MIN_GAP, ribbonMarks } from "../client/src/lib/waktu/ribbon.js";
 
 // Malaysia time is UTC+8; the band is the visitor's own day.
 const at = (h, m = 0) => Date.UTC(2026, 10, 23, h - 8, m);

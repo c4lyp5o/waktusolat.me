@@ -4,9 +4,10 @@
 // thirteen stylesheets were written against `[data-state="past"]`, a selector
 // that never matched. Nothing failed — the rows simply never dimmed. A test on
 // the vocabulary is cheap; noticing missing dimming on a wall is not.
+
+import { describe, expect, test } from "bun:test";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
-import { describe, expect, test } from "bun:test";
 import { rowStates } from "../client/src/lib/waktu/schedule.js";
 
 const SRC = join(import.meta.dir, "..", "client", "src");
