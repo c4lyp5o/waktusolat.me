@@ -123,9 +123,10 @@ jobs:
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
     runs-on: ubuntu-latest
     steps:
-      # Both services claim the same Traefik host rule, so only one can run at a
-      # time: whichever branch deploys stops the other first. Giving staging its
-      # own hostname would remove that coupling — see DEVELOPER.md.
+      # Staging has its own hostname and its own data since 2026-11-26, so each
+      # branch only touches its own service. Before that both claimed
+      # Host(`waktusolat.me`), which is why a staging deploy used to stop
+      # production.
       - name: 🚀 Recreate the container on the server
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -135,12 +136,10 @@ jobs:
           script: |
             set -euo pipefail
             cd ~/own
-            docker compose down waktusolat.me || true
-            docker compose down waktusolat.me-staging || true
             if [ "${{ github.ref }}" = "refs/heads/main" ]; then
               docker pull ${{ env.IMAGE }}:latest
-              docker compose up -d waktusolat.me
+              docker compose up -d --force-recreate waktusolat.me
             else
               docker pull ${{ env.IMAGE }}:staging
-              docker compose up -d waktusolat.me-staging
+              docker compose up -d --force-recreate waktusolat.me-staging
             fi
