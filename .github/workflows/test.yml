@@ -67,9 +67,24 @@ jobs:
             sleep 2
           done
           test "$status" = healthy
+          test "$(docker exec app id -u)" = "1000"
       - name: 🔌 Healthcheck answers
         run: |
           docker exec app bun -e 'const r = await fetch("http://127.0.0.1:5000/api/v1/healthcheck"); const j = await r.json(); if (!j.ok) { console.error(j); process.exit(1); } console.log("healthcheck ok", r.status);'
+      - name: 💾 Writes to a uid-1000 bind mount
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/wkt-storage && sudo chown 1000:1000 /tmp/wkt-storage
+          docker run -d --name app-vol --network none \
+            -e DB_PATH=/app/storage/visitors.sqlite \
+            -v /tmp/wkt-storage:/app/storage waktusolat:ci
+          for _ in $(seq 1 30); do
+            [ "$(docker inspect -f '{{.State.Health.Status}}' app-vol)" = healthy ] && break
+            sleep 2
+          done
+          test "$(docker inspect -f '{{.State.Health.Status}}' app-vol)" = healthy
+          test -f /tmp/wkt-storage/visitors.sqlite
+          ls -ln /tmp/wkt-storage
       - name: 🧾 Container logs
         if: always()
         run: docker logs app || true

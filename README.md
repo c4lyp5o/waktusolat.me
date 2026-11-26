@@ -57,6 +57,12 @@ Then open http://localhost:5000. The compose file publishes the port on `127.0.0
 
 Do **not** bind-mount `./db` or `./data` as a whole: they contain code (`db/db.js`, `data/getter.js`) and tracked Quran/hadith JSON.
 
+The container runs as **`bun` (uid 1000)**, not root. Host directories it writes to must be owned by 1000:1000, or the app starts but cannot open the visitor DB:
+
+```bash
+mkdir -p storage data/times && sudo chown -R 1000:1000 storage data/times
+```
+
 > **Upgrading from ≤ 2.1.0 compose:** the visitor DB moved from `./db/visitors.sqlite` to `./storage/visitors.sqlite`. Move it before starting the new container: `mkdir -p storage && mv db/visitors.sqlite storage/`.
 
 ### Production behind Traefik
