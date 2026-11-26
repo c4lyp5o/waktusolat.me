@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Draf 08 — Poster</title>
+<link rel="stylesheet" href="base.css">
+<style>
+:root{
+  --paper:#ece5d6; --ink:#141310; --muted:#6d6557; --line:#141310; --pop:#c8402a;
+}
+body.v8{background:var(--paper);color:var(--ink);font-family:"Bricolage",sans-serif}
+.v8 .shell{padding-left:20px;padding-right:20px}
+.v8 .mast{display:flex;justify-content:space-between;align-items:baseline;
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+.v8 .mast b{font-weight:700}
+.v8 .rule{height:4px;background:var(--ink);margin-top:8px}
+.v8 .rule.thin{height:1px;margin-top:3px}
+
+.v8 .hero{margin-top:20px}
+.v8 .kicker{display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--pop);font-weight:600}
+.v8 .kicker i{width:7px;height:7px;background:var(--pop);border-radius:50%}
+.v8 .nm{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:6px}
+.v8 .nm h1{font-size:clamp(44px,12.5vw,56px);font-weight:700;letter-spacing:-.045em;line-height:.9}
+.v8 .nm .jawi{font-size:clamp(26px,8vw,34px);line-height:1;opacity:.85}
+.v8 .big{font-size:clamp(92px,27vw,124px);font-weight:800;letter-spacing:-.06em;line-height:.82;
+  font-variant-numeric:tabular-nums;margin-top:16px;margin-left:-4px}
+.v8 .sub{display:flex;justify-content:space-between;align-items:baseline;margin-top:18px;
+  padding-top:11px;border-top:1px solid var(--ink);font-size:12px}
+.v8 .sub .cd{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.v8 .sub .cd span{font-weight:400;color:var(--muted)}
+
+.v8 .list{flex:1;display:flex;flex-direction:column;justify-content:space-between;
+  margin-top:24px;border-top:3px solid var(--ink)}
+.v8 .list div{display:flex;justify-content:space-between;align-items:baseline;
+  padding:10px 0;border-bottom:1px solid rgba(20,19,16,.22);font-size:15px}
+.v8 .list .hijri{display:flex;justify-content:space-between;align-items:baseline;border-bottom:0;
+  padding-top:14px;color:var(--muted);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase}
+.v8 .list .n{font-weight:500;letter-spacing:-.01em}
+.v8 .list .t{font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em;font-size:18px}
+.v8 .list .past{color:#a79e8c}
+.v8 .list .past .t{color:#a79e8c;font-weight:400}
+.v8 .list .adv .n{font-weight:400;color:var(--muted);font-size:12px}
+.v8 .list .adv .t{font-weight:400;font-size:12px;color:var(--muted)}
+.v8 .list .next{background:var(--ink);color:var(--paper);padding-left:7px;padding-right:7px;
+  margin-left:-7px;margin-right:-7px;border-bottom-color:var(--ink)}
+.v8 .list .next .t{color:var(--pop)}
+
+.v8 footer{margin-top:0;display:flex;justify-content:space-between;align-items:flex-end;
+  border-top:4px solid var(--ink);padding-top:8px;font-size:9.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted)}
+.v8 footer b{color:var(--ink)}
+@media(min-width:760px){
+  .v8 .shell{max-width:860px;margin:0 auto;padding:40px 44px}
+  .v8 .big{font-size:150px}
+  .v8 .nm h1{font-size:72px}
+  .v8 .list{grid-template-columns:repeat(4,1fr);column-gap:28px}
+}
+</style></head>
+<body class="v8"><div class="shell">
+  <div class="mast"><span><b>Waktu Solat</b> · Malaysia</span><span>SGR01 / Selangor</span></div>
+  <div class="rule"></div><div class="rule thin"></div>
+
+  <section class="hero">
+    <p class="kicker"><i></i> Seterusnya · Isnin 23 Nov 2026</p>
+    <div class="nm"><h1>Maghrib</h1><span class="jawi">مغرب</span></div>
+    <p class="big num">19:00</p>
+    <div class="sub"><span>Shah Alam · Petaling</span><span class="cd">2j 08m 14s <span>lagi</span></span></div>
+  </section>
+
+  <div class="list">
+    <div class="past"><span class="n">Imsak</span><span class="t">05:40</span></div>
+    <div class="past"><span class="n">Subuh</span><span class="t">05:50</span></div>
+    <div class="past"><span class="n">Syuruk</span><span class="t">06:59</span></div>
+    <div class="past"><span class="n">Zohor</span><span class="t">13:02</span></div>
+    <div class="past"><span class="n">Asar</span><span class="t">16:25</span></div>
+    <div class="next"><span class="n">Maghrib</span><span class="t">19:00</span></div>
+    <div><span class="n">Isyak</span><span class="t">20:13</span></div>
+    <div class="fill hijri"><span class="n">13 Jamadilakhir 1448</span><span class="n">Waktu Malaysia</span></div>
+  </div>
+
+  <footer><span><b>JAKIM</b> e-Solat</span><span>Waktu Malaysia · 16:52</span></footer>
+</div></body></html>

@@ -1,3 +1,8 @@
+// /radio — Islamic radio stations with one shared player: one stream at a
+// time, play/pause from the list or the player. On phones the player sits
+// above the bottom bar; on desktop it is a panel beside the list.
+import { useEffect, useRef, useState } from "react";
+
 const STATIONS = [
 	{
 		id: "rodja",
@@ -21,92 +26,142 @@ const STATIONS = [
 		location: "Salatiga, Indonesia",
 		url: "https://radioonline.co.id/#bass-salatiga",
 		logo: "https://cdn.webrad.io/images/logos/radioonline-co-id/bass-salatiga.png",
-		stream: "http://live.bassfm.id/;", // Note: HTTP streams might not play on HTTPS sites due to browser security
+		// http only: browsers block it on an https page (shown as unavailable).
+		stream: "http://live.bassfm.id/;",
 	},
 ];
 
-export default function Radio() {
+const STATUS_TEXT = {
+	idle: "Pilih stesen untuk mula mendengar.",
+	loading: "Menyambung…",
+	playing: "Sedang bersiaran",
+	paused: "Dijeda",
+	error: "Stesen ini tidak dapat dimainkan sekarang.",
+};
+
+function PlayIcon({ playing }) {
 	return (
-		<>
-			<title>Radio Islamik</title>
-			<meta name="description" content="Dengar stesen radio internet islamik secara langsung" />
-			<link rel="icon" href="/favicon.ico" />
+		<svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+			{playing ? <path d="M7 5h4v14H7zM13 5h4v14h-4z" /> : <path d="M8 5v14l11-7z" />}
+		</svg>
+	);
+}
 
-			<main className="min-h-screen bg-slate-950 flex flex-col items-center p-4 font-sans pb-20">
-				<div className="w-full max-w-5xl space-y-10">
-					{/* Header Section */}
-					<div className="text-center space-y-3 pt-2">
-						<h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-100">
-							Radio <span className="text-acre-600">Islamik</span>
-						</h1>
-					</div>
+export default function Radio() {
+	const audio = useRef(null);
+	const [station, setStation] = useState(null);
+	const [status, setStatus] = useState("idle");
 
-					{/* Grid Section */}
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-						{STATIONS.map((station) => (
-							<div
-								key={station.id}
-								className="bg-slate-900 rounded-3xl p-4 shadow-sm border border-slate-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center text-center"
-							>
-								{/* Logo Container */}
-								<div className="w-24 h-24 mb-6 rounded-full bg-white flex items-center justify-center p-4 border border-slate-800 shadow-inner">
-									<img
-										src={station.logo}
-										alt={station.name}
-										className="max-h-full max-w-full object-contain mix-blend-multiply"
-									/>
-								</div>
+	const play = (s) => {
+		const el = audio.current;
+		if (station?.id === s.id && status === "playing") {
+			el.pause();
+			return;
+		}
+		if (station?.id !== s.id) {
+			setStation(s);
+			el.src = s.stream;
+		}
+		setStatus("loading");
+		el.play().catch(() => setStatus("error"));
+	};
 
-								{/* Station Info */}
-								<div className="mb-6 space-y-1">
-									<h3 className="font-bold text-xl text-slate-100">{station.name}</h3>
-									<p className="text-sm text-slate-400 font-medium uppercase tracking-wider">
-										{station.location}
-									</p>
-								</div>
+	// Stop the stream when leaving the page.
+	useEffect(() => () => audio.current?.pause(), []);
 
-								{/* Audio Player */}
-								{/* We use w-full to make the player stretch to fit the card */}
-								<div className="w-full mt-auto">
-									{/** biome-ignore lint/a11y/useMediaCaption: no caption for online radio */}
-									<audio
-										controls
-										className="w-full h-10 rounded-full focus:outline-none accent-acre-600"
+	const isPlaying = (s) => station?.id === s.id && status === "playing";
+
+	return (
+		<main className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-12">
+			<title>Radio | Waktu Solat</title>
+			<h1 className="text-2xl font-semibold tracking-tight md:text-[32px]">Radio</h1>
+			<p className="mt-2 text-lg text-muted">Stesen radio Islam, siaran langsung.</p>
+
+			{/* biome-ignore lint/a11y/useMediaCaption: live radio has no captions */}
+			<audio
+				ref={audio}
+				preload="none"
+				onPlaying={() => setStatus("playing")}
+				onPause={() => setStatus((s) => (s === "error" ? s : "paused"))}
+				onWaiting={() => setStatus("loading")}
+				onError={() => station && setStatus("error")}
+			/>
+
+			<div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+				<ul className="min-w-0" aria-label="Stesen radio">
+					{STATIONS.map((s) => (
+						<li key={s.id} className="flex items-center gap-4 border-b border-line py-4">
+							<img
+								src={s.logo}
+								alt=""
+								width="56"
+								height="56"
+								loading="lazy"
+								className="h-14 w-14 shrink-0 rounded-xl bg-white object-contain p-1.5"
+							/>
+							<div className="min-w-0 flex-1">
+								<p className="text-[17px] text-ink">{s.name}</p>
+								<p className="text-[15px] text-faint">
+									{s.location} ·{" "}
+									<a
+										href={s.url}
+										target="_blank"
+										rel="noreferrer"
+										className="underline-offset-2 hover:underline"
 									>
-										<source src={station.stream} />
-										Browser anda tidak menyokong elemen audio.
-									</audio>
-								</div>
-
-								{/* External Link */}
-								<a
-									href={station.url}
-									target="_blank"
-									rel="noreferrer"
-									className="mt-6 text-xs font-bold text-acre-600 hover:text-acre-800 flex items-center gap-1 transition-colors"
-								>
-									Lawati Laman Asal
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="h-3 w-3"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
-									>
-										<title>External Link</title>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-										/>
-									</svg>
-								</a>
+										laman asal
+									</a>
+								</p>
 							</div>
-						))}
+							<button
+								type="button"
+								onClick={() => play(s)}
+								aria-label={`${isPlaying(s) ? "Jeda" : "Main"} ${s.name}`}
+								aria-pressed={isPlaying(s)}
+								className={`grid h-12 w-12 shrink-0 place-items-center rounded-full ${
+									isPlaying(s) ? "bg-ink text-ground" : "bg-raised text-ink hover:bg-line"
+								}`}
+							>
+								<PlayIcon playing={isPlaying(s)} />
+							</button>
+						</li>
+					))}
+				</ul>
+
+				{/* The player: a bar above the phone's bottom navigation, a panel on
+				    desktop. Shown once a station has been chosen. */}
+				<section
+					aria-label="Pemain radio"
+					aria-live="polite"
+					className={`${
+						station
+							? "fixed inset-x-0 bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-30 flex"
+							: "hidden"
+					} items-center gap-4 border-t border-line bg-surface px-4 py-3 md:static md:flex md:self-start md:rounded-2xl md:border-0 md:p-6`}
+				>
+					<div className="min-w-0 flex-1">
+						<p className="truncate text-[17px] font-semibold text-ink">
+							{station?.name ?? "Radio"}
+						</p>
+						<p className={`text-[15px] ${status === "error" ? "text-ink" : "text-faint"}`}>
+							{status === "playing" && (
+								<span className="pulse-dot mr-2 inline-block align-middle" aria-hidden="true" />
+							)}
+							{STATUS_TEXT[status]}
+						</p>
 					</div>
-				</div>
-			</main>
-		</>
+					{station && (
+						<button
+							type="button"
+							onClick={() => play(station)}
+							aria-label={status === "playing" ? "Jeda" : "Main"}
+							className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-ink text-ground"
+						>
+							<PlayIcon playing={status === "playing"} />
+						</button>
+					)}
+				</section>
+			</div>
+		</main>
 	);
 }

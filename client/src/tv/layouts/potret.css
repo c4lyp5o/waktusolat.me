@@ -1,0 +1,135 @@
+/* potret.css — the portrait panel layout (S4). Everything is scoped to
+   .tv[data-tema][data-layout="potret"], so the landscape screen is untouched.
+   Sizes are in vw, not vh: on a panel this tall the width is the constraint,
+   and 1080×1920 and 2160×3840 then look alike. */
+
+.tv[data-tema][data-layout="potret"] {
+	--fs-count: 17.5vw;
+	--fs-name: 8vw;
+	--fs-clock: 8.6vw;
+	--fs-row: 5vw;
+	--fs-title: 4.4vw;
+	--fs-meta: 3.2vw;
+	--fs-small: 2.9vw;
+	--radius: 3.2vw;
+	--pad-x: 6.6vw;
+	--pad-y: 5vw;
+}
+
+.tv[data-tema][data-layout="potret"] .tv-potret-view {
+	display: grid;
+	grid-template-rows: auto auto minmax(0, 1fr) auto;
+	gap: 3.2vw;
+	height: 100%;
+}
+
+/* Header: name and clock on one line, both dates under them. */
+.tv[data-tema][data-layout="potret"] .tv-header {
+	grid-template-columns: minmax(0, 1fr) auto;
+	grid-template-areas:
+		"title clock"
+		"dates dates";
+	align-items: start;
+	gap: 2vw;
+	padding-bottom: 1.6vw;
+	border-bottom: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+}
+.tv[data-tema][data-layout="potret"] .tv-title {
+	grid-area: title;
+	gap: 0.8vw;
+}
+.tv[data-tema][data-layout="potret"] .tv-title-name {
+	color: var(--text);
+	font-size: var(--fs-title);
+	white-space: normal;
+}
+.tv[data-tema][data-layout="potret"] .tv-title-zone {
+	max-width: 100%;
+	overflow: visible;
+	font-size: var(--fs-small);
+	line-height: 1.4;
+	white-space: normal;
+	text-overflow: clip;
+}
+.tv[data-tema][data-layout="potret"] .tv-clock {
+	grid-area: clock;
+	font-size: var(--fs-clock);
+	text-align: right;
+}
+.tv[data-tema][data-layout="potret"] .tv-clock-s {
+	font-size: var(--fs-meta);
+}
+.tv[data-tema][data-layout="potret"] .tv-dates {
+	grid-area: dates;
+	flex-direction: row;
+	justify-content: space-between;
+	font-size: var(--fs-small);
+	text-align: left;
+}
+
+/* The answer: prayer name, countdown, azan/iqamah. */
+.tv[data-tema][data-layout="potret"] .tv-lead {
+	align-items: flex-start;
+	gap: 2.4vw;
+	padding-top: 0.6vw;
+}
+.tv[data-tema][data-layout="potret"] .tv-lead-name {
+	font-size: var(--fs-name);
+}
+.tv[data-tema][data-layout="potret"] .tv-lead-count {
+	font-size: var(--fs-count);
+	letter-spacing: -0.05em;
+}
+.tv[data-tema][data-layout="potret"] .tv-lead-meta {
+	font-size: var(--fs-meta);
+}
+
+/* The seven times, spread down the panel. */
+.tv[data-tema][data-layout="potret"] .tv-list {
+	justify-content: space-between;
+	height: 100%;
+	gap: 0;
+}
+.tv[data-tema][data-layout="potret"] .tv-row {
+	padding: 1.6vw 3vw;
+	font-size: var(--fs-row);
+}
+.tv[data-tema][data-layout="potret"] .tv-row-time {
+	font-size: var(--fs-row);
+}
+
+/* The banner is a band here, not a fixed 15vh box. */
+.tv[data-tema][data-layout="potret"] .tv-banner {
+	height: auto;
+	min-height: 17vw;
+	padding: 3vw 3.4vw;
+	border-radius: var(--radius);
+}
+.tv[data-tema][data-layout="potret"] .tv-banner-text {
+	font-size: 3.4vw;
+	-webkit-line-clamp: 3;
+}
+.tv[data-tema][data-layout="potret"] .tv-banner-foot {
+	margin-top: 1.2vw;
+	font-size: 2.8vw;
+}
+.tv[data-tema][data-layout="potret"] .tv-banner-arabic {
+	font-size: 4vw;
+}
+.tv[data-tema][data-layout="potret"] .tv-prog {
+	height: auto;
+	min-height: 17vw;
+	margin: -3vw -3.4vw;
+	padding: 2vw 3.4vw;
+}
+.tv[data-tema][data-layout="potret"] .tv-prog.has-photo {
+	grid-template-columns: 17vw minmax(0, 1fr);
+	gap: 3vw;
+}
+.tv[data-tema][data-layout="potret"] .tv-prog-photo {
+	width: 17vw;
+	height: 17vw;
+}
+.tv[data-tema][data-layout="potret"] .tv-prog-title {
+	font-size: var(--fs-row);
+}

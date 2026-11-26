@@ -1,0 +1,386 @@
+@import "@fontsource-variable/newsreader/wght.css";
+
+/* editorial.css — the site palette and page for Editorial (web draft 10): a
+   magazine spread on warm paper with a dark "panel" page. Fixed light.
+   The panel's own inks are local to .editorial-panel (a dark surface inside a
+   light page), so they are literals, not site tokens. */
+html[data-tema="editorial"],
+html[data-tema="editorial"] .sheet {
+	--sheet: #f1ebdf;
+	--ground: #f1ebdf;
+	--surface: #f1ebdf;
+	--raised: #e8e1d2;
+	--line: #cfc5b2;
+	--ink: #171512;
+	--muted: #6b6356;
+	--faint: #6b6355;
+	--spent: #6b6355;
+	--accent: #a8321f;
+	--accent-fill: #171512;
+	--on-accent: #f1ebdf;
+	--danger: #8f2b1a;
+	--font-serif: "Newsreader Variable", Georgia, serif;
+	color-scheme: light;
+}
+
+html[data-tema="editorial"] body,
+html[data-tema="editorial"] .editorial {
+	background: var(--sheet);
+}
+
+/* ---- masthead ----------------------------------------------------------- */
+html[data-tema="editorial"] .editorial-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	padding-bottom: 8px;
+	border-bottom: 1px solid var(--ink);
+	font-size: 10px;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--ink);
+}
+
+html[data-tema="editorial"] .editorial-head b {
+	font-weight: 600;
+}
+
+/* Controls as editorial labels, never pills. */
+html[data-tema="editorial"] .editorial-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+	margin-top: 4px;
+}
+
+html[data-tema="editorial"] .editorial-actions > button,
+html[data-tema="editorial"] .editorial-actions > a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	padding: 0 2px;
+	border: 0;
+	border-radius: 0;
+	background: none;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--muted);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+}
+
+html[data-tema="editorial"] .editorial-actions > button:hover,
+html[data-tema="editorial"] .editorial-actions > a:hover {
+	background: none;
+	color: var(--accent);
+}
+
+/* ---- the spread --------------------------------------------------------- */
+html[data-tema="editorial"] .editorial-spread {
+	display: block;
+}
+
+html[data-tema="editorial"] .editorial-stage {
+	margin-top: 18px;
+}
+
+html[data-tema="editorial"] .editorial-kind {
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.24em;
+	text-transform: uppercase;
+	color: var(--accent);
+}
+
+html[data-tema="editorial"] .editorial-title {
+	margin-top: 10px;
+	font-family: var(--font-serif);
+	font-size: clamp(48px, 14vw, 62px);
+	font-weight: 400;
+	line-height: 0.92;
+	letter-spacing: -0.03em;
+	color: var(--ink);
+}
+
+html[data-tema="editorial"] .editorial-title em {
+	display: block;
+	margin-top: 7px;
+	font-size: 0.42em;
+	font-style: italic;
+	letter-spacing: -0.01em;
+	color: var(--muted);
+}
+
+html[data-tema="editorial"] .editorial-time {
+	margin-top: 16px;
+	margin-left: -5px;
+	font-family: var(--font-serif);
+	font-size: clamp(76px, 24vw, 104px);
+	font-weight: 300;
+	line-height: 0.9;
+	letter-spacing: -0.055em;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink);
+}
+
+html[data-tema="editorial"] .editorial-cd {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0 8px;
+	margin-top: 10px;
+	padding-top: 9px;
+	border-top: 1px solid var(--line);
+	font-size: 12.5px;
+	color: var(--muted);
+}
+
+html[data-tema="editorial"] .editorial-cd b {
+	font-size: 19px;
+	font-weight: 500;
+	letter-spacing: -0.01em;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink);
+}
+
+html[data-tema="editorial"] .editorial-meta {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-top: 14px;
+	font-size: 10.5px;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--faint);
+}
+
+/* The week strip only earns its place on the wide spread. */
+html[data-tema="editorial"] .editorial-week {
+	display: none;
+}
+
+/* ---- the dark page ------------------------------------------------------ */
+html[data-tema="editorial"] .editorial-panel {
+	margin: 22px -6px 0;
+	padding: 16px 18px 12px;
+	border-radius: 20px;
+	background: #101312;
+	color: #eeeae2;
+}
+
+html[data-tema="editorial"] .editorial-panel-head {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	padding-bottom: 9px;
+	border-bottom: 1px solid rgb(238 234 226 / 0.13);
+	font-size: 9px;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: #9aa199;
+}
+
+html[data-tema="editorial"] .editorial-times {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+html[data-tema="editorial"] .editorial-times li {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) 3.4em 3.4em;
+	align-items: baseline;
+	gap: 10px;
+	padding: 8px 0;
+	border-bottom: 1px solid rgb(238 234 226 / 0.13);
+	font-size: 13px;
+}
+
+html[data-tema="editorial"] .editorial-times li:last-child {
+	border-bottom: 0;
+}
+
+html[data-tema="editorial"] .editorial-w {
+	min-width: 52px;
+	font-size: 17px;
+	font-weight: 400;
+	letter-spacing: -0.02em;
+	font-variant-numeric: tabular-nums;
+	color: #eeeae2;
+}
+
+html[data-tema="editorial"] .editorial-n {
+	font-size: 12px;
+	color: #9aa199;
+}
+
+html[data-tema="editorial"] .editorial-ar {
+	min-width: 0;
+	font-family: "Noto Naskh Arabic Variable", serif;
+	font-size: 11px;
+	text-align: right;
+	color: #9aa199;
+}
+
+html[data-tema="editorial"] .editorial-s {
+	min-width: 0;
+	font-size: 8.5px;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	text-align: right;
+	color: #9aa199;
+}
+
+html[data-tema="editorial"] .editorial-times li[data-state="passed"] .editorial-w,
+html[data-tema="editorial"] .editorial-times li[data-state="passed"] .editorial-n,
+html[data-tema="editorial"] .editorial-times li[data-state="passed"] .editorial-ar,
+html[data-tema="editorial"] .editorial-times li[data-advisory] .editorial-n,
+html[data-tema="editorial"] .editorial-times li[data-advisory] .editorial-ar {
+	color: #8b928b;
+}
+
+html[data-tema="editorial"] .editorial-times li[data-state="next"] .editorial-w {
+	font-size: 20px;
+	font-weight: 500;
+	color: #e8c07a;
+}
+
+html[data-tema="editorial"] .editorial-times li[data-state="next"] .editorial-n,
+html[data-tema="editorial"] .editorial-times li[data-state="current"] .editorial-n {
+	color: #eeeae2;
+}
+
+html[data-tema="editorial"] .editorial-times li[data-state="next"] .editorial-s,
+html[data-tema="editorial"] .editorial-times li[data-state="current"] .editorial-s {
+	color: #e8c07a;
+}
+
+/* ---- foot --------------------------------------------------------------- */
+html[data-tema="editorial"] .editorial-foot {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	padding-top: 14px;
+	font-size: 9px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--faint);
+}
+
+/* ---- the spread, when there is room for two pages ----------------------- */
+@media (min-width: 900px) {
+	html[data-tema="editorial"] .editorial-spread {
+		display: grid;
+		grid-template-columns: 1.05fr 0.95fr;
+		align-items: start;
+		column-gap: 64px;
+	}
+
+	html[data-tema="editorial"] .editorial-stage {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		min-height: 34rem;
+		margin-top: 20px;
+		padding-bottom: 8px;
+	}
+
+	html[data-tema="editorial"] .editorial-title {
+		font-size: 92px;
+	}
+
+	html[data-tema="editorial"] .editorial-title em {
+		font-size: 0.4em;
+	}
+
+	html[data-tema="editorial"] .editorial-time {
+		margin-top: 20px;
+		font-size: 170px;
+	}
+
+	html[data-tema="editorial"] .editorial-cd {
+		margin-top: 16px;
+	}
+
+	html[data-tema="editorial"] .editorial-week {
+		display: block;
+		margin-top: 52px;
+	}
+
+	html[data-tema="editorial"] .editorial-week-head {
+		display: flex;
+		justify-content: space-between;
+		padding-bottom: 7px;
+		font-size: 9px;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--faint);
+	}
+
+	html[data-tema="editorial"] .editorial-week ol {
+		display: grid;
+		grid-template-columns: repeat(7, minmax(0, 1fr));
+		margin: 0;
+		padding: 0;
+		border-top: 1px solid var(--line);
+		list-style: none;
+	}
+
+	html[data-tema="editorial"] .editorial-week li {
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+		padding: 8px 0 0;
+	}
+
+	html[data-tema="editorial"] .editorial-week li b {
+		font-size: 9px;
+		font-weight: 500;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	html[data-tema="editorial"] .editorial-week li span {
+		font-family: var(--font-serif);
+		font-size: 15px;
+		font-variant-numeric: tabular-nums;
+		color: var(--ink);
+	}
+
+	html[data-tema="editorial"] .editorial-week li[data-on] b,
+	html[data-tema="editorial"] .editorial-week li[data-on] span {
+		font-weight: 600;
+		color: var(--accent);
+	}
+
+	html[data-tema="editorial"] .editorial-panel {
+		margin: 30px 0 0;
+		padding: 26px 30px 18px;
+	}
+
+	html[data-tema="editorial"] .editorial-times li {
+		grid-template-columns: auto minmax(0, 1fr) 3.6em 3.6em;
+		gap: 14px;
+		padding: 10.5px 0;
+	}
+
+	html[data-tema="editorial"] .editorial-w {
+		min-width: 74px;
+		font-size: 22px;
+	}
+
+	html[data-tema="editorial"] .editorial-n,
+	html[data-tema="editorial"] .editorial-ar {
+		font-size: 13px;
+	}
+
+	html[data-tema="editorial"] .editorial-panel-head {
+		padding-bottom: 13px;
+		font-size: 9.5px;
+	}
+}

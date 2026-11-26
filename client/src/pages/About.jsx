@@ -1,84 +1,165 @@
+// /about — what this is, the real visitor counts, where the data comes
+// from, the free TV display for mosques, and the photo credits (every
+// mosque photograph used on the site, with creator and licence).
+import { useEffect, useState } from "react";
+import { Link } from "react-router";
+import tvDisplay from "../assets/tv-display.webp";
+import { MOSQUE_CREDITS } from "../lib/mosques.js";
+import { zoneIndex } from "../lib/zones.js";
+
+const nf = (n) => Number(n ?? 0).toLocaleString("ms-MY");
+
+function useVisitorStats() {
+	const [stats, setStats] = useState(null);
+	useEffect(() => {
+		let cancelled = false;
+		fetch("/api/v1/visitors/stats")
+			.then((r) => r.json())
+			.then((json) => !cancelled && json?.data && setStats(json.data))
+			.catch(() => {});
+		return () => {
+			cancelled = true;
+		};
+	}, []);
+	return stats;
+}
+
 export default function About() {
+	const stats = useVisitorStats();
 	return (
-		<>
-			<title>Tentang Kami</title>
-			<meta name="description" content="Mari kenali kami di c4lyp5o @ github" />
-			<link rel="icon" href="/favicon.ico" />
+		<main className="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-14">
+			<title>Tentang | Waktu Solat</title>
+			<div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_30rem]">
+				<div>
+					<h1 className="text-2xl font-semibold tracking-tight md:text-[32px]">
+						Tentang Waktu Solat
+					</h1>
+					<p className="mt-3 max-w-2xl text-lg text-muted">
+						Waktu solat untuk {zoneIndex.length} zon di seluruh Malaysia, terus dari JAKIM e-Solat,
+						bersama Al-Quran, hadis, radio dan ruang sembang. Percuma dan sumber terbuka.
+					</p>
 
-			<main className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 font-sans pb-20">
-				<div className="w-full max-w-md bg-slate-900 rounded-3xl shadow-xl overflow-hidden border border-slate-800">
-					{/* Header Image / Pattern */}
-					<div className="h-32 bg-gradient-to-r from-acre-600 to-teal-600 relative overflow-hidden">
-						{/* Decorative Circles */}
-						<div className="absolute -top-10 -right-10 w-40 h-40 bg-slate-900/10 rounded-full blur-2xl"></div>
-						<div className="absolute top-10 -left-10 w-20 h-20 bg-slate-900/10 rounded-full blur-xl"></div>
-					</div>
-
-					{/* Profile Section */}
-					<div className="px-8 pb-10 text-center relative">
-						{/* Floating Icon */}
-						<div className="-mt-12 mb-6">
-							<div className="w-24 h-24 bg-slate-900 rounded-full p-2 mx-auto shadow-lg">
-								<div className="w-full h-full bg-red-50 rounded-full flex items-center justify-center">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24"
-										fill="currentColor"
-										className="w-10 h-10 text-red-500 animate-pulse"
-									>
-										<title>Profile Icon</title>
-										<path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-									</svg>
+					{stats && (
+						<dl className="mt-8 grid max-w-xl grid-cols-3 gap-4">
+							{[
+								["Kunjungan", stats.total_visits],
+								["Pelawat", stats.unique_visitors],
+								["Hari aktif", stats.active_days],
+							].map(([label, value]) => (
+								<div key={label}>
+									<dt className="text-[15px] text-faint">{label}</dt>
+									<dd className="mt-1 text-2xl font-semibold tabular-nums">{nf(value)}</dd>
 								</div>
-							</div>
-						</div>
+							))}
+						</dl>
+					)}
 
-						<h1 className="text-2xl font-bold text-slate-100">
-							Made with <span className="text-red-500">love!</span>
-						</h1>
+					<section aria-labelledby="sumber" className="mt-12">
+						<h2 id="sumber" className="text-xl font-semibold">
+							Sumber data
+						</h2>
+						<ul className="mt-3 max-w-2xl space-y-2 text-[17px] text-muted">
+							<li>
+								<span className="text-ink">Waktu solat:</span> JAKIM e-Solat, setahun penuh bagi
+								setiap zon, disemak semula setiap 6 jam.
+							</li>
+							<li>
+								<span className="text-ink">Al-Quran:</span> teks Arab dengan terjemahan.
+							</li>
+							<li>
+								<span className="text-ink">Hadis:</span> enam kitab: Bukhari, Muslim, Abu Daud,
+								Nasa'i, Tirmizi dan Ibnu Majah.
+							</li>
+						</ul>
+					</section>
 
-						{/* <p className="text-slate-400 mt-3 text-sm leading-relaxed">
-							Satu inisiatif sumber terbuka untuk memudahkan semakan waktu
-							solat, bacaan Al-Quran, dan komuniti Islamik.
-						</p> */}
-
-						{/* Developer Button */}
-						<div className="mt-4">
+					<section aria-labelledby="sumber-terbuka" className="mt-12">
+						<h2 id="sumber-terbuka" className="text-xl font-semibold">
+							Sumber terbuka
+						</h2>
+						<p className="mt-3 max-w-2xl text-[17px] text-muted">
+							Kod sumber ada di{" "}
 							<a
-								href="https://github.com/c4lyp5o"
+								href="https://github.com/c4lyp5o/waktusolat.me"
 								target="_blank"
 								rel="noreferrer"
-								className="inline-flex items-center gap-2 bg-slate-900 hover:bg-black text-white px-6 py-3 rounded-xl font-medium transition-all transform hover:scale-105 shadow-lg"
+								className="font-semibold text-ink underline underline-offset-2"
 							>
-								<svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-									<path
-										fillRule="evenodd"
-										d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-										clipRule="evenodd"
-									/>
-								</svg>
-								<span>github.com/c4lyp5o</span>
+								github.com/c4lyp5o/waktusolat.me
 							</a>
-						</div>
-					</div>
-
-					{/* Tech Stack Footer */}
-					<div className="bg-slate-950 border-t border-slate-800 p-6 flex flex-wrap justify-center gap-3">
-						<span className="px-3 py-1 bg-slate-900 border border-slate-800 rounded-lg text-xs font-semibold text-slate-400">
-							React
-						</span>
-						<span className="px-3 py-1 bg-slate-900 border border-slate-800 rounded-lg text-xs font-semibold text-slate-400">
-							Tailwind CSS
-						</span>
-						<span className="px-3 py-1 bg-slate-900 border border-slate-800 rounded-lg text-xs font-semibold text-slate-400">
-							Vite
-						</span>
-						<span className="px-3 py-1 bg-slate-900 border border-slate-800 rounded-lg text-xs font-semibold text-slate-400">
-							Socket.io
-						</span>
-					</div>
+							. Sumbangan dialu-alukan.
+						</p>
+					</section>
 				</div>
-			</main>
-		</>
+
+				<section aria-labelledby="tv" className="self-start rounded-2xl bg-surface p-6">
+					<h2 id="tv" className="text-xl font-semibold">
+						Paparan TV untuk masjid
+					</h2>
+					<p className="mt-2 text-[17px] text-muted">
+						Buka <span className="font-semibold text-ink">waktusolat.me/tv/kod-zon</span> pada
+						pelayar TV masjid atau surau anda. Kiraan ke azan dan iqamah, Jumaat pada hari Jumaat,
+						serta ayat dan hadis bergilir. Terus berfungsi walaupun internet terputus.
+					</p>
+					<img
+						src={tvDisplay}
+						width="1200"
+						height="675"
+						alt="Paparan TV: kiraan ke Zohor, waktu solat hari ini dan ayat Al-Quran"
+						className="mt-5 w-full rounded-lg"
+						loading="lazy"
+					/>
+					<Link
+						to="/m/baru"
+						className="mt-5 inline-flex min-h-12 items-center rounded-full bg-ink px-6 text-[17px] font-semibold text-ground"
+					>
+						Daftar masjid anda
+					</Link>
+					<p className="mt-4 text-[15px] text-faint">
+						Atau tanpa daftar, tetapan dalam pautan, contohnya{" "}
+						<span className="break-all text-ink">
+							/tv/wly01?nama=Masjid%20Anda&amp;iqamah=10,10,10,5,10
+						</span>
+						.
+					</p>
+				</section>
+			</div>
+
+			<section id="kredit-foto" aria-labelledby="kredit" className="mt-16">
+				<h2 id="kredit" className="text-xl font-semibold">
+					Kredit foto
+				</h2>
+				<p className="mt-2 max-w-2xl text-[17px] text-muted">
+					Foto masjid di halaman zon adalah daripada Wikimedia Commons, digunakan di bawah lesen
+					masing-masing.
+				</p>
+				<ul className="mt-5 grid gap-x-10 md:grid-cols-2">
+					{MOSQUE_CREDITS.map((m) => (
+						<li key={m.negeri} className="border-t border-line py-3">
+							<p className="text-[15px] text-ink">{m.name}</p>
+							<p className="text-[13px] text-faint">
+								<a
+									href={m.page}
+									target="_blank"
+									rel="noreferrer"
+									className="underline-offset-2 hover:underline"
+								>
+									{m.creator}
+								</a>
+								,{" "}
+								<a
+									href={m.licenseUrl}
+									target="_blank"
+									rel="noreferrer"
+									className="underline-offset-2 hover:underline"
+								>
+									{m.license}
+								</a>
+							</p>
+						</li>
+					))}
+				</ul>
+			</section>
+		</main>
 	);
 }

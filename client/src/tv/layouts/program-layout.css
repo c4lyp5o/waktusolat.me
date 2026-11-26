@@ -1,0 +1,243 @@
+/* program-layout.css — draft TV 08: the answer and the whole day's grid on the
+   left, the week's programmes on the right. Scoped to [data-layout="program"]. */
+
+.tv[data-layout="program"] .tv-program-view {
+	display: grid;
+	grid-template-columns: minmax(0, 1.22fr) minmax(0, 0.9fr);
+	grid-template-rows: auto minmax(0, 1fr) auto;
+	gap: 0 5vh;
+	height: 100%;
+}
+
+.tv[data-layout="program"] .tv-header {
+	grid-column: 1 / -1;
+	grid-template-columns: minmax(0, 1fr) auto;
+	grid-template-areas:
+		"title clock"
+		"title dates";
+	align-items: center;
+	gap: 0 4vh;
+	padding-bottom: 1.6vh;
+	border-bottom: 1px solid var(--line);
+}
+.tv[data-layout="program"] .tv-title {
+	grid-area: title;
+	gap: 0.8vh;
+}
+.tv[data-layout="program"] .tv-title-name {
+	overflow: visible;
+	font-size: 4.2vh;
+	line-height: 1.1;
+	white-space: normal;
+	text-overflow: clip;
+}
+.tv[data-layout="program"] .tv-title-zone {
+	font-size: 1.8vh;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+}
+.tv[data-layout="program"] .tv-clock {
+	grid-area: clock;
+	font-size: 8.2vh;
+	line-height: 1;
+	text-align: right;
+}
+.tv[data-layout="program"] .tv-dates {
+	grid-area: dates;
+	flex-direction: row;
+	justify-content: flex-end;
+	gap: 2.6vh;
+	font-size: 1.9vh;
+}
+
+/* ---- left: the answer, then the day ------------------------------------ */
+.tv[data-layout="program"] .tv-program-left {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 3.4vh;
+	min-height: 0;
+}
+.tv[data-layout="program"] .tv-lead {
+	align-items: flex-start;
+	gap: 0.9vh;
+}
+.tv[data-layout="program"] .tv-lead-name {
+	font-size: 2.4vh;
+	gap: 0;
+}
+.tv[data-layout="program"] .tv-lead-prayer {
+	color: var(--accent);
+	font-weight: 500;
+	letter-spacing: 0.02em;
+}
+.tv[data-layout="program"] .tv-lead-count {
+	font-size: 12.5vh;
+}
+.tv[data-layout="program"] .tv-lead-meta {
+	font-size: 2.2vh;
+}
+
+.tv[data-layout="program"] .tv-prog-grid {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 0;
+	margin: 0;
+	padding: 0;
+	border-right: 1px solid var(--line);
+	border-bottom: 1px solid var(--line);
+	list-style: none;
+}
+.tv[data-layout="program"] .tv-prog-cell {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6vh;
+	padding: 1.5vh 1.6vh;
+	border-top: 1px solid var(--line);
+	border-left: 1px solid var(--line);
+}
+.tv[data-layout="program"] .tv-prog-cell span {
+	font-size: 1.7vh;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--faint);
+}
+.tv[data-layout="program"] .tv-prog-cell b {
+	font-size: 3.4vh;
+	font-weight: 400;
+	letter-spacing: -0.01em;
+	font-variant-numeric: tabular-nums;
+	color: var(--text);
+}
+.tv[data-layout="program"] .tv-prog-cell[data-state="passed"] b {
+	color: var(--spent);
+}
+.tv[data-layout="program"] .tv-prog-cell[data-state="passed"] span {
+	color: var(--spent);
+}
+.tv[data-layout="program"] .tv-prog-cell[data-advisory] b {
+	font-size: 2.8vh;
+	color: var(--muted);
+}
+.tv[data-layout="program"] .tv-prog-cell[data-state="next"],
+.tv[data-layout="program"] .tv-prog-cell[data-state="current"] {
+	background: rgb(217 178 107 / 0.12);
+}
+.tv[data-layout="program"] .tv-prog-cell[data-state="next"] span,
+.tv[data-layout="program"] .tv-prog-cell[data-state="current"] span {
+	color: var(--accent);
+}
+.tv[data-layout="program"] .tv-prog-cell[data-state="next"] b,
+.tv[data-layout="program"] .tv-prog-cell[data-state="current"] b {
+	color: var(--accent);
+	font-weight: 500;
+}
+
+/* ---- right: the week's programmes -------------------------------------- */
+.tv[data-layout="program"] .tv-prog-sheet {
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	padding: 2.4vh 2.6vh;
+	border: 1px solid var(--line);
+	background: var(--surface);
+}
+.tv[data-layout="program"] .tv-prog-sheet-head {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6vh;
+	padding-bottom: 1.6vh;
+	border-bottom: 1px solid var(--line);
+}
+/* biome-ignore lint/style/noDescendingSpecificity: the earlier (0,4,1) rule targets b inside .tv-prog-cell, a different subtree — order is irrelevant */
+.tv[data-layout="program"] .tv-prog-sheet-head b {
+	font-size: 2.4vh;
+	font-weight: 500;
+	color: var(--accent);
+}
+/* biome-ignore lint/style/noDescendingSpecificity: same — .tv-prog-cell[data-state] span is a different subtree */
+.tv[data-layout="program"] .tv-prog-sheet-head span {
+	font-size: 1.7vh;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--faint);
+}
+.tv[data-layout="program"] .tv-prog-sheet ol {
+	display: flex;
+	flex-direction: column;
+	gap: 2vh;
+	margin: 2vh 0 0;
+	padding: 0;
+	list-style: none;
+	overflow: hidden;
+}
+.tv[data-layout="program"] .tv-prog-item {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5vh;
+	padding-left: 1.6vh;
+	border-left: 2px solid rgb(217 178 107 / 0.35);
+}
+.tv[data-layout="program"] .tv-prog-item:first-child {
+	border-left-color: var(--accent);
+}
+.tv[data-layout="program"] .tv-prog-when {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0 1.2vh;
+	font-size: 1.8vh;
+	color: var(--faint);
+}
+/* biome-ignore lint/style/noDescendingSpecificity: .tv-prog-item b is a different subtree from .tv-prog-cell[data-state] b */
+.tv[data-layout="program"] .tv-prog-when b {
+	font-weight: 500;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--text);
+}
+.tv[data-layout="program"] .tv-prog-title {
+	margin: 0.4vh 0 0;
+	font-size: 2.6vh;
+	font-weight: 500;
+	line-height: 1.25;
+	color: var(--text);
+	/* Two lines is the room we have; a long title is clipped, never shrunk. */
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+}
+.tv[data-layout="program"] .tv-prog-who {
+	font-size: 1.9vh;
+	line-height: 1.35;
+	color: var(--muted);
+}
+.tv[data-layout="program"] .tv-prog-note {
+	margin-top: auto;
+	padding-top: 1.8vh;
+	border-top: 1px solid var(--line);
+	font-size: 1.8vh;
+	line-height: 1.45;
+	color: var(--faint);
+}
+.tv[data-layout="program"] .tv-prog-empty {
+	margin-top: 2vh;
+	font-size: 2.2vh;
+	line-height: 1.5;
+	color: var(--muted);
+}
+
+/* ---- foot --------------------------------------------------------------- */
+.tv[data-layout="program"] .tv-foot {
+	grid-column: 1 / -1;
+	display: flex;
+	justify-content: space-between;
+	gap: 3vh;
+	padding-top: 1.4vh;
+	border-top: 1px solid var(--line);
+	font-size: 1.7vh;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--faint);
+}

@@ -1,6 +1,8 @@
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router";
 import Navbar from "./components/Navbar";
+import SkySheet from "./components/SkySheet.jsx";
+import { isTvPath } from "./lib/routes.js";
 import About from "./pages/About";
 import Chat from "./pages/Chat";
 import Hadith from "./pages/Hadith";
@@ -11,10 +13,18 @@ import QuranWithSurah from "./pages/QuranWithSurah";
 import Radio from "./pages/Radio";
 import ZonePrayerTimes from "./pages/ZonePrayerTimes";
 
+// The mosque TV display: its own chunk (three.js, motion and fonts load only
+// there), rendered without the site chrome.
+const TvApp = lazy(() => import("./tv/TvApp.jsx"));
+const MosqueTv = lazy(() => import("./tv/MosqueTv.jsx"));
+// The mosque pages: few visitors, so out of the main bundle.
+const MosqueNew = lazy(() => import("./pages/MosqueNew.jsx"));
+const MosqueEditor = lazy(() => import("./pages/MosqueEditor.jsx"));
+
 // Top-level routes that count as a "visit". Deep links (e.g. a bookmarked
 // /times/wly01) arrive here as a hard load — the beacon fires on whatever
 // path the user actually landed on, not just the landing page.
-const VISIT_PREFIXES = ["/times/", "/quran", "/hadith", "/radio", "/chat", "/about"];
+const VISIT_PREFIXES = ["/times/", "/quran", "/hadith", "/radio", "/chat", "/about", "/tv/", "/m/"];
 
 function isTrackedVisit(pathname) {
 	if (pathname === "/") return true;
@@ -33,16 +43,23 @@ function VisitTracker() {
 	return null;
 }
 
-function App() {
+// Navbar and the dev-mode badge, on every route except the TV display.
+function SiteChrome() {
+	const { pathname } = useLocation();
+	if (isTvPath(pathname)) return null;
 	return (
-		<BrowserRouter>
+		<>
 			{import.meta.env.MODE !== "production" && (
 				<div
 					style={{
+						// Bottom-left, above the phone bottom bar, and click-through:
+						// it used to sit on top of the theme toggle.
 						position: "fixed",
-						top: "1rem",
-						right: "1rem",
+						bottom: "4.5rem",
+						left: "0.75rem",
 						zIndex: 1000,
+						pointerEvents: "none",
+						opacity: 0.8,
 					}}
 				>
 					<span
@@ -59,19 +76,62 @@ function App() {
 				</div>
 			)}
 			<Navbar />
+		</>
+	);
+}
+
+function App() {
+	return (
+		<BrowserRouter>
+			<SiteChrome />
 			<VisitTracker />
 			<Routes>
 				<Route index element={<Landing />} />
 
 				<Route path="/times/:zone" element={<ZonePrayerTimes />} />
-				<Route path="/quran" element={<QuranSurahSelect />} />
-				<Route path="/quran/:surah" element={<QuranWithSurah />} />
-				<Route path="/hadith" element={<Hadith />} />
-				<Route path="/radio" element={<Radio />} />
-				<Route path="/chat" element={<Chat />} />
-				<Route path="/about" element={<About />} />
+				<Route
+					path="/m/:id"
+					element={
+						<Suspense fallback={null}>
+							<MosqueTv />
+						</Suspense>
+					}
+				/>
+				<Route
+					path="/tv/:zone"
+					element={
+						<Suspense fallback={null}>
+							<TvApp />
+						</Suspense>
+					}
+				/>
 
-				<Route path="*" element={<NotFound />} />
+				{/* Every page but the zone page and the TV sits on the sheet. */}
+				<Route element={<SkySheet />}>
+					<Route path="/quran" element={<QuranSurahSelect />} />
+					<Route path="/quran/:surah" element={<QuranWithSurah />} />
+					<Route path="/hadith" element={<Hadith />} />
+					<Route path="/radio" element={<Radio />} />
+					<Route path="/chat" element={<Chat />} />
+					<Route path="/about" element={<About />} />
+					<Route
+						path="/m/baru"
+						element={
+							<Suspense fallback={null}>
+								<MosqueNew />
+							</Suspense>
+						}
+					/>
+					<Route
+						path="/m/:id/edit"
+						element={
+							<Suspense fallback={null}>
+								<MosqueEditor />
+							</Suspense>
+						}
+					/>
+					<Route path="*" element={<NotFound />} />
+				</Route>
 			</Routes>
 		</BrowserRouter>
 	);

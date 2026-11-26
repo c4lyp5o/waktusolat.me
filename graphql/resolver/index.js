@@ -6,15 +6,18 @@ const WSAPIresolvers = {
 		return "Hello world!";
 	},
 	waktuSolat: async (args) => {
-		const currentZone = Zones[args.zone];
-		if (!currentZone) {
+		if (!Object.hasOwn(Zones, args.zone)) {
 			throw new Error(`Invalid zone: ${args.zone}`);
 		}
+		const currentZone = Zones[args.zone];
 		const data = timeCruncher(args.period, currentZone);
-		if (!Array.isArray(data) || data.length === 0) {
+		if (data === "error") {
+			throw new Error(`Invalid period: ${args.period}`);
+		}
+		if (data.length === 0) {
 			throw new Error(`No data for zone: ${args.zone}`);
 		}
-		const today = timeCruncher("today", currentZone);
+		const today = args.period === "today" ? data : timeCruncher("today", currentZone);
 		const todayData = getTimeNow();
 		const timeDifference = await timeReminder(today);
 		const combinedData = {

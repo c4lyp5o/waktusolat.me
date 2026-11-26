@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>waktusolat.me — mosque TV · ten drafts</title>
+<link rel="stylesheet" href="base.css">
+<style>
+:root{--bg:#0d0f0e;--line:#252b28;--ink:#eceae4;--dim:#8f978f;--gold:#d8b06a}
+body{background:var(--bg);color:var(--ink);font-family:"Bricolage",sans-serif}
+.wrap{max-width:1560px;margin:0 auto;padding:48px 32px 80px}
+header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;
+  border-bottom:1px solid var(--line);padding-bottom:22px}
+h1{font-family:"Newsreader",serif;font-weight:400;font-size:44px;letter-spacing:-.02em;line-height:1}
+h1 em{font-style:italic;color:var(--dim)}
+.top p{max-width:460px;font-size:13px;line-height:1.6;color:var(--dim);text-align:right}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:34px 26px;margin-top:32px}
+.card{display:flex;flex-direction:column;gap:10px}
+.frame{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);
+  background:#000;aspect-ratio:16/9}
+.frame.portrait{aspect-ratio:9/16;max-width:300px}
+.frame iframe{width:1920px;height:1080px;border:0;transform-origin:top left;position:absolute;top:0;left:0}
+.frame.portrait iframe{width:1080px;height:1920px}
+.card h2{font-size:15px;font-weight:600;display:flex;justify-content:space-between;gap:8px}
+.card h2 span{font-family:"PlexMono",monospace;font-size:10px;color:var(--gold);font-weight:400;letter-spacing:.06em}
+.card p{font-size:11.5px;line-height:1.5;color:var(--dim)}
+.card a:hover h2{color:var(--gold)}
+.note{margin-top:44px;border-top:1px solid var(--line);padding-top:18px;display:flex;
+  justify-content:space-between;gap:30px;font-size:11px;color:#6f776f}
+.note b{color:var(--dim);font-weight:500}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.wrap{padding:28px 16px 60px}h1{font-size:32px}
+  header.top{flex-direction:column;align-items:flex-start}.top p{text-align:left}}
+</style></head>
+<body><div class="wrap">
+<header class="top">
+  <h1>Mosque TV <em>— ten drafts</em></h1>
+  <p>Same data as the phone drafts, redesigned for a hall: <b>Masjid Al-Ikhlas, SGR01</b>, 16:52, next Maghrib 19:00. 1920×1080 unless marked portrait. Tap a card to open it full screen.</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<div class="note">
+  <span><b>Constraint for all ten</b> · the countdown must be readable at 10 m; the next prayer at 5 m; the full times row at 3 m. Nothing static is pure white, so burn-in is slower.</span>
+  <span><b>States still to prove</b> · iqamah countdown, solat-in-progress, offline, unknown zone.</span>
+</div>
+</div>
+<script>
+const drafts=[
+ ["01-papan.html","Papan Warisan","The prayer board Malaysian mosques already know, rebuilt: green, gold hairlines, seven columns, one lit prayer.",0],
+ ["02-langit.html","Langit Malam","Dark hall, quiet list on the left, countdown taking the whole room.",0],
+ ["03-jalur.html","Jalur","The day as one ribbon across the screen; prayers are ticks, now is a needle.",0],
+ ["04-kaca.html","Kaca","The mosque itself behind a frosted panel. Identity, not decoration.",0],
+ ["05-takwim.html","Takwim TV","A printed almanac blown up to 65 inches: paper, serif, dotted leaders.",0],
+ ["06-sorotan.html","Sorotan","One spotlight, one number, nothing else competing for the eye.",0],
+ ["07-dail.html","Dail TV","Instrument dial: how far Asar→Maghrib has already gone.",0],
+ ["08-program.html","Papan Program","Run the hall, not just the clock: times plus this week's kulliah and khutbah.",0],
+ ["09-potret.html","Potret","1080×1920 for the portrait panels in lobbies and wuduk areas.",1],
+ ["10-senyap.html","Senyap","Four elements only. The quietest screen here, and the clearest from 10 m.",0]
+];
+const grid=document.getElementById('grid');
+drafts.forEach(([file,name,desc,portrait],i)=>{
+  const n=String(i+1).padStart(2,'0');
+  const a=document.createElement('a');
+  a.className='card';a.href='tv/'+file;a.target='_blank';
+  a.innerHTML=`<div class="frame${portrait?' portrait':''}"><iframe src="tv/${file}" loading="eager" scrolling="no" title="${name}"></iframe></div>
+  <h2>${name}<span>TV ${n}${portrait?' · POTRET':''}</span></h2><p>${desc}</p>`;
+  grid.appendChild(a);
+});
+const fit=()=>document.querySelectorAll('.frame').forEach(f=>{
+  const fr=f.querySelector('iframe');
+  const w=fr.offsetWidth; f.style.height='auto';
+  const s=f.clientWidth/w;
+  fr.style.transform=`scale(${s})`;
+  f.style.height=(fr.offsetHeight*s)+'px';
+});
+addEventListener('resize',fit); setTimeout(fit,60); fit();
+</script>
+</body></html>

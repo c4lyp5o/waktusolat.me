@@ -1,0 +1,42 @@
+/* langit.css — the site palette for the Langit tema, moved verbatim out of
+ * main.css (S1). Values are unchanged; only the selector changed: the palette
+ * now belongs to html[data-tema="langit"], so another tema can bring its own.
+ *
+ * `mode: auto` — Langit follows the system light/dark setting. There is no
+ * visitor toggle any more; nothing is stored.
+ */
+html[data-tema="langit"],
+html[data-tema="langit"] .sheet {
+	--sheet: #fffaf3;
+	--ground: #faf6f0;
+	--surface: #ffffff;
+	--raised: #efe8de;
+	--line: #e4dccf;
+	--ink: #1d130b;
+	--muted: #4d4136;
+	--faint: #5f5246;
+	--spent: #6b5e52;
+	--accent: #8a4f00;
+	--accent-fill: #f2b33d;
+	--on-accent: #1d130b;
+	--danger: #b3261e; /* errors and destructive actions (mosque editor) */
+	color-scheme: light;
+}
+
+html[data-tema="langit"][data-theme="dark"],
+html[data-tema="langit"][data-theme="dark"] .sheet {
+	--sheet: #141416;
+	--ground: #0b0b0d;
+	--surface: #151517;
+	--raised: #222226;
+	--line: #26262a;
+	--ink: #ffffff;
+	--muted: #b8b8bf;
+	--faint: #a0a0a8;
+	--spent: #8c8c94;
+	--accent: #f2b33d;
+	--accent-fill: #f2b33d;
+	--on-accent: #000000;
+	--danger: #ff8a80;
+	color-scheme: dark;
+}

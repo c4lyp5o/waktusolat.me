@@ -1,0 +1,181 @@
+/* malam-layout.css — draft TV 02: the times as one quiet column on the left,
+   the countdown holding the right, the banner along the foot. Scoped to
+   [data-layout="malam"]. */
+
+.tv[data-layout="malam"] .tv-malam-view {
+	display: grid;
+	grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+	grid-template-rows: auto minmax(0, 1fr) auto;
+	gap: 0 5vh;
+	height: 100%;
+}
+
+/* Header: masthead left, clock and dates right, one hairline under it. */
+.tv[data-layout="malam"] .tv-header {
+	grid-column: 1 / -1;
+	grid-template-columns: minmax(0, 1fr) auto;
+	grid-template-areas:
+		"title clock"
+		"title dates";
+	align-items: center;
+	gap: 0 4vh;
+	padding-bottom: 2.2vh;
+	border-bottom: 1px solid var(--line);
+}
+.tv[data-layout="malam"] .tv-title {
+	grid-area: title;
+	gap: 0.9vh;
+}
+.tv[data-layout="malam"] .tv-title-name {
+	overflow: visible;
+	font-size: 4.4vh;
+	line-height: 1.1;
+	white-space: normal;
+	text-overflow: clip;
+}
+.tv[data-layout="malam"] .tv-title-zone {
+	font-size: 1.9vh;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+}
+.tv[data-layout="malam"] .tv-clock {
+	grid-area: clock;
+	font-size: 7.4vh;
+	font-weight: 200;
+	line-height: 1;
+	text-align: right;
+}
+.tv[data-layout="malam"] .tv-dates {
+	grid-area: dates;
+	flex-direction: row;
+	justify-content: flex-end;
+	gap: 2.6vh;
+	font-size: 2.1vh;
+}
+
+/* The list: name, jawi, rule, time. Next in amber, past dimmed. */
+.tv[data-layout="malam"] .tv-list {
+	align-self: center;
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+}
+.tv[data-layout="malam"] .tv-row {
+	display: flex;
+	align-items: baseline;
+	gap: 1.4vh;
+	padding: 1.5vh 0;
+	background: none;
+	border-bottom: 1px solid var(--line);
+	border-radius: 0;
+	box-shadow: none;
+}
+.tv[data-layout="malam"] .tv-row > span:first-child {
+	flex: 0 0 auto;
+	font-size: 2.5vh;
+	letter-spacing: 0.02em;
+	color: var(--muted);
+}
+.tv[data-layout="malam"] .tv-row-jawi {
+	flex: 0 0 auto;
+	font-family: "Noto Naskh Arabic Variable", serif;
+	font-size: 2.1vh;
+	line-height: 1.2;
+	color: var(--faint);
+}
+.tv[data-layout="malam"] .tv-row-time {
+	margin-left: auto;
+	font-size: 3.3vh;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: -0.01em;
+	color: var(--text);
+}
+.tv[data-layout="malam"] .tv-row[data-state="next"] > span:first-child,
+.tv[data-layout="malam"] .tv-row[data-state="next"] .tv-row-time {
+	color: var(--accent);
+}
+.tv[data-layout="malam"] .tv-row[data-state="next"] .tv-row-time {
+	font-size: 3.8vh;
+}
+.tv[data-layout="malam"] .tv-row[data-state="next"] .tv-row-jawi {
+	color: var(--accent);
+	opacity: 0.8;
+}
+.tv[data-layout="malam"] .tv-row[data-state="passed"] > span:first-child,
+.tv[data-layout="malam"] .tv-row[data-state="passed"] .tv-row-time {
+	color: var(--spent);
+}
+.tv[data-layout="malam"] .tv-row[data-advisory] > span:first-child {
+	font-size: 2.1vh;
+	color: var(--faint);
+}
+.tv[data-layout="malam"] .tv-row[data-advisory] .tv-row-time {
+	font-size: 2.8vh;
+	color: var(--faint);
+}
+
+/* The answer: a small amber label, the countdown, its azan and iqamah. */
+.tv[data-layout="malam"] .tv-lead {
+	align-self: center;
+	align-items: flex-start;
+	gap: 1.6vh;
+	padding-bottom: 4vh;
+}
+.tv[data-layout="malam"] .tv-lead-name {
+	font-size: 2.5vh;
+	font-weight: 500;
+	letter-spacing: 0.26em;
+	text-transform: uppercase;
+	color: var(--accent);
+}
+.tv[data-layout="malam"] .tv-lead-count {
+	font-size: 17.5vh;
+	line-height: 0.88;
+	letter-spacing: -0.055em;
+}
+.tv[data-layout="malam"] .tv-lead-meta {
+	font-size: 2.6vh;
+	line-height: 1.4;
+	color: var(--muted);
+}
+
+/* The banner keeps the foot quiet: a hairline, no card. */
+.tv[data-layout="malam"] .tv-banner {
+	grid-column: 1 / -1;
+	height: auto;
+	min-height: 11vh;
+	padding: 1.8vh 0 1.4vh;
+	border-top: 1px solid var(--line);
+	background: none;
+	border-radius: 0;
+}
+.tv[data-layout="malam"] .tv-banner-text {
+	font-size: 2.9vh;
+	line-height: 1.5;
+	color: var(--muted);
+}
+.tv[data-layout="malam"] .tv-banner-foot {
+	gap: 2vh;
+	font-size: 2.2vh;
+	color: var(--faint);
+}
+.tv[data-layout="malam"] .tv-banner-arabic {
+	margin-left: auto;
+	font-size: 3vh;
+	color: var(--accent);
+	opacity: 0.8;
+}
+.tv[data-layout="malam"] .tv-prog {
+	height: auto;
+	min-height: 11vh;
+	margin: 0;
+	padding: 1vh 0;
+}
+.tv[data-layout="malam"] .tv-prog.has-photo {
+	grid-template-columns: 11vh minmax(0, 1fr);
+}
+.tv[data-layout="malam"] .tv-prog-photo {
+	width: 11vh;
+	height: 11vh;
+	border-radius: 0.8vh;
+}

@@ -1,0 +1,204 @@
+/* sorotan-layout.css — draft TV 06: a black room, one warm glow behind the
+   countdown, the seven times as a quiet strip along the floor. Scoped to
+   [data-layout="sorotan"]. */
+
+.tv[data-layout="sorotan"] .tv-sorotan-view {
+	position: relative;
+	display: grid;
+	grid-template-rows: auto minmax(0, 1fr) auto;
+	height: 100%;
+	padding: 0 1vh;
+	overflow: hidden;
+}
+
+/* The spotlight: a soft amber ellipse behind the middle of the wall. */
+.tv[data-layout="sorotan"] .tv-spot {
+	position: absolute;
+	top: -18vh;
+	left: 50%;
+	z-index: 0;
+	width: 120vh;
+	height: 100vh;
+	transform: translateX(-50%);
+	background: radial-gradient(
+		ellipse at center,
+		rgb(232 179 102 / 0.16),
+		rgb(232 179 102 / 0.05) 46%,
+		transparent 70%
+	);
+	pointer-events: none;
+}
+
+.tv[data-layout="sorotan"] .tv-header,
+.tv[data-layout="sorotan"] .tv-sorotan-mid,
+.tv[data-layout="sorotan"] .tv-sorotan-times {
+	position: relative;
+	z-index: 1;
+}
+
+/* One line: who and where on the left, when on the right. */
+.tv[data-layout="sorotan"] .tv-header {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto auto;
+	grid-template-areas: "title dates clock";
+	align-items: baseline;
+	gap: 0 4vh;
+	padding: 3.4vh 0 0;
+}
+.tv[data-layout="sorotan"] .tv-title {
+	grid-area: title;
+	flex-direction: row;
+	align-items: baseline;
+	gap: 1.6vh;
+	min-width: 0;
+}
+.tv[data-layout="sorotan"] .tv-title-name {
+	overflow: hidden;
+	font-size: 2.1vh;
+	font-weight: 500;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.tv[data-layout="sorotan"] .tv-title-zone {
+	font-size: 1.7vh;
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+	color: var(--faint);
+	white-space: nowrap;
+}
+.tv[data-layout="sorotan"] .tv-dates {
+	grid-area: dates;
+	flex-direction: row;
+	gap: 1.4vh;
+	font-size: 1.7vh;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--faint);
+	white-space: nowrap;
+}
+.tv[data-layout="sorotan"] .tv-clock {
+	display: inline-flex;
+	grid-area: clock;
+	align-items: baseline;
+	gap: 0.8vh;
+	font-size: 2.1vh;
+	letter-spacing: 0.12em;
+	color: var(--text);
+}
+/* The seconds: same line, quieter, never a stray number in the corner. */
+.tv[data-layout="sorotan"] .tv-clock-s {
+	align-self: baseline;
+	font-family: inherit;
+	font-size: 0.78em;
+	line-height: 1;
+	letter-spacing: 0.08em;
+	color: var(--faint);
+}
+
+/* ---- the middle: the answer, lit ---------------------------------------- */
+.tv[data-layout="sorotan"] .tv-sorotan-mid {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1.2vh;
+	padding-bottom: 2vh;
+}
+.tv[data-layout="sorotan"] .tv-sorotan-kicker {
+	font-size: 2.1vh;
+	font-weight: 500;
+	letter-spacing: 0.36em;
+	text-transform: uppercase;
+	color: var(--accent);
+}
+.tv[data-layout="sorotan"] .tv-sorotan-name {
+	display: flex;
+	align-items: baseline;
+	gap: 2.6vh;
+	font-size: 8.8vh;
+	font-weight: 500;
+	letter-spacing: -0.03em;
+	line-height: 1;
+	color: var(--text);
+}
+.tv[data-layout="sorotan"] .tv-sorotan-jawi {
+	font-family: "Noto Naskh Arabic Variable", serif;
+	font-size: 5.2vh;
+	font-weight: 400;
+	letter-spacing: 0;
+	color: var(--faint);
+}
+.tv[data-layout="sorotan"] .tv-sorotan-cd {
+	/* 400px on the draft's 1080 stage; capped by width so a long countdown
+	   never runs off the wall. */
+	font-family: var(--font-num);
+	font-size: min(33vh, 17vw);
+	font-weight: 200;
+	line-height: 0.84;
+	letter-spacing: -0.06em;
+	font-variant-numeric: tabular-nums;
+	color: var(--text);
+}
+.tv[data-layout="sorotan"] .tv-sorotan-meta {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0 5vh;
+	font-size: 2.2vh;
+	letter-spacing: 0.06em;
+	color: var(--muted);
+}
+.tv[data-layout="sorotan"] .tv-sorotan-meta b {
+	font-weight: 500;
+	color: var(--text);
+}
+
+/* ---- the floor: seven times, no boxes ----------------------------------- */
+.tv[data-layout="sorotan"] .tv-sorotan-times {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+	gap: 1.6vh;
+	margin: 0;
+	padding: 2.2vh 0 3.4vh;
+	border-top: 1px solid var(--line);
+	list-style: none;
+}
+.tv[data-layout="sorotan"] .tv-sorotan-cell {
+	display: flex;
+	flex-direction: column;
+	gap: 0.9vh;
+}
+.tv[data-layout="sorotan"] .tv-sorotan-cell span {
+	font-size: 1.6vh;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--faint);
+}
+.tv[data-layout="sorotan"] .tv-sorotan-cell b {
+	font-family: var(--font-num);
+	font-size: 4.2vh;
+	font-weight: 400;
+	line-height: 1;
+	letter-spacing: -0.01em;
+	font-variant-numeric: tabular-nums;
+	color: var(--text);
+}
+.tv[data-layout="sorotan"] .tv-sorotan-cell[data-state="passed"] span,
+.tv[data-layout="sorotan"] .tv-sorotan-cell[data-state="passed"] b {
+	color: var(--spent);
+}
+.tv[data-layout="sorotan"] .tv-sorotan-cell[data-advisory] b {
+	font-size: 3.6vh;
+	color: var(--muted);
+}
+.tv[data-layout="sorotan"] .tv-sorotan-cell[data-state="next"] span,
+.tv[data-layout="sorotan"] .tv-sorotan-cell[data-state="current"] span {
+	color: var(--accent);
+}
+.tv[data-layout="sorotan"] .tv-sorotan-cell[data-state="next"] b,
+.tv[data-layout="sorotan"] .tv-sorotan-cell[data-state="current"] b {
+	color: var(--accent);
+	font-weight: 500;
+}

@@ -1,0 +1,145 @@
+# ez standard publish workflow, adapted to this repo's three-rung ladder.
+#
+#   push development -> test, then :development and :sha-<commit> (no deploy)
+#   push staging     -> test, then :staging and :sha-<commit>, then recreate
+#                       the staging container on the server
+#   push main        -> test, then :latest, :<package.json version> and
+#                       :sha-<commit>, then recreate the production container
+#   push tag vX.Y.Z  -> test, check the tag matches package.json, push
+#                       :<version> and create a GitHub Release from CHANGELOG.md
+#
+# Replaces docker-publish-staging.yml and docker-publish-production.yml, which
+# published before running any test and baked a staging .env into the image.
+name: publish
+
+on:
+  push:
+    branches: [development, staging, main]
+    tags: ["v*.*.*"]
+  # A manual run from any other branch tests but never publishes.
+  workflow_dispatch:
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  IMAGE: calypso666/waktusolat.me
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
+  publish:
+    name: Publish image
+    needs: test
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/development' || github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - name: 🧾 Checkout source
+        uses: actions/checkout@v7
+
+      - name: 🏷️ Version
+        id: v
+        run: |
+          set -euo pipefail
+          version=$(jq -r .version package.json)
+          if [ "${{ github.ref_type }}" = tag ] && [ "${{ github.ref_name }}" != "v$version" ]; then
+            echo "::error::tag ${{ github.ref_name }} does not match package.json version $version"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: 🧱 Build mode
+        id: mode
+        run: |
+          set -euo pipefail
+          # The Dockerfile builds the client with --mode staging for a staging
+          # image (bun run build-staging) and production otherwise.
+          if [ "${{ github.ref }}" = "refs/heads/staging" ]; then
+            echo "node_env=staging" >> "$GITHUB_OUTPUT"
+          else
+            echo "node_env=production" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 🏷️ Image tags
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=raw,value=${{ steps.v.outputs.version }},enable=${{ github.ref == 'refs/heads/main' || github.ref_type == 'tag' }}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=staging,enable=${{ github.ref == 'refs/heads/staging' }}
+            type=raw,value=development,enable=${{ github.ref == 'refs/heads/development' }}
+            type=sha,prefix=sha-,format=short,enable=${{ github.ref_type == 'branch' }}
+
+      - name: 🐳 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: 🔑 Log in to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: 🛠️ Build & push
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            NODE_ENV=${{ steps.mode.outputs.node_env }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: 📝 Release notes
+        if: github.ref_type == 'tag'
+        run: |
+          set -euo pipefail
+          v="${{ steps.v.outputs.version }}"
+          awk -v v="$v" '$0 ~ "^## \\[" v "\\]" {f=1; next} f && /^## /{exit} f' CHANGELOG.md > release-notes.md
+          test -s release-notes.md || echo "See CHANGELOG.md." > release-notes.md
+
+      - name: 📦 GitHub Release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v3
+        with:
+          body_path: release-notes.md
+
+  deploy:
+    name: Deploy
+    needs: [test, publish]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    steps:
+      # Staging has its own hostname and its own data since 2026-11-26, so each
+      # branch only touches its own service. Before that both claimed
+      # Host(`waktusolat.me`), which is why a staging deploy used to stop
+      # production.
+      - name: 🚀 Recreate the container on the server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -euo pipefail
+            cd ~/own
+            if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+              docker pull ${{ env.IMAGE }}:latest
+              docker compose up -d --force-recreate waktusolat.me
+            else
+              docker pull ${{ env.IMAGE }}:staging
+              docker compose up -d --force-recreate waktusolat.me-staging
+            fi

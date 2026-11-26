@@ -14,7 +14,7 @@
 import fs from "node:fs/promises";
 import { join } from "node:path";
 import Cpray from "cpray";
-import { MONTH_ABBREV_NUM } from "./jakimDates.js";
+import { jakimDateToIso, todayIso } from "./jakimDates.js";
 import logger from "./logger.js";
 
 const cpray = new Cpray();
@@ -24,24 +24,6 @@ const cpray = new Cpray();
 // on demand so a runtime write never ENOENTs.
 const timesDir = join(import.meta.dir, "../data/times");
 const ensureTimesDir = async () => fs.mkdir(timesDir, { recursive: true });
-
-// "01-Mac-2026" / "01-Jan-2026" -> "2026-03-01"; null if unparseable
-export const jakimDateToIso = (date) => {
-	const parts = String(date ?? "").split("-");
-	if (parts.length !== 3) return null;
-	const [day, abbrev, year] = parts;
-	const month = MONTH_ABBREV_NUM[abbrev];
-	if (!month) return null;
-	return `${year}-${String(month).padStart(2, "0")}-${day.padStart(2, "0")}`;
-};
-
-const todayIso = () => {
-	const now = new Date();
-	const y = now.getFullYear();
-	const m = String(now.getMonth() + 1).padStart(2, "0");
-	const d = String(now.getDate()).padStart(2, "0");
-	return `${y}-${m}-${d}`;
-};
 
 const validYearPayload = (payload) =>
 	Array.isArray(payload?.prayerTime) && payload.prayerTime.length > 100;
@@ -55,9 +37,18 @@ export async function refreshZone(zone) {
 			);
 			return false;
 		}
+		// Until JAKIM publishes the new year it re-serves the old one; that
+		// is not a refresh, so don't overwrite or count it as success.
+		const latest = latestDataDate(payload.prayerTime);
+		if (!latest || latest < todayIso()) {
+			logger.warn(`[timesRefresh] ${zone}: JAKIM data still ends at ${latest}, not yet published`);
+			return false;
+		}
 		const file = join(timesDir, `${zone}.json`);
 		await ensureTimesDir();
-		await fs.writeFile(file, JSON.stringify(payload), "utf8");
+		// Write-then-rename so a concurrent read never sees a half-written file.
+		await fs.writeFile(`${file}.tmp`, JSON.stringify(payload), "utf8");
+		await fs.rename(`${file}.tmp`, file);
 		logger.info(`[timesRefresh] ${zone}: wrote ${payload.prayerTime.length} rows`);
 		return true;
 	} catch (error) {

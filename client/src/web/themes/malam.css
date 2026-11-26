@@ -1,0 +1,65 @@
+/* malam.css — the site palette for Malam (draft 02): near-black, warm amber,
+   the seven times as a quiet rail of dots. `mode: fixed` — one light. */
+html[data-tema="malam"],
+html[data-tema="malam"] .sheet {
+	--sheet: #0b0d10;
+	--ground: #08090b;
+	--surface: #101216;
+	--raised: #171a1f;
+	--line: #20242a;
+	--ink: #ecebe7;
+	--muted: #8b919b;
+	--faint: #7b838d;
+	--spent: #7e8791;
+	--accent: #e0ab5f;
+	--accent-fill: #e0ab5f;
+	--on-accent: #0b0d10;
+	--danger: #ff8a80;
+	--font-serif: "Bricolage Grotesque Variable", system-ui, sans-serif;
+	color-scheme: dark;
+}
+
+/* The draft's warm glow, behind the almanak masthead. */
+html[data-tema="malam"] .almanak {
+	position: relative;
+	isolation: isolate;
+	/* The glow is wider than the page on purpose; clip it, never scroll. */
+	overflow: clip;
+}
+html[data-tema="malam"] .almanak::before {
+	position: absolute;
+	inset: -28% -18% auto;
+	z-index: -1;
+	height: min(70vw, 520px);
+	background: radial-gradient(50% 50% at 72% 30%, rgb(224 171 95 / 0.13), transparent 70%);
+	content: "";
+	pointer-events: none;
+}
+
+/* The seven times become a rail: one dot per prayer, the next one amber. */
+html[data-tema="malam"] .leader-dots {
+	display: none;
+}
+html[data-tema="malam"] .leader-name::before {
+	display: inline-block;
+	width: 0.45em;
+	height: 0.45em;
+	margin-right: 0.65em;
+	border-radius: 50%;
+	background: var(--faint);
+	content: "";
+	vertical-align: middle;
+}
+html[data-tema="malam"] .leader-row[data-state="next"] .leader-name::before {
+	background: var(--accent);
+	box-shadow: 0 0 0 0.2em rgb(224 171 95 / 0.2);
+}
+html[data-tema="malam"] .leader-row[data-state="passed"] .leader-name::before {
+	opacity: 0.5;
+}
+html[data-tema="malam"] .leader-time {
+	margin-left: auto;
+}
+html[data-tema="malam"] .leader-jawi {
+	margin-left: 0.55em;
+}

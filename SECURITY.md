@@ -2,20 +2,22 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Only the latest release (the `main` branch, deployed to waktusolat.me) receives security fixes.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| 2.1.x   | :white_check_mark: |
+| < 2.1   | :x:                |
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+Please report vulnerabilities privately through GitHub: open the repository's **Security** tab and choose **Report a vulnerability**. Don't open a public issue for security problems.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Include the affected endpoint or file, steps to reproduce, and the impact you observed.
+
+## Deployment Hardening Notes
+
+- **Admin routes** (`GET /api/v1/visitors`, `POST /api/v1/cache/invalidate`) require `x-api-key: <ADMIN_API_KEY>`. They fail closed: with `ADMIN_API_KEY` unset or empty, they always return `401`.
+- **Keep secrets out of the image.** Provide `ADMIN_API_KEY` through the runtime environment on the server, not through a `.env` in the Docker build context.
+- **Client IP and the proxy.** The app trusts `X-Forwarded-For` only when the TCP peer is a private/loopback address (the reverse proxy), and then uses only the last hop. Don't expose the container port publicly; route all traffic through the proxy.
+- **Visitor data.** The visitor DB stores client IPs. Keep it on a volume (`/app/storage`), not in the image.

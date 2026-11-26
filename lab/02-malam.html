@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Draf 02 — Malam</title>
+<link rel="stylesheet" href="base.css">
+<style>
+:root{
+  --bg:#08090b; --surface:#101216; --ink:#ecebe7; --dim:#8b919b; --faint:#78808a;
+  --amber:#e0ab5f; --line:rgba(255,255,255,.075);
+}
+body.v2{background:var(--bg);color:var(--ink);font-family:"Bricolage",sans-serif}
+.v2 .shell{position:relative;padding-left:26px;padding-right:26px;overflow:hidden}
+.v2 .glow{position:absolute;inset:-30% -40% auto;height:560px;
+  background:radial-gradient(50% 50% at 72% 30%,rgba(224,171,95,.13),transparent 70%);
+  pointer-events:none}
+.v2 header{display:flex;justify-content:space-between;align-items:baseline;
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.v2 header b{color:var(--ink);font-weight:600}
+.v2 .date{margin-top:26px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.v2 .label{margin-top:34px;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--amber)}
+.v2 .big{font-size:clamp(56px,17vw,72px);font-weight:300;line-height:.95;letter-spacing:-.035em;
+  font-variant-numeric:tabular-nums;margin-top:14px}
+.v2 .big .s{color:var(--dim);font-weight:200}
+.v2 .under{display:flex;align-items:baseline;gap:10px;margin-top:12px;color:var(--dim);font-size:13px}
+.v2 .under .jawi{font-size:19px;color:var(--ink);opacity:.8}
+.v2 .under b{color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums}
+.v2 .rail{margin-top:34px;border-top:1px solid var(--line)}
+.v2 .rail li{display:grid;grid-template-columns:14px 1fr auto;align-items:center;gap:12px;
+  padding:11px 0;border-bottom:1px solid var(--line);color:var(--dim)}
+.v2 .rail .dot{width:7px;height:7px;border-radius:50%;background:var(--faint);justify-self:center}
+.v2 .rail .n{font-size:15px;font-weight:400;letter-spacing:.01em}
+.v2 .rail .n .jawi{font-size:12px;color:var(--faint);margin-left:8px}
+.v2 .rail .t{font-size:17px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.v2 .rail li.past{color:var(--faint)}
+.v2 .rail li.past .t{color:var(--faint)}
+.v2 .rail li.past .n{color:var(--faint)}
+.v2 .rail li.next{color:var(--ink)}
+.v2 .rail li.next .dot{background:var(--amber);box-shadow:0 0 0 5px rgba(224,171,95,.13),0 0 18px rgba(224,171,95,.55)}
+.v2 .rail li.next .t{color:var(--amber);font-weight:600;font-size:20px}
+.v2 .rail li.next .n{font-weight:600;color:var(--ink)}
+.v2 .rail li.next .n .jawi{color:var(--amber);opacity:.7}
+.v2 .adv .n{font-size:12.5px;color:var(--faint);font-style:normal}
+.v2 footer{margin-top:auto;padding-top:24px;display:flex;justify-content:space-between;align-items:baseline;
+  font-size:11px;letter-spacing:.08em;color:var(--faint);text-transform:uppercase}
+.v2 footer .clock{font-size:22px;letter-spacing:-.01em;color:var(--dim);font-variant-numeric:tabular-nums;text-transform:none}
+@media(min-width:760px){
+  .v2 .shell{max-width:760px;margin:0 auto;padding:44px 40px}
+  .v2 .big{font-size:96px}
+  .v2 .rail{display:grid;grid-template-columns:1fr 1fr;column-gap:48px}
+  .v2 .rail li:nth-child(4),.v2 .rail li:nth-child(5){border-bottom:1px solid var(--line)}
+}
+</style></head>
+<body class="v2"><div class="shell">
+  <div class="glow"></div>
+  <header><span><b>SGR01</b> · Shah Alam</span><span>Tukar</span></header>
+  <p class="date">Isnin · 23 Nov 2026 · 13 Jamadilakhir 1448</p>
+
+  <p class="label">Maghrib dalam</p>
+  <p class="big">2<span class="s">:</span>08<span class="s">:</span>14</p>
+  <div class="under"><span class="jawi">مغرب</span><span>Azan</span><b>19:00</b><span>· Asar telah masuk</span></div>
+
+  <ol class="rail">
+    <li class="past adv"><span class="dot"></span><span class="n">Imsak <span class="jawi">إمساك</span></span><span class="t">05:40</span></li>
+    <li class="past"><span class="dot"></span><span class="n">Subuh <span class="jawi">صبح</span></span><span class="t">05:50</span></li>
+    <li class="past adv"><span class="dot"></span><span class="n">Syuruk <span class="jawi">شروق</span></span><span class="t">06:59</span></li>
+    <li class="past"><span class="dot"></span><span class="n">Zohor <span class="jawi">ظهر</span></span><span class="t">13:02</span></li>
+    <li class="past"><span class="dot"></span><span class="n">Asar <span class="jawi">عصر</span></span><span class="t">16:25</span></li>
+    <li class="next"><span class="dot"></span><span class="n">Maghrib <span class="jawi">مغرب</span></span><span class="t">19:00</span></li>
+    <li><span class="dot"></span><span class="n">Isyak <span class="jawi">عشاء</span></span><span class="t">20:13</span></li>
+  </ol>
+
+  <footer><span>JAKIM · Waktu Malaysia</span><span class="clock">16:52</span></footer>
+</div></body></html>

@@ -1,0 +1,31 @@
+/* papan.css — the site palette for Papan (S5b): the mosque board, on the web.
+ * Same deep green and gold as the TV, so a mosque that picked the board on its
+ * screen reads the same site. `mode: fixed` — the board has one light.
+ */
+@import "@fontsource-variable/reem-kufi/wght.css";
+
+html[data-tema="papan"],
+html[data-tema="papan"] .sheet {
+	--sheet: #0a1a15;
+	--ground: #071411;
+	--surface: #102520;
+	--raised: #16302a;
+	--line: #22403a;
+	--ink: #f5efdf;
+	--muted: #a8b7ab;
+	--faint: #93a597;
+	--spent: #8a9b8f;
+	--accent: #d9ae63;
+	--accent-fill: #d9ae63;
+	--on-accent: #081713;
+	--danger: #ff8a80;
+	--font-serif: "Reem Kufi Variable", "Bricolage Grotesque Variable", sans-serif;
+	color-scheme: dark;
+}
+
+html[data-tema="papan"] .almanak-title {
+	font-family: var(--font-serif);
+	font-weight: 500;
+	letter-spacing: 0.01em;
+	color: var(--accent);
+}

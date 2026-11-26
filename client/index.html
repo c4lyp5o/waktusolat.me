@@ -5,13 +5,38 @@
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Waktu Solat Untuk Malaysia Straight Dari JAKIM" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
     <title>Waktu Solat Malaysia</title>
+    <!-- Palette before first paint (no flash). The ids are injected from
+         shared/temas.js by vite (see vite.config.js); the rule is the same as
+         src/lib/tema.js: URL, then remembered, then the first. No toggle: the
+         mode is the system setting. -->
+    <!--tema-ids-->
+    <script>
+      (() => {
+        const list = window.__TEMAS__ || [];
+        const ids = window.__WEB_TEMAS__ || list.map((t) => t.id);
+        let picked = null;
+        try {
+          picked = new URLSearchParams(location.search).get("tema");
+        } catch {}
+        if (!ids.includes(picked)) {
+          try {
+            picked = localStorage.getItem("waktu:tema");
+          } catch {}
+        }
+        if (!ids.includes(picked)) picked = ids[0];
+        const tema = list.find((t) => t.id === picked);
+        const root = document.documentElement;
+        root.dataset.tema = picked;
+        // `mode: fixed` means one light: the system dark setting does not apply.
+        root.dataset.theme =
+          tema?.mode === "fixed"
+            ? "light"
+            : window.matchMedia?.("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

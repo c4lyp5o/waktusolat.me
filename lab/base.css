@@ -1,0 +1,25 @@
+/* design lab — shared type + reset only. Every draft sets its own colour and layout. */
+@font-face{font-family:"Newsreader";src:url("fonts/newsreader-latin-wght-normal.woff2") format("woff2-variations");font-weight:200 800;font-style:normal;font-display:swap}
+@font-face{font-family:"Newsreader";src:url("fonts/newsreader-latin-wght-italic.woff2") format("woff2-variations");font-weight:200 800;font-style:italic;font-display:swap}
+@font-face{font-family:"Bricolage";src:url("fonts/bricolage-grotesque-latin-wght-normal.woff2") format("woff2-variations");font-weight:200 800;font-display:swap}
+@font-face{font-family:"Naskh";src:url("fonts/noto-naskh-arabic-arabic-wght-normal.woff2") format("woff2-variations");font-weight:400 700;font-display:swap}
+@font-face{font-family:"ReemKufi";src:url("fonts/reem-kufi-arabic-wght-normal.woff2") format("woff2-variations");font-weight:400 700;font-display:swap}
+@font-face{font-family:"Readex";src:url("fonts/readex-pro-latin-wght-normal.woff2") format("woff2-variations");font-weight:200 700;font-display:swap}
+@font-face{font-family:"Plex";src:url("fonts/ibm-plex-sans-400.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Plex";src:url("fonts/ibm-plex-sans-500.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Plex";src:url("fonts/ibm-plex-sans-600.woff2") format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"PlexMono";src:url("fonts/ibm-plex-mono-400.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"PlexMono";src:url("fonts/ibm-plex-mono-500.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"PlexMono";src:url("fonts/ibm-plex-mono-600.woff2") format("woff2");font-weight:600;font-display:swap}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+ol,ul{list-style:none}
+.jawi{font-family:"Naskh",serif;direction:rtl;unicode-bidi:isolate}
+.num{font-variant-numeric:tabular-nums lining-nums}
+.shell{min-height:100%;display:flex;flex-direction:column;padding:max(20px,env(safe-area-inset-top)) 22px max(16px,env(safe-area-inset-bottom))}
+.grow{flex:1}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

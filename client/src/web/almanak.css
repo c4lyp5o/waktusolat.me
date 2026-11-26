@@ -1,0 +1,80 @@
+/* almanak.css — the printed-almanac zone page (S5b, draft 01). Layout only:
+ * every colour is a token, so Takwim paints it as paper and Papan as the green
+ * board. Loaded for every tema but only matched by the almanak page, which the
+ * sky page never renders. */
+
+.almanak {
+	--rule: color-mix(in srgb, var(--ink) 22%, transparent);
+}
+
+/* A double rule under the masthead: the printed almanac's tell. */
+.almanak-rule {
+	margin: 0;
+	border: 0;
+	border-top: 1px solid var(--line);
+}
+
+.almanak-rule-double {
+	margin: 0;
+	border: 0;
+	border-top: 3px double var(--rule);
+}
+
+/* name ...... time — dotted leaders, aligned to the baseline. */
+.leader-row {
+	display: flex;
+	align-items: baseline;
+	gap: 0.6rem;
+	padding: 0.62rem 0;
+	border-bottom: 1px solid var(--line);
+}
+
+.leader-name {
+	font-size: 1.0625rem;
+	font-weight: 500;
+	letter-spacing: 0.01em;
+	white-space: nowrap;
+}
+
+.leader-jawi {
+	font-family: var(--font-jawi);
+	font-size: 0.95rem;
+	line-height: 1;
+	color: var(--faint);
+	white-space: nowrap;
+}
+
+.leader-dots {
+	flex: 1 1 auto;
+	min-width: 1.5rem;
+	border-bottom: 1px dotted var(--faint);
+	opacity: 0.75;
+	transform: translateY(-0.3em);
+}
+
+.leader-time {
+	font-variant-numeric: tabular-nums;
+	font-size: 1.0625rem;
+	white-space: nowrap;
+}
+
+/* The next prayer: ink becomes accent, the leaders follow. */
+.leader-row[data-state="next"] .leader-name,
+.leader-row[data-state="next"] .leader-time {
+	color: var(--accent);
+	font-weight: 600;
+}
+.leader-row[data-state="next"] .leader-dots {
+	border-bottom-color: var(--accent);
+	opacity: 0.9;
+}
+
+.leader-row[data-state="passed"] .leader-name,
+.leader-row[data-state="passed"] .leader-time {
+	color: var(--spent);
+}
+
+.leader-row[data-advisory] .leader-time {
+	font-size: 0.95rem;
+	color: var(--faint);
+}
