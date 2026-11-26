@@ -67,7 +67,7 @@ Commits follow [Conventional Commits](https://www.conventionalcommits.org) (`fix
 - `publish.yml` — on push to `development`, `staging`, `main` or a `vX.Y.Z` tag: runs `test.yml` first, then publishes `calypso666/waktusolat.me` — `development` gets `:development` and `:sha-<commit>` and does not deploy; `staging` gets `:staging` and `:sha-<commit>` and recreates the staging container; `main` gets `:latest`, `:<version>` and `:sha-<commit>` and recreates production; a tag must match `package.json`, publishes `:<version>` and writes a GitHub Release from the `CHANGELOG.md` section.
 - `codeql-analysis.yml` — the scheduled security scan.
 
-Both deployment services claim the same Traefik host rule, so only one can run at a time and a staging deploy **stops production** before starting staging. Giving staging its own hostname would remove that coupling; until then, deploy staging when a short outage is acceptable.
+Staging has its own hostname (`staging.waktusolat.me`) and its own data (`~/own/waktusolat-staging/`), so a staging deploy touches only the staging container. Before 2026-11-26 both services claimed the same Traefik host rule and a staging deploy **stopped production**; that coupling is gone.
 
 Bun is pinned at **1.4.5** in both `Dockerfile` stages and in `test.yml`. Keep them in step.
 
